@@ -3,7 +3,7 @@ import Button from '../components/Button'
 import styles from '../styles/Home.module.css'
 import { Base64 } from 'js-base64';
 import axios from 'axios';
-
+import querystring from 'query-string';
 // console.log(process.env.SPOT_ID)
 
 export default function Home() {
@@ -86,12 +86,32 @@ export async function accessToken() {
   //     return error
   // }).catch(error => console.error(error));
 
-  axios.post('https://accounts.spotify.com/api/token', {
-    headers: {
-      Authorization: `Basic ${b64}`,
-      grant_type: "client_credentials",
-      'Content-Type': 'application/x-www-form-urlencoded', 
-    }
+  // https://stackoverflow.com/questions/55557557/axios-post-results-in-bad-request-grant-typeclient-credentials
+  
+  // ,{
+    //   // note the use of querystring
+    //   querystring.stringify({'grant_type':'client_credentials'}),{
+      //   headers: {
+        //     'Content-Type':'application/x-www-form-urlencoded',     
+        //     'Authorization': 'Basic xxxx'   
+        //   }
+        
+  const stringified = querystring.stringify({'grant_type':'client_credentials'});
+  console.log(stringified)
+
+  axios.post('https://accounts.spotify.com/api/token', 
+    // queryString.stringify({'grant_type':'client_credentials'}),{
+      // stringified,
+      `grant_type=client_credentials`, 
+      {
+        'Authorization': 'Basic ' + b64,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Access-Control-Allow-Header': '*',
+        'Cache-Control': 'no-cache',
+      
+      // body: querystring.stringify({'grant_type':'client_credentials'}),
+      // transformRequest: getQueryString,
+    // }
   }).then(function(response) {
     console.log(response);
     return response;
