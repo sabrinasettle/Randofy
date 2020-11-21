@@ -3,6 +3,7 @@ import Button from '../components/Button'
 import styles from '../styles/Home.module.css'
 import { Base64 } from 'js-base64';
 import axios from 'axios';
+import SpotifyWebApi from 'spotify-web-api-node';
 import querystring from 'query-string';
 // console.log(process.env.SPOT_ID)
 
@@ -45,10 +46,10 @@ export async function accessToken() {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
   // from main component
-  var id = process.env.SPOT_ID;
-  var secret = process.env.SPOT_SECRET;
-  var str = id.concat(":", secret);
-  const b64 = Base64.btoa(str);
+  // var id = process.env.SPOT_ID;
+  // var secret = process.env.SPOT_SECRET;
+  // var str = id.concat(":", secret);
+  // const b64 = Base64.btoa(str);
 
   // const res = await fetch('https://accounts.spotify.com/api/token', {
   //   method: "POST",
@@ -99,26 +100,58 @@ export async function accessToken() {
   const stringified = querystring.stringify({'grant_type':'client_credentials'});
   console.log(stringified)
 
-  axios.post('https://accounts.spotify.com/api/token', 
-    // queryString.stringify({'grant_type':'client_credentials'}),{
-      // stringified,
-      `grant_type=client_credentials`, 
-      {
-        'Authorization': 'Basic ' + b64,
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Access-Control-Allow-Header': '*',
-        'Cache-Control': 'no-cache',
+  var id = process.env.SPOT_ID;
+  var secret = process.env.SPOT_SECRET;
+  var str = id.concat(":", secret);
+  const b64 = Base64.btoa(str);
+
+  var clientId = 'someClientId',
+  clientSecret = 'someClientSecret';
+
+// Create the api object with the credentials
+var spotifyApi = new SpotifyWebApi({
+  clientId: id,
+  clientSecret: secret
+});
+
+
+// Retrieve an access token.
+// if webpacker cant see child function then ignore, otherwise run getGrant
+// esstienally a cheat 
+
+// Put it as part of an HOC (Higher Order Component)
+if (spotifyApi && spotifyApi.clientCredentialsGrant) {
+  spotifyApi.clientCredentialsGrant().then(
+   function(data) {
+     console.log('The access token expires in ' + data.body['expires_in']);
+     console.log('The access token is ' + data.body['access_token']);
+     // Save the access token so that it's used in future calls
+     spotifyApi.setAccessToken(data.body['access_token']);
+   },
+   function(err) {
+     console.log('Something went wrong when retrieving an access token', err);
+   }
+ ).catch(error => console.log(error));
+}
+
+  // axios.post('https://accounts.spotify.com/api/token', 
+  //   // queryString.stringify({'grant_type':'client_credentials'}),{
+  //     // stringified,
+  //     `grant_type=client_credentials`, 
+  //     {
+  //       Authorization: 'Basic ' + str.toString('base64'),
+  //       'Content-Type': 'application/x-www-form-urlencoded',
       
-      // body: querystring.stringify({'grant_type':'client_credentials'}),
-      // transformRequest: getQueryString,
-    // }
-  }).then(function(response) {
-    console.log(response);
-    return response;
-  }).catch(function (error){
-    console.log(error);
-    return error;
-  })
+  //     // body: querystring.stringify({'grant_type':'client_credentials'}),
+  //     // transformRequest: getQueryString,
+  //   // }
+  // }).then(function(response) {
+  //   console.log(response);
+  //   return response;
+  // }).catch(function (error){
+  //   console.log(error);
+  //   return error;
+  // })
 
   // return fetch('https://accounts.spotify.com/api/token', {
   //   Authorization: `Basic ${b64}`,
