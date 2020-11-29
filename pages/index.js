@@ -14,7 +14,7 @@ export default function Home() {
   {
      console.log("no access token")
   }
-  accessToken();
+  getAccessToken();
   return (
     <div className={styles.container}>
       <Head>
@@ -25,7 +25,9 @@ export default function Home() {
   )
 }
 
-export async function accessToken() {
+// This returns the access token for the Client Credentials Flow of the Spotify API (here: https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow)
+// Notes: Change this so it runs the request less and doesnt cross streams on access_token which gets set in the APIWrapper code
+export async function getAccessToken() {
 
   var id = process.env.SPOT_ID;
   var secret = process.env.SPOT_SECRET;
@@ -38,9 +40,7 @@ export async function accessToken() {
     clientSecret: secret
   });
 
-
-  // if webpacker cant see child function then ignore, otherwise run getGrant
-  // esstienally a cheat 
+  // if webpacker cant see child function then ignore, otherwise run getGrant, esstienally a cheat 
   // Put it as part of an HOC (Higher Order Component)
   if (spotifyApi && spotifyApi.clientCredentialsGrant) {
     spotifyApi.clientCredentialsGrant().then(
@@ -56,6 +56,7 @@ export async function accessToken() {
   ).catch(error => console.log(error));
   }
 
+  // previous code that never worked 
   // axios.post('https://accounts.spotify.com/api/token', 
   //   // queryString.stringify({'grant_type':'client_credentials'}),{
   //     // stringified,
