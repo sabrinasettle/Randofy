@@ -1,15 +1,24 @@
 {
-  "name": "spot-song-randomize",
-  "version": "0.1.0",
-  "private": true,
+  "name": "spotify-random-song",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "concurrently \"cd frontend && npm run dev\" \"cd backend && npm run dev\"",
+    "start": "concurrently \"cd frontend && npm run start\" \"cd backend && npm run start\""
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/settleformore/spotify-random-song.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/settleformore/spotify-random-song/issues"
+  },
+  "homepage": "https://github.com/settleformore/spotify-random-song#readme",
   "dependencies": {
-    "next": "9.5.5",
-    "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "concurrent": "^0.3.2"
   }
 }
