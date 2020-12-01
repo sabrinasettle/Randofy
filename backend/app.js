@@ -7,7 +7,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
+var randomSongRouter = require('./routes/randomSong');
 
+require('dotenv').config();
 var app = express();
 var SpotifyWebApi = require('spotify-web-api-node');
 
@@ -21,9 +23,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+var clientId = process.env.SPOT_ID,
+  clientSecret = process.env.SPOT_SECRET;
+var redirect_uri = 'localhost:8888';
+
+var spotifyApi = new SpotifyWebApi({
+  clientId: clientId,
+  clientSecret: clientSecret
+});
+
+// middleware for sending spotify object to routes as needed
+let butts = 1;
+app.use((req, res, next) => {
+  req.spotify = spotifyApi;
+
+  //spotify token check on any route
+  console.log(`butts ${butts}`);
+  butts += 1;
+  next();
+})
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter)
+app.use('/random', randomSongRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -41,14 +64,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-var clientId = process.env.SPOT_ID,
-  clientSecret = process.env.SPOT_SECRET;
-var redirect_uri = 'localhost:8888';
-
-var spotifyApi = new SpotifyWebApi({
-  clientId: clientId,
-  clientSecret: clientSecret
-});
 
 spotifyApi.clientCredentialsGrant().then(
   function(data) {
