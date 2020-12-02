@@ -1,6 +1,6 @@
 import React from 'react'
-import Link from 'next/link'
 
+// Card for song data from Spotify
 class SongCard extends React.Component {
     constructor(props){
         super(props);
@@ -17,18 +17,16 @@ class SongCard extends React.Component {
         console.log("data in card", this.props.data)
         return (
             <div className='card'>
-                <h1>Card</h1>
-                {/* <p>The data from parent is:{this.props.data}</p> */}
-                {/* <p>Track: {this.props.data.track_name}</p> */}
-                {/* <p>Artist: {this.props.track_artist}</p> */}
-                {/* <p>Album: {this.props.album_name}</p> */}
-                {/* <p>Explicit: {this.props.data.is_explicit}</p> */}
-                {/* <p>Attempts: {this.props.attempts}</p> */}
-                {/* <img 
-                    src={this.props.album_image.url}
+                <img 
+                    src={this.props.data.album_image.url}
                     alt="new"
-                /> */}
-                <Link href='spotify.com'>Listen On Spotify</Link>
+                />
+                <p>Track: {this.props.data.track_name}</p>
+                <p>Artist: {this.props.data.track_artist}</p>
+                <p>Album: {this.props.data.album_name}</p>
+                <p>Explicit: {this.props.data.is_explicit ? 'true' : 'false'}</p>
+                <p>Attempts: {this.props.data.attempts}</p>
+                <a href='https://spotify-randomizer-backend.herokuapp.com/login'>Listen On Spotify</a>
             </div>
         )
     }

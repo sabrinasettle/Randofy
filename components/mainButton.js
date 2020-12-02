@@ -80,11 +80,10 @@ class MainButton extends React.Component {
     render() {
         let {songData, isLoaded} = this.state;
         return (
-            
             // <input type="button" disabled={isSending} onClick={sendRequest} />
             <div>
-                <button onClick={this.handleClick}>Click Me</button>
-                {songData === null ? <p>Song Data set</p> : <p>No song data</p>}
+                <button onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
+                {/* {songData === null ? <p>No song data</p> : <p>Song Data set</p> } */}
                 {isLoaded ? <SongCard data={this.state.songData} /> : <p>not loaded</p>}
                 {/* <SongCard data={this.state.songData} /> */}
             </div>

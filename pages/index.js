@@ -7,13 +7,13 @@ export default function Home({data}) {
   // console.log("in index", data);
   return (
     <div>
-      <p> Testing </p>
       <MainButton></MainButton>
-      {/* <SongCard {...data} /> */}
     </div>
   )
 }
 
+
+// Used to test backend orignally without components 
 // export async function getServerSideProps(context) {
 
 //   const res = await fetch(`https://spotify-randomizer-backend.herokuapp.com/random`)
