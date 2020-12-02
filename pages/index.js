@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import SongCard from '../components/songCard'
-// import MainButton from '../components/mainButton'
+import MainButton from '../components/mainButton'
 // import styles from '../styles/Home.module.css'
 
 export default function Home({data}) {
@@ -9,23 +9,23 @@ export default function Home({data}) {
     <div>
       <p> Testing </p>
       <MainButton></MainButton>
-      <SongCard {...data} />
+      {/* <SongCard {...data} /> */}
     </div>
   )
 }
 
-export async function getServerSideProps(context) {
+// export async function getServerSideProps(context) {
 
-  const res = await fetch(`https://spotify-randomizer-backend.herokuapp.com/random`)
-  const data = await res.json()
+//   const res = await fetch(`https://spotify-randomizer-backend.herokuapp.com/random`)
+//   const data = await res.json()
   
-  if (!data) {
-    return {
-      notFound: true,
-    }
-  }
+//   if (!data) {
+//     return {
+//       notFound: true,
+//     }
+//   }
   
-  return {
-    props: { data } // will be passed to the page component as props
-  }
-}
+//   return {
+//     props: { data } // will be passed to the page component as props
+//   }
+// }
