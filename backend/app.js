@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var cors = require('cors')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -8,9 +9,11 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var randomSongRouter = require('./routes/randomSong');
+var githubRouter = require('./routes/github');
 
 require('dotenv').config();
 var app = express();
+app.use(cors());
 var SpotifyWebApi = require('spotify-web-api-node');
 
 
@@ -83,6 +86,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter)
 app.use('/random', randomSongRouter);
+app.use('/markdown', githubRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

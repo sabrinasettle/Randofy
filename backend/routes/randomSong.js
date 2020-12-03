@@ -37,64 +37,72 @@ function getRandomSearch() {
 // data.body.tracks.items[0].explicit
 //
 
-  router.get('/', function(req, res, next) {
+
+
+router.get('/', function(req, res, next) {
     const search = getRandomSearch();
     console.log(search)
     let att = 0;
+    // doit tracks attempts, by count
     function doit() {
       att++;
         console.log("attempt number: ", att );
         retry();
     }
+    // retry makes the attempt to get data
+
+    // new regex(/^:+[a-zA-Z]*:)
     function retry() {
       let randomOffset = Math.floor(Math.random() * 10000);
         req.spotify.searchTracks(search,{ limit: 1, offset: randomOffset})
         .then(function(data) {
-            var getIpInfo = function (ip) {
-                // IPV6 addresses can include IPV4 addresses
-                // So req.ip can be '::ffff:86.3.182.58'
-                // However geoip-lite returns null for these
-                if (ip.includes('::ffff:')) {
-                    ip = ip.split(':').reverse()[0]
-                }
-                var lookedUpIP = geoip.lookup(ip);
-                if ((ip === '127.0.0.1' || ip === '::1')) {
-                    return {error:"This won't work on localhost"}
-                }
-                if (!lookedUpIP){
-                    return { error: "Error occured while trying to process the information" }
-                }
-                return lookedUpIP;
+          var getIpInfo = function (ip) {
+            // IPV6 addresses can include IPV4 addresses
+            // So req.ip can be '::ffff:86.3.182.58'
+            // However geoip-lite returns null for these
+            if (ip.includes('::ffff:')) {
+                ip = ip.split(':').reverse()[0]
             }
+            var lookedUpIP = geoip.lookup(ip);
+            if ((ip === '127.0.0.1' || ip === '::1')) {
+                return {error:"This won't work on localhost"}
+            }
+            if (!lookedUpIP){
+                return { error: "Error occured while trying to process the information" }
+            }
+            return lookedUpIP;
+        }
+
+        var xForwardedFor = (req.headers['x-forwarded-for'] || '').replace(/:\d+$/, '');
+        var ip = xForwardedFor || req.connection.remoteAddress;
+        req.ipInfo = { ip, ...getIpInfo(ip) };
+        if (data.body.tracks.items[0].album.available_markets.includes(req.ipInfo.country)){
+          console.log("passed");
+          let returnData = {
+            "album_name": data.body.tracks.items[0].album.name,
+            "album_image": data.body.tracks.items[0].album.images[1],
+            "track_artist": data.body.tracks.items[0].artists[0].name,
+            "track_name": data.body.tracks.items[0].name,
+            "preview_url": data.body.tracks.items[0].preview_url,
+            "spotify_url": data.body.tracks.items[0].external_urls.spotify,
+            "is_explicit": data.body.tracks.items[0].explicit,
+            "attempts": att,
+          };
+        res.status(200).send(returnData);
+        }
+        else{
+          console.log("bad Market Match");
+          doit();
+        }
+
+        }, function(err) {
+          console.log("nope")
+          doit();
+    })};
+    doit();
     
-            var xForwardedFor = (req.headers['x-forwarded-for'] || '').replace(/:\d+$/, '');
-            var ip = xForwardedFor || req.connection.remoteAddress;
-            req.ipInfo = { ip, ...getIpInfo(ip) };
-            if (data.body.tracks.items[0].album.available_markets.includes(req.ipInfo.country)){
-              console.log("passed");
-              let returnData = {
-                "album_name": data.body.tracks.items[0].album.name,
-                "album_image": data.body.tracks.items[0].album.images[1],
-                "track_artist": data.body.tracks.items[0].artists[0].name,
-                "track_name": data.body.tracks.items[0].name,
-                "preview_url": data.body.tracks.items[0].preview_url,
-                "spotify_url": data.body.tracks.items[0].external_urls.spotify,
-                "is_explicit": data.body.tracks.items[0].explicit,
-                "attempts": att,
-              };
-            res.status(200).send(returnData);
-            }
-            else{
-              console.log("bad Market Match");
-              doit();
-            }
-    
-            }, function(err) {
-              console.log("nope")
-              doit();
-        })};
-        doit();
 });
 
 module.exports = router;
+
 
