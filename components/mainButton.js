@@ -88,9 +88,11 @@ class MainButton extends React.Component {
             // <input type="button" disabled={isSending} onClick={sendRequest} />
             <div className="section1">
                 <button className={styles.trackbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
-                {/* {songData === null ? <p>No song data</p> : <p>Song Data set</p> } */}
-                {isLoaded ? <SongCard data={this.state.songData} /> : <p>not loaded</p>}
-                {/* <SongCard data={this.state.songData} /> */}
+                <div className={styles.return}>
+                    {/* {songData === null ? <p>No song data</p> : <p>Song Data set</p> } */}
+                    {isLoaded ? <SongCard data={this.state.songData} /> : <h1 className={styles.instructfill}>Get a new track or album!</h1>}
+                    {/* <SongCard data={this.state.songData} /> */}
+                </div>
             </div>
         )
     }

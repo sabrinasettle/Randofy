@@ -16,25 +16,27 @@ $screen-xxl: 1600px;
     background-color: hotpink;
     display: flex;
     flex-direction: row;
-    // min-height: 100%;
-    // display:inline-flex
     height: fit-content;
     width: max-content;
     flex-wrap: wrap;
     margin: auto;
+    padding: 10px;
 }
 
 .section {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    // width: min-content;
     &.info {
-        background-color: red;
         padding-left: 30px;
-        padding-right: 30px;
+        // padding-right: 30px;
+        // width: 50%;
         // margin-bottom: auto;
+        max-width: 300px;
     }
-    &.album_cover {
+    &.albumcover {
+        background: blue;
         // margin-bottom: auto;
     }
     &.spotify {
@@ -45,14 +47,23 @@ $screen-xxl: 1600px;
 
 p.title {
     color: yellow;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 p.artist {
     color: green;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    
 }
 
 p.album {
     color: blue;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    
+
 }
 
 @media(max-width: 767px){

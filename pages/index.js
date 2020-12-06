@@ -6,13 +6,19 @@ import MainButton from '../components/mainButton'
 export default function Home({data}) {
   // console.log("in index", data);
   return (
-    <div className="page">
-      <Head></Head>
-      <header>
-        <h1>Randify</h1>
-      </header>
-      <MainButton></MainButton>
-    </div>
+    <body>
+
+      {/* <div className="page"> */}
+        <Head></Head>
+        <header>
+          <h1>Randify</h1>
+        </header>
+        <MainButton></MainButton>
+        <div className="section2">
+
+        </div>
+      {/* </div> */}
+    </body>
   )
 }
 
