@@ -13,6 +13,7 @@ class MainButton extends React.Component {
             isLoaded: false,
             // song: null,
             songData: null,
+            type: null,
         };
         this.handleClick = this.handleClick.bind(this);
     }
@@ -55,6 +56,7 @@ class MainButton extends React.Component {
     
     
     handleClick() {
+        // send type based on user input
         fetch(`https://spotify-randomizer-backend.herokuapp.com/random`)
         .then(res => res.json())
           .then(data => {
@@ -80,6 +82,7 @@ class MainButton extends React.Component {
     }
 
     render() {
+        // if type is track or album change the button text based on that
         let {songData, isLoaded} = this.state;
         return (
             // <input type="button" disabled={isSending} onClick={sendRequest} />

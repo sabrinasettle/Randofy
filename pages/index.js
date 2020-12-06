@@ -8,6 +8,9 @@ export default function Home({data}) {
   return (
     <div className="page">
       <Head></Head>
+      <header>
+        <h1>Randify</h1>
+      </header>
       <MainButton></MainButton>
     </div>
   )

@@ -1,0 +1,62 @@
+$screen-xs: 480px;
+$screen-sm: 768px;
+$screen-md: 992px;
+$screen-lg: 1200px;
+$screen-xl: 1400px;
+$screen-xxl: 1600px;
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;
+    grid-gap: 1rem;
+}
+
+.card {
+    background-color: hotpink;
+    display: flex;
+    flex-direction: row;
+    // min-height: 100%;
+    // display:inline-flex
+    height: fit-content;
+    width: max-content;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    &.info {
+        background-color: red;
+        padding-left: 30px;
+        padding-right: 30px;
+        // margin-bottom: auto;
+    }
+    &.album_cover {
+        // margin-bottom: auto;
+    }
+    &.spotify {
+        position: absolute; 
+        bottom: 0px;
+    }
+}
+
+p.title {
+    color: yellow;
+}
+
+p.artist {
+    color: green;
+}
+
+p.album {
+    color: blue;
+}
+
+@media(max-width: 767px){
+    .card {
+        flex-direction: column;
+    }
+}
