@@ -15,6 +15,7 @@ class SongCard extends React.Component {
 
     render() {
         console.log("data in card", this.props.data)
+        const o_sys = window.navigator.platform
         return (
             <div className='card'>
                 <img 

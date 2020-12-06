@@ -1,5 +1,7 @@
 import React from 'react'
 import SongCard from '../components/songCard'
+import styles from '../styles/MainButton.module.scss'
+
 
 // onClick fetch data from backend and then use loader
 
@@ -81,8 +83,8 @@ class MainButton extends React.Component {
         let {songData, isLoaded} = this.state;
         return (
             // <input type="button" disabled={isSending} onClick={sendRequest} />
-            <div>
-                <button onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
+            <div className="section1">
+                <button className={styles.trackbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
                 {/* {songData === null ? <p>No song data</p> : <p>Song Data set</p> } */}
                 {isLoaded ? <SongCard data={this.state.songData} /> : <p>not loaded</p>}
                 {/* <SongCard data={this.state.songData} /> */}
