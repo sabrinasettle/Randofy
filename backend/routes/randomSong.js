@@ -1,29 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var geoip = require('geoip-lite');
+var getRandomSearch = require('../lib/js/helpers/randomLib').getRandomSearch;
 
 /* GET home page. */
 
-function getRandomSearch() {
-    // A list of all characters that can be chosen.
-    const characters = 'abcdefghijklmnopqrstuvwxyz';
-    
-    // Gets a random character from the characters string.
-    const randomCharacter = characters.charAt(Math.floor(Math.random() * characters.length));
-    let randomSearch = '';
-  
-    // Places the wildcard character at the beginning, or both beginning and end, randomly.
-    switch (Math.round(Math.random())) {
-      case 0:
-        randomSearch = randomCharacter + '%';
-        break;
-      case 1:
-        randomSearch = '%' + randomCharacter + '%';
-        break;
-    }
-  
-    return randomSearch;
-  }
 // data.body.tracks.items[0].album.available_markets 
 // check for current location and see if matches market else retry search
 
@@ -37,16 +18,18 @@ function getRandomSearch() {
 // data.body.tracks.items[0].explicit
 //
 
-
-
-router.get('/', function(req, res, next) {
+/* GET random song object https://.../random */
+router.get('/', function ( req, res ) {
     const search = getRandomSearch();
     console.log(search)
     let att = 0;
     // doit tracks attempts, by count
     function doit() {
-      att++;
+        att++;
         console.log("attempt number: ", att );
+        if (att >= 50){
+            
+        }
         retry();
     }
     // retry makes the attempt to get data
@@ -76,7 +59,8 @@ router.get('/', function(req, res, next) {
         var xForwardedFor = (req.headers['x-forwarded-for'] || '').replace(/:\d+$/, '');
         var ip = xForwardedFor || req.connection.remoteAddress;
         req.ipInfo = { ip, ...getIpInfo(ip) };
-        if (data.body.tracks.items[0].album.available_markets.includes(req.ipInfo.country)){
+        console.log(ip);
+        if (data.body.tracks.items[0].album.available_markets.includes(req.ipInfo.country) || ip === '::1'){
           console.log("passed");
           let returnData = {
             "album_name": data.body.tracks.items[0].album.name,
