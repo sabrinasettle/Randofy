@@ -6,10 +6,50 @@ import React from 'react';
 
 // export default function Home({data}) {
 class Home extends React.Component {
-  // console.log("in index", data);
+  constructor(props){
+    super(props);
+    this.state = {
+      songList: [],
+      isLoading: true,
+      test: "butts",
+    }
+  }
+
+  updateButts = (string) => {
+    this.setState({test: string});
+    console.log(this.state.test)
+  }
+
+  updateSongList = (data) => {
+    this.setState({isLoading: true})
+    let temparr = this.state.songList
+    temparr.push(data)
+    this.setState({
+      songList: temparr,
+      isLoading: false,
+    })
+  }
+
+  SongList = () => {
+    let htmlList = `<ul>`;
+    this.state.songList.map((dataObj) => {
+      const track_name = dataObj.track_name;
+      console.log(track_name);
+      // li
+      // p dataObj.title
+      htmlList += `<li>;
+      <p>${track_name}</p>;
+
+      </li>`;
+    })
+    htmlList += "</ul>"
+    return htmlList
+  }
+  
   render() {
+    const {isLoading} = this.state
     return (
-      <div>
+      <html>
         <Head></Head>
         <body>
     
@@ -17,13 +57,14 @@ class Home extends React.Component {
             <header>
               <h1>Randify</h1>
             </header>
-            <MainButton />
+            <MainButton updateSongList={this.updateSongList}/>
             <div className="section2">
-    
+                    <p>List of Songs</p>
+                    {isLoading ? <p>Loading...</p> : <this.SongList />}
             </div>
           {/* </div> */}
         </body>
-      </div>
+      </html>
     )
   }
 }

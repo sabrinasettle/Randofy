@@ -61,6 +61,9 @@ class MainButton extends React.Component {
         .then(res => res.json())
           .then(data => {
             console.log("on click", data);
+            if (this.props.updateSongList){
+                this.props.updateSongList(data);
+            }
             this.setState({
                 isLoaded: true,
                 songData: data,
@@ -78,7 +81,8 @@ class MainButton extends React.Component {
 
         console.log("Clicked!");
         console.log(this.state.isLoaded)
-        console.log('song data state',this.state.songData)
+        // console.log('song data state',this.state.songData)
+
     }
 
     render() {
@@ -93,9 +97,7 @@ class MainButton extends React.Component {
                     {isLoaded ? <SongCard data={this.state.songData} /> : <h1 className={styles.instructfill}>Get a new track or album!</h1>}
                     {/* <SongCard data={this.state.songData} /> */}
                 </div>
-                <div className="section3">
-                    <p>List of Songs</p>
-                </div>
+                
             </div>
         )
     }
