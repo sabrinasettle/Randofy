@@ -2,6 +2,7 @@ import Head from 'next/head'
 import SongCard from '../components/songCard'
 import MainButton from '../components/mainButton'
 import React from 'react';
+import liststyles from '../styles/List.module.scss'
 // import styles from '../styles/Home.module.css'
 
 // export default function Home({data}) {
@@ -11,16 +12,11 @@ class Home extends React.Component {
     this.state = {
       songList: [],
       isLoading: true,
-      test: "butts",
+      // test: "butts",
     }
   }
 
-  updateButts = (string) => {
-    this.setState({test: string});
-    console.log(this.state.test)
-  }
-
-  updateSongList = (data) => {
+  updateList = (data) => {
     this.setState({isLoading: true})
     let temparr = this.state.songList
     temparr.push(data)
@@ -30,20 +26,33 @@ class Home extends React.Component {
     })
   }
 
-  SongList = () => {
-    let htmlList = `<ul>`;
-    this.state.songList.map((dataObj) => {
-      const track_name = dataObj.track_name;
-      console.log(track_name);
-      // li
-      // p dataObj.title
-      htmlList += `<li>;
-      <p>${track_name}</p>;
+  List = () => {
+    // let htmlList = `<ul>`;
+    // this.state.songList.map((dataObj) => {
+    //   const track_name = dataObj.track_name;
+    //   console.log(track_name);
+    //   // li
+    //   // p dataObj.title
+    //   htmlList += `<li>;
+    //   <p>${track_name}</p>;
 
-      </li>`;
-    })
-    htmlList += "</ul>"
-    return htmlList
+    //   </li>`;
+    // })
+    // htmlList += "</ul>"
+    // return htmlList
+    let htmlList = (
+      <ul>
+        <p>List of Songs</p>
+        {this.state.songList.map((dataObj) => {
+          return (
+            <li>
+              <p>{dataObj.track_name} {dataObj.track_artist} </p>
+            </li>
+          )}
+        )}
+      </ul>
+    );
+    return htmlList;
   }
   
   render() {
@@ -53,16 +62,13 @@ class Home extends React.Component {
         <Head></Head>
         <body>
     
-          {/* <div className="page"> */}
             <header>
               <h1>Randify</h1>
             </header>
-            <MainButton updateSongList={this.updateSongList}/>
+            <MainButton updateList={this.updateList}/>
             <div className="section2">
-                    <p>List of Songs</p>
-                    {isLoading ? <p>Loading...</p> : <this.SongList />}
+                    {isLoading ? <p>Loading...</p> : <this.List />}
             </div>
-          {/* </div> */}
         </body>
       </html>
     )

@@ -61,8 +61,8 @@ class MainButton extends React.Component {
         .then(res => res.json())
           .then(data => {
             console.log("on click", data);
-            if (this.props.updateSongList){
-                this.props.updateSongList(data);
+            if (this.props.updateList){
+                this.props.updateList(data);
             }
             this.setState({
                 isLoaded: true,
@@ -82,7 +82,6 @@ class MainButton extends React.Component {
         console.log("Clicked!");
         console.log(this.state.isLoaded)
         // console.log('song data state',this.state.songData)
-
     }
 
     render() {
