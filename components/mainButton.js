@@ -13,7 +13,7 @@ class MainButton extends React.Component {
             isLoaded: false,
             // song: null,
             songData: null,
-            type: null,
+            type: this.props.type ? this.props.type : "track",
         };
         this.handleClick = this.handleClick.bind(this);
     }
@@ -57,7 +57,7 @@ class MainButton extends React.Component {
     
     handleClick() {
         // send type based on user input
-        fetch(`https://spotify-randomizer-backend.herokuapp.com/random`)
+        fetch(`https://randify-backend.herokuapp.com/random`)
         .then(res => res.json())
           .then(data => {
             console.log("on click", data);
@@ -92,6 +92,9 @@ class MainButton extends React.Component {
                     {/* {songData === null ? <p>No song data</p> : <p>Song Data set</p> } */}
                     {isLoaded ? <SongCard data={this.state.songData} /> : <h1 className={styles.instructfill}>Get a new track or album!</h1>}
                     {/* <SongCard data={this.state.songData} /> */}
+                </div>
+                <div className="section3">
+                    <p>List of Songs</p>
                 </div>
             </div>
         )

@@ -1,27 +1,34 @@
 import Head from 'next/head'
 import SongCard from '../components/songCard'
 import MainButton from '../components/mainButton'
+import React from 'react';
 // import styles from '../styles/Home.module.css'
 
-export default function Home({data}) {
+// export default function Home({data}) {
+class Home extends React.Component {
   // console.log("in index", data);
-  return (
-    <body>
-
-      {/* <div className="page"> */}
+  render() {
+    return (
+      <div>
         <Head></Head>
-        <header>
-          <h1>Randify</h1>
-        </header>
-        <MainButton></MainButton>
-        <div className="section2">
-
-        </div>
-      {/* </div> */}
-    </body>
-  )
+        <body>
+    
+          {/* <div className="page"> */}
+            <header>
+              <h1>Randify</h1>
+            </header>
+            <MainButton />
+            <div className="section2">
+    
+            </div>
+          {/* </div> */}
+        </body>
+      </div>
+    )
+  }
 }
 
+export default Home;
 
 // Used to test backend orignally without components 
 // export async function getServerSideProps(context) {
