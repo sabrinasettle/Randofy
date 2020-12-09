@@ -1,65 +1,95 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import SongCard from '../components/songCard'
+import MainButton from '../components/mainButton'
+import React from 'react';
+import liststyles from '../styles/List.module.scss'
+// import styles from '../styles/Home.module.css'
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+// export default function Home({data}) {
+class Home extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      songList: [],
+      isLoading: true,
+      // test: "butts",
+    }
+  }
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+  updateList = (data) => {
+    this.setState({isLoading: true})
+    let temparr = this.state.songList
+    temparr.push(data)
+    this.setState({
+      songList: temparr,
+      isLoading: false,
+    })
+  }
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+  List = () => {
+    // let htmlList = `<ul>`;
+    // this.state.songList.map((dataObj) => {
+    //   const track_name = dataObj.track_name;
+    //   console.log(track_name);
+    //   // li
+    //   // p dataObj.title
+    //   htmlList += `<li>;
+    //   <p>${track_name}</p>;
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+    //   </li>`;
+    // })
+    // htmlList += "</ul>"
+    // return htmlList
+    let htmlList = (
+      <ul>
+        <p>List of Songs</p>
+        {this.state.songList.map((dataObj) => {
+          return (
+            <li>
+              <p>{dataObj.track_name} {dataObj.track_artist} </p>
+            </li>
+          )}
+        )}
+      </ul>
+    );
+    return htmlList;
+  }
+  
+  render() {
+    const {isLoading} = this.state
+    return (
+      <html>
+        <Head></Head>
+        <body>
+    
+            <header>
+              <h1>Randify</h1>
+            </header>
+            <MainButton updateList={this.updateList}/>
+            <div className="section2">
+                    {isLoading ? <p>Loading...</p> : <this.List />}
+            </div>
+        </body>
+      </html>
+    )
+  }
 }
+
+export default Home;
+
+// Used to test backend orignally without components 
+// export async function getServerSideProps(context) {
+
+//   const res = await fetch(`https://spotify-randomizer-backend.herokuapp.com/random`)
+//   const data = await res.json()
+  
+//   if (!data) {
+//     return {
+//       notFound: true,
+//     }
+//   }
+  
+//   return {
+//     props: { data } // will be passed to the page component as props
+//   }
+// }
