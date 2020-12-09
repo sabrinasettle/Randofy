@@ -1,145 +1,104 @@
 import Head from 'next/head'
-import Button from '../components/Button'
-import styles from '../styles/Home.module.css'
-import { Base64 } from 'js-base64';
-import axios from 'axios';
+import SongCard from '../components/songCard'
+import MainButton from '../components/mainButton'
+import React from 'react';
+import liststyles from '../styles/List.module.scss'
+// import styles from '../styles/Home.module.css'
 
-// console.log(process.env.SPOT_ID)
-
-export default function Home() {
-  let access_token; 
-  if (access_token == null)
-  {
-     console.log("no access token")
-  }
-  accessToken();
-  // let api = getStaticProps();
-  // console.log(api);
-  
-  // ok here grab that and then apply that to the call of the post
-  // curl -X "POST" -H "Authorization: Basic ZjM4ZjAw...WY0MzE=" -d grant_type=client_credentials https://accounts.spotify.com/api/token
-  
-  // curl -X "POST" -H "Authorization: Basic ZTZhNjNjYWU0NTlmNDY4N2I0YTA1NmI5ODRiNTUyMGU6ZjFjNDU3ODUxYzFiNGFlYWJiNTBhZDdhZDkyNmM4Yzg=" -d grant_type=client_credentials https://accounts.spotify.com/api/token
-  // filter the response for both type and access code if the status is successful (200)
-  //{
-  //  "access_token": "NgCXRKc...MzYjw",
-  //  "token_type": "bearer",
-  //  "expires_in": 3600,
-  // }
-
-  // curl -H "Authorization: Bearer NgCXRKc...MzYjw" https://api.spotify.com/v1/tracks/2TpxZ7JUBn3uw46aR7qd6V
-
-  // in future also check the expired part of the token and recreate
-  return (
-    <div className={styles.container}>
-      <Head>
-        Header
-      </Head>
-      {/* <div> {b64} </div> */}
-      <Button />
-    </div>
-  )
-}
-
-export async function accessToken() {
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
-  // from main component
-  var id = process.env.SPOT_ID;
-  var secret = process.env.SPOT_SECRET;
-  var str = id.concat(":", secret);
-  const b64 = Base64.btoa(str);
-
-  // const res = await fetch('https://accounts.spotify.com/api/token', {
-  //   method: "POST",
-  //   headers: '',   
-  // })
-
-  // curl -X "POST" -H "Authorization: Basic ZjM4ZjAw...WY0MzE=" -d grant_type=client_credentials https://accounts.spotify.com/api/token
-  // fro axios POST docs
-
-  // try {
-  //   const {data:response} = await axios.get(url) //use data destructuring to get data from the promise object
-  //   return response
-  // }
-
-  // catch (error) {
-  //   console.log(error);
-  // }
-
-  // try {
-  //   const {data:response} = await axios.post('https://accounts.spotify.com/api/token',`grant_type=client_credentials`, {
-  //     Authorization: `Basic ${b64}`,
-  // })
-  // }
-  // catch(err){
-  //   console.error(err);
-  // };
-
-
-  // return await axios.post('https://accounts.spotify.com/api/token',`grant_type=client_credentials`, {
-  //   Authorization: `Basic ${b64}`,
-  // }).then((result) => {
-  //   if (result)
-  //     return result.data;
-  //   else
-  //     return error
-  // }).catch(error => console.error(error));
-
-  axios.post('https://accounts.spotify.com/api/token', {
-    headers: {
-      Authorization: `Basic ${b64}`,
-      grant_type: "client_credentials",
-      'Content-Type': 'application/x-www-form-urlencoded', 
+// export default function Home({data}) {
+class Home extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      songList: [],
+      isLoading: true,
+      // test: "butts",
     }
-  }).then(function(response) {
-    console.log(response);
-    return response;
-  }).catch(function (error){
-    console.log(error);
-    return error;
-  })
+  }
 
-  // return fetch('https://accounts.spotify.com/api/token', {
-  //   Authorization: `Basic ${b64}`,
-  //   grant_type: 'client_credentials'
-  // }).then(res => {
-  //   console.log(res)
-  // }).then(data => console.log("data", data))
-  // .catch(err => console.log("error", err))
+  componentDidMount(){
+    const params = new URLSearchParams(window.location.search.substring(1))
+    console.log("params", params.get("user"));
+    // console.log("props location", this.props.location.search)
+  }
 
-  // axios.post('/user', {
-  //   firstName: 'Fred',
-  //   lastName: 'Flintstone'
-  // })
-  // .then(function (response) {
-  //   console.log(response);
-  // })
-  // .catch(function (error) {
-  //   console.log(error);
-  // });
+  updateList = (data) => {
+    this.setState({isLoading: true})
+    let temparr = this.state.songList
+    temparr.push(data)
+    this.setState({
+      songList: temparr,
+      isLoading: false,
+    })
+  }
 
+  List = () => {
+    // let htmlList = `<ul>`;
+    // this.state.songList.map((dataObj) => {
+    //   const track_name = dataObj.track_name;
+    //   console.log(track_name);
+    //   // li
+    //   // p dataObj.title
+    //   htmlList += `<li>;
+    //   <p>${track_name}</p>;
 
-
-  // needs to return this
-
-  // {
-  //   "access_token": "NgCXRKc...MzYjw",
-  //   "token_type": "bearer",
-  //   "expires_in": 3600,
-  // }
-
-
-  // const posts = await res.json()
-
-  // By returning { props: posts }, the Blog component
-  // will receive `posts` as a prop at build time
-  // return {
-  //   props: {
-  //     b64,
-  //   //   posts,
-  //   },
-  // }
-
+    //   </li>`;
+    // })
+    // htmlList += "</ul>"
+    // return htmlList
+    let htmlList = (
+      <ul>
+        <p>List of Songs</p>
+        {this.state.songList.map((dataObj) => {
+          return (
+            <li>
+              <p>{dataObj.track_name} {dataObj.track_artist} </p>
+            </li>
+          )}
+        )}
+      </ul>
+    );
+    return htmlList;
+  }
+  
+  render() {
+    const {isLoading} = this.state
+    return (
+      <>
+        <Head>
+          <meta charSet="utf-8" />
+          <title>Randify: The random Spotify song Genetor</title>
+          <meta name="description" content="An example of a meta description." />
+        </Head>
+        
+            <header>
+              <h1>Randify</h1>
+            </header>
+            <MainButton updateList={this.updateList}/>
+            <div className="section2">
+                    {isLoading ? <p>Loading...</p> : <this.List />}
+            </div>
+        
+      </>
+    )
+  }
 }
 
+export default Home;
+
+// Used to test backend orignally without components 
+// export async function getServerSideProps(context) {
+
+//   const res = await fetch(`https://spotify-randomizer-backend.herokuapp.com/random`)
+//   const data = await res.json()
+  
+//   if (!data) {
+//     return {
+//       notFound: true,
+//     }
+//   }
+  
+//   return {
+//     props: { data } // will be passed to the page component as props
+//   }
+// }
