@@ -5,6 +5,8 @@ import React from 'react';
 import liststyles from '../styles/List.module.scss'
 // import styles from '../styles/Home.module.css'
 
+import { NoteConsumer } from '../components/spotifyUser';
+
 // export default function Home({data}) {
 class Home extends React.Component {
   constructor(props){
@@ -33,19 +35,6 @@ class Home extends React.Component {
   }
 
   List = () => {
-    // let htmlList = `<ul>`;
-    // this.state.songList.map((dataObj) => {
-    //   const track_name = dataObj.track_name;
-    //   console.log(track_name);
-    //   // li
-    //   // p dataObj.title
-    //   htmlList += `<li>;
-    //   <p>${track_name}</p>;
-
-    //   </li>`;
-    // })
-    // htmlList += "</ul>"
-    // return htmlList
     let htmlList = (
       <ul>
         <p>List of Songs</p>
@@ -74,6 +63,17 @@ class Home extends React.Component {
             <header>
               <h1>Randify</h1>
             </header>
+            <NoteConsumer>
+              {({ state }) => (
+                <p>
+                  hi I'm {state.spotifyUser}
+                  {/* <button onClick={growAYearOlder}>Grow</button> */}
+                </p>
+              )}
+            </NoteConsumer>
+
+
+
             <MainButton updateList={this.updateList}/>
             <div className="section2">
                     {isLoading ? <p>Loading...</p> : <this.List />}
