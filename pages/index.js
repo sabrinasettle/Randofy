@@ -14,24 +14,43 @@ class Home extends React.Component {
     this.state = {
       songList: [],
       isLoading: true,
+      code: null,
       // test: "butts",
     }
   }
 
   componentDidMount(){
     const params = new URLSearchParams(window.location.search.substring(1))
-    console.log("params", params.get("user"));
+    const code = params.get("code");
+    console.log("code from login is", code);
+    // original testing console.log
     // console.log("props location", this.props.location.search)
+    if (code) {
+      this.setState({
+        code: code,
+      }, () => {
+        // callback
+        console.log("index state code is", this.state.code);
+        console.log(code)
+      });
+      // send to backend route to get the user data
+    }
   }
 
   updateList = (data) => {
-    this.setState({isLoading: true})
+    this.setState({
+      isLoading: true
+    })
     let temparr = this.state.songList
     temparr.push(data)
     this.setState({
       songList: temparr,
       isLoading: false,
-    })
+    });
+    const { songList } = this.state;
+    localStorage.setItem('songList', songList);
+    var list = localStorage.getItem('songList')
+    console.log("localStorage", list);
   }
 
   List = () => {
@@ -63,14 +82,13 @@ class Home extends React.Component {
             <header>
               <h1>Randify</h1>
             </header>
-            <NoteConsumer>
+            {/* <NoteConsumer>
               {({ state }) => (
                 <p>
                   hi I'm {state.spotifyUser}
-                  {/* <button onClick={growAYearOlder}>Grow</button> */}
                 </p>
               )}
-            </NoteConsumer>
+            </NoteConsumer> */}
 
 
 

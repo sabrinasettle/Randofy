@@ -6,7 +6,7 @@ const NoteContext = React.createContext();
 // Then create a provider Component
 class NoteProvider extends Component {
   state = {
-    spotifyUser: localStorage ? JSON.parse(localStorage.getItem('spotifyUser')) : null,
+    // spotifyUser: localStorage ? JSON.parse(localStorage.getItem('spotifyUser')) : null,
   };
   render() {
     return (
