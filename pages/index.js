@@ -59,7 +59,7 @@ class Home extends React.Component {
         <p>List of Songs</p>
         {this.state.songList.map((dataObj) => {
           return (
-            <li>
+            <li key={dataObj.track_id}>
               <p>{dataObj.track_name} {dataObj.track_artist} </p>
             </li>
           )}

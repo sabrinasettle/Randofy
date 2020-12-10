@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react'
 import SongCard from '../components/songCard'
 import styles from '../styles/MainButton.module.scss'
@@ -9,7 +10,7 @@ class MainButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: false,
+            error: "",
             isLoaded: false,
             // song: null,
             songData: null,
@@ -55,33 +56,32 @@ class MainButton extends React.Component {
     // });
     
     
-    handleClick() {
-        // send type based on user input
-        fetch(`https://randify-backend.herokuapp.com/random`)
-        .then(res => res.json())
-          .then(data => {
-            console.log("on click", data);
+    handleClick = () => {
+        
+        axios.get(`https://randify-backend.herokuapp.com/random`)
+        .then(response => {
+            console.log("response from axios", response.data);
+            console.log("test", this.state.isLoaded)
             if (this.props.updateList){
-                this.props.updateList(data);
+                console.log("props from parent exist")
+                this.props.updateList(response.data);
             }
             this.setState({
                 isLoaded: true,
-                songData: data,
-            }, () => {
-            console.log("after set state", this.state.songData, this.state.isLoaded);
-            }); 
-              },
-              (error) => {
-                  this.setState({
-                      isLoaded: true,
-                      error: true,
-                  });
-              }
-          )
-
-        console.log("Clicked!");
-        console.log(this.state.isLoaded)
-        // console.log('song data state',this.state.songData)
+                songData: response.data,
+            });
+          })
+          .catch(error => {
+            console.log("error", error);
+            this.setState({
+                isLoaded: true,
+                error: error,
+            });
+          })
+    
+        // console.log("Clicked!");
+        // console.log(self.state.isLoaded)
+        // console.log('song data state', self.state.songData)
     }
 
     render() {
