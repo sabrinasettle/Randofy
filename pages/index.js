@@ -6,6 +6,7 @@ import liststyles from '../styles/List.module.scss'
 // import styles from '../styles/Home.module.css'
 
 import { NoteConsumer } from '../components/spotifyUser';
+import axios from 'axios';
 
 // export default function Home({data}) {
 class Home extends React.Component {
@@ -30,6 +31,17 @@ class Home extends React.Component {
         code: code,
       }, () => {
         // callback
+        axios.get(`https://randify-backend.herokuapp.com/token`, {
+          code
+        })
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+
+
         console.log("index state code is", this.state.code);
         console.log(code)
       });
