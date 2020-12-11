@@ -5,12 +5,14 @@ $screen-lg: 1200px;
 $screen-xl: 1400px;
 $screen-xxl: 1600px;
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: auto;
-    grid-gap: 1rem;
-}
+
+// moved to List.module.scss
+// .cards {
+//     display: grid;
+//     grid-template-columns: repeat(3, 1fr);
+//     grid-auto-rows: auto;
+//     grid-gap: 1rem;
+// }
 
 .card {
     background-color: hotpink;
@@ -21,6 +23,7 @@ $screen-xxl: 1600px;
     flex-wrap: wrap;
     margin: auto;
     padding: 10px;
+    font-family: 'JetBrains Mono', monospace;
 }
 
 .section {

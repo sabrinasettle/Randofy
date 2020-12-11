@@ -21,6 +21,7 @@ class Home extends React.Component {
   }
 
   componentDidMount(){
+    // gets params of code from the redirect on login
     const params = new URLSearchParams(window.location.search.substring(1))
     const code = params.get("code");
     console.log("code from login is", code);
@@ -30,17 +31,18 @@ class Home extends React.Component {
       this.setState({
         code: code,
       }, () => {
-        // callback
+        // callback gets from the backend the user data
         axios.get(`https://randify-backend.herokuapp.com/token`, {
           code
         })
         .then(response => {
           console.log(response);
+          console.log(response.data.access_token)
+          console.log(response.data.expires_in)
         })
         .catch(error => {
           console.log(error);
         })
-
 
         console.log("index state code is", this.state.code);
         console.log(code)
@@ -66,13 +68,16 @@ class Home extends React.Component {
   }
 
   List = () => {
+    const openSpot = 'https://open.spotify.com/track/'
+    // transfer the li into a card???
     let htmlList = (
-      <ul>
+      <ul className={liststyles.list}>
         <p>List of Songs</p>
         {this.state.songList.map((dataObj) => {
           return (
             <li key={dataObj.track_id}>
-              <p>{dataObj.track_name} {dataObj.track_artist} </p>
+              <p>Song: {dataObj.track_name} Artist: {dataObj.track_artist} </p>
+              <a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a>
             </li>
           )}
         )}
@@ -89,10 +94,13 @@ class Home extends React.Component {
           <meta charSet="utf-8" />
           <title>Randify: The random Spotify song Genetor</title>
           <meta name="description" content="An example of a meta description." />
+          <link rel="preconnect" href="https://fonts.gstatic.com"></link>
+          <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
         </Head>
         
             <header>
               <h1>Randify</h1>
+              <a href='https://randify-backend.herokuapp.com/login'>Login</a>
             </header>
             {/* <NoteConsumer>
               {({ state }) => (

@@ -1,7 +1,9 @@
-ul {
-
+ul.list {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
 }
 
-li {
-    
+li.cards {
 }
