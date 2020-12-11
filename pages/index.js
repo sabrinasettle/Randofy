@@ -36,9 +36,13 @@ class Home extends React.Component {
           code
         })
         .then(response => {
-          console.log(response);
-          console.log(response.data.access_token)
-          console.log(response.data.expires_in)
+          // console.log(response);
+          // gets the user https://api.spotify.com/v1/me
+          // https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
+          // needs the access_token and token_type in the request
+          console.log("token", response.data.access_token)
+          console.log("expries_in", response.data.expires_in)
+          console.log("type", response.data.token_type)
         })
         .catch(error => {
           console.log(error);
@@ -75,9 +79,10 @@ class Home extends React.Component {
         <p>List of Songs</p>
         {this.state.songList.map((dataObj) => {
           return (
-            <li key={dataObj.track_id}>
+            <li className={liststyles.cards} key={dataObj.track_id}>
               <p>Song: {dataObj.track_name} Artist: {dataObj.track_artist} </p>
               <a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a>
+              <a>Add to Playlist</a>
             </li>
           )}
         )}

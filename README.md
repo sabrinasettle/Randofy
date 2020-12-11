@@ -32,3 +32,16 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### Notes
 https://blog.maximeheckel.com/posts/data-fetching-with-next-js
+
+
+# To Do
+
+[] Make background of MainButton return a different color based on image. This may work https://alligator.io/react/extract-dominant-colors-from-images/ or https://lokeshdhakar.com/projects/color-thief/#api
+
+[] Get context working
+
+[] Get localStorage working as well
+
+[] Styling the List
+
+[] Loading animation and logic
