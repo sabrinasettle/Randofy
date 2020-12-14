@@ -44,4 +44,4 @@ https://blog.maximeheckel.com/posts/data-fetching-with-next-js
 
 [] Styling the List
 
-[] Loading animation and logic
+[] Loading animation and logic. Watch this https://www.youtube.com/watch?v=0LstwqHt8G8

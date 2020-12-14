@@ -1,18 +1,19 @@
 import React, { createContext, useState } from "react";
+const SpotifyContext = createContext(null);
+export default SpotifyContext;
 
-export const Context = createContext(null);
+// first attempt
+// const ContextProvider = (props) => {
+//     const [isLoading, setIsLoading] = useState(true);
 
-const ContextProvider = (props) => {
-    const [isLoading, setIsLoading] = useState(true);
+//     return (
+//         <Context.Provider value={{
+//                 isLoading,
+//                 // setIsLoading,
+//             }}>
+//             {props.children}
+//         </Context.Provider>
+//     );
+// };
 
-    return (
-        <Context.Provider value={{
-                isLoading,
-                // setIsLoading,
-            }}>
-            {props.children}
-        </Context.Provider>
-    );
-};
-
-export default ContextProvider;
+// export default ContextProvider;

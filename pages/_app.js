@@ -1,13 +1,13 @@
 import '../styles/globals.scss'
 import App, { Container } from 'next/app';
 
-import NoteProvider from '../components/spotifyUser';
+// import NoteProvider from '../components/spotifyUser';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <NoteProvider>
+    // <NoteProvider>
       <Component {...pageProps} />
-    </NoteProvider>
+    // </NoteProvider>
   );
 }
 
