@@ -3,7 +3,7 @@ import SongCard from '../components/songCard'
 import MainButton from '../components/mainButton'
 import React from 'react';
 import liststyles from '../styles/List.module.scss'
-import {SpotifyContext, withSpotify} from '.../context'
+import {SpotifyContext, withSpotify} from '../context'
 // import styles from '../styles/Home.module.css'
 
 import { NoteConsumer } from '../context/spotifyUser';
@@ -108,6 +108,7 @@ class Home extends React.Component {
           {spotifyUser => spotifyUser ? <p>User</p> : <p>No User</p>}
           {/* move login into a condtional */}
           {/* <User data={spotifyuser} /> */}
+          </SpotifyContext.Consumer>
             <header>
               <h1>Randify</h1>
               <a href='https://randify-backend.herokuapp.com/login'>Login</a>
@@ -127,7 +128,6 @@ class Home extends React.Component {
                     {isLoading ? <p>Loading...</p> : <this.List />}
             </div>
         
-        </SpotifyContext.Consumer>
       </>
     )
   }

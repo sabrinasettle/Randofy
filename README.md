@@ -36,7 +36,7 @@ https://blog.maximeheckel.com/posts/data-fetching-with-next-js
 
 # To Do
 
-[] Make background of MainButton return a different color based on image. This may work https://alligator.io/react/extract-dominant-colors-from-images/ or https://lokeshdhakar.com/projects/color-thief/#api
+[] Make back ground of MainButton return a different color based on an image. This may work https://alligator.io/react/extract-dominant-colors-from-images/ or https://lokeshdhakar.com/projects/color-thief/#api
 
 [] Get context working
 

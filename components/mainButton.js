@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react'
 import SongCard from '../components/songCard'
 import styles from '../styles/MainButton.module.scss'
-
+import Color from 'color-thief-react'
 
 // onClick fetch data from backend and then use loader
 
@@ -15,6 +15,7 @@ class MainButton extends React.Component {
             // song: null,
             songData: null,
             type: this.props.type ? this.props.type : "track",
+            imgImg: null,
         };
         this.handleClick = this.handleClick.bind(this);
     }
@@ -69,6 +70,7 @@ class MainButton extends React.Component {
             this.setState({
                 isLoaded: true,
                 songData: response.data,
+                imgImg: response.data.album_image.url
             });
           })
           .catch(error => {
@@ -87,15 +89,46 @@ class MainButton extends React.Component {
     render() {
         // if type is track or album change the button text based on that
         let {songData, isLoaded} = this.state;
+        let img = this.state.imgImg
+        if (isLoaded)
+            console.log("img", img);
         return (
             // <input type="button" disabled={isSending} onClick={sendRequest} />
             <div className="section1">
                 <button className={styles.trackbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
-                <div className={styles.return}>
-                    {/* {songData === null ? <p>No song data</p> : <p>Song Data set</p> } */}
-                    {isLoaded ? <SongCard data={this.state.songData} /> : <h1 className={styles.instructfill}>Get a new track or album!</h1>}
+                {isLoaded ? 
+                    <Color src={img} crossOrigin="anonymous" format="hex">
+                    {({ data, loading }) => {
+                    // if (loading) return <Loading />;
+                    console.log("data", data)
+                    let color = data
+                    return (
+                            <div className={styles.return} style={{backgroundColor: `${color}`}}>
+                                {/* // <p style={{color: data}}>Predominant color: <strong>{data}</strong></p> */}
+                                <SongCard data={this.state.songData} /> 
+                            </div>
+                        );
+                    }}
+                </Color>
+                // <Color src={img} format="hex">
+                //     {({ data, loading}) => {
+                //         console.log("data", data)
+                //         console.log("src", img)
+                //         console.log(loading)
+                //     // <div className={styles.return} style={{background: {data}}}>
+                //     //     <p style={{color: {data}}}>This color is {data}</p>
+                //     {/* {songData === null ? <p>No song data</p> : <p>Song Data set</p> } */}
+                //     return (
+                //         <div>
+                //           Predominant color: <strong>{data}</strong>
+                //         </div>
+                //       );
+                //     // </div>
+                //     }}
+                // </Color>
+                : 
+                <h1 className={styles.instructfill}>Get a new track or album!</h1>}
                     {/* <SongCard data={this.state.songData} /> */}
-                </div>
                 
             </div>
         )
