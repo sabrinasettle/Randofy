@@ -5,6 +5,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   height: 100vh;
+  overscroll-behavior: none;
 }
 
 a {
@@ -14,4 +15,28 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+footer {
+  // position:absolute;
+    height: 50px;
+    background-color: red;
+    // bottom: 0px;
+    // left: 0px;
+    // right: 0px;
+    // margin-bottom: 0px
+}
+
+.section {
+  height: max-content;
+}
+
+.section-main {
+  height: calc(100vh - 110px);
+}
+
+h1.title {
+  font-family: 'Righteous', cursive;
+  letter-spacing: 0.1ch;
+  font-size: 45px;
 }

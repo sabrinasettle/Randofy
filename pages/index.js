@@ -33,7 +33,7 @@ class Home extends React.Component {
         code: code,
       }, () => {
         // callback gets from the backend the user data
-        axios.get(`https://randify-backend.herokuapp.com/token`, {
+        axios.get(`https://randofy-backend.herokuapp.com/token`, {
           code
         })
         .then(response => {
@@ -81,7 +81,8 @@ class Home extends React.Component {
         {this.state.songList.map((dataObj) => {
           return (
             <li className={liststyles.cards} key={dataObj.track_id}>
-              <p>Song: {dataObj.track_name} Artist: {dataObj.track_artist} </p>
+              <p>Song: {dataObj.track_name} </p>
+              <p>Artist: {dataObj.track_artist} </p>
               <a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a>
               <a>Add to Playlist</a>
             </li>
@@ -97,11 +98,17 @@ class Home extends React.Component {
     return (
       <>
         <Head>
+          <html lang='en-us' />
           <meta charSet="utf-8" />
-          <title>Randify: The random Spotify song Genetor</title>
-          <meta name="description" content="An example of a meta description." />
+          <title>randofy: The random Spotify song Generator</title>
+          <meta name="description" content="Generate a completely random Spotify song with a click!" />
           <link rel="preconnect" href="https://fonts.gstatic.com"></link>
           <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
+          {/* <link href="https://fonts.googleapis.com/css2?family=Bungee+Outline&display=swap" rel="stylesheet"></link> */}
+          {/* <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet"></link> */}
+          {/* I like the one below */}
+          {/* <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet"></link> */}
+          <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&display=swap" rel="stylesheet"></link>
         </Head>
         {/* Consumer start here? */}
         <SpotifyContext.Consumer>
@@ -110,8 +117,8 @@ class Home extends React.Component {
           {/* <User data={spotifyuser} /> */}
           </SpotifyContext.Consumer>
             <header>
-              <h1>Randify</h1>
-              <a href='https://randify-backend.herokuapp.com/login'>Login</a>
+              <h1 className="title">Randofy</h1>
+              <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
             </header>
             {/* <NoteConsumer>
               {({ state }) => (
@@ -124,9 +131,13 @@ class Home extends React.Component {
 
 
             <MainButton updateList={this.updateList}/>
-            <div className="section2">
+            <div className="section-main">
                     {isLoading ? <p>Loading...</p> : <this.List />}
             </div>
+            <footer>
+                <a>About</a>
+
+            </footer>
         
       </>
     )

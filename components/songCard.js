@@ -31,11 +31,11 @@ class SongCard extends React.Component {
                         />
                     </div>
                     <div className={`${styles.section} ${styles.info}`}>
-                        <p className={styles.title}> {this.props.data.track_name}</p>
+                        <h1 className={styles.title}> {this.props.data.track_name}</h1>
                         <p className={styles.artist}> {this.props.data.track_artist}</p>
                         <p className={styles.album}> {this.props.data.album_name}</p>
-                        <p>{this.props.data.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
-                        <p>Number of attempts to get this song: {this.props.data.attempts}</p>
+                        {/* <p className={styles.explicit}>{this.props.data.is_explicit ? 'Explicit' : 'Nonexplicit'}</p> */}
+                        {/* <p className={styles.attempt}>Number of attempts to get this song: {this.props.data.attempts}</p> */}
                     </div>
                     {/* <div className={`${styles.section} ${styles.spotify}`}>
                         <a href='https://spotify-randomizer-backend.herokuapp.com/login'>Listen On Spotify</a>

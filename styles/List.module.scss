@@ -3,8 +3,18 @@ ul.list {
     display: flex;
     flex-direction: column;
     height: fit-content;
+    // margin: 0;
+    padding: 0;
 }
 
 li.cards {
     background-color: aqua;
+    border-bottom: gray 1px solid;
+    padding-top: 1em;
+    padding-bottom: 2em;
+    &:hover{
+
+        background-color: blue;
+    }
 }
+

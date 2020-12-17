@@ -59,7 +59,7 @@ class MainButton extends React.Component {
     
     handleClick = () => {
         
-        axios.get(`https://randify-backend.herokuapp.com/random`)
+        axios.get(`https://randofy-backend.herokuapp.com/random`)
         .then(response => {
             console.log("response from axios", response.data);
             console.log("test", this.state.isLoaded)
@@ -94,42 +94,33 @@ class MainButton extends React.Component {
             console.log("img", img);
         return (
             // <input type="button" disabled={isSending} onClick={sendRequest} />
-            <div className="section1">
-                <button className={styles.trackbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
+            <div className="section">
                 {isLoaded ? 
-                    <Color src={img} crossOrigin="anonymous" format="hex">
-                    {({ data, loading }) => {
-                    // if (loading) return <Loading />;
-                    console.log("data", data)
-                    let color = data
-                    return (
-                            <div className={styles.return} style={{backgroundColor: `${color}`}}>
-                                {/* // <p style={{color: data}}>Predominant color: <strong>{data}</strong></p> */}
-                                <SongCard data={this.state.songData} /> 
-                            </div>
-                        );
-                    }}
-                </Color>
-                // <Color src={img} format="hex">
-                //     {({ data, loading}) => {
-                //         console.log("data", data)
-                //         console.log("src", img)
-                //         console.log(loading)
-                //     // <div className={styles.return} style={{background: {data}}}>
-                //     //     <p style={{color: {data}}}>This color is {data}</p>
-                //     {/* {songData === null ? <p>No song data</p> : <p>Song Data set</p> } */}
-                //     return (
-                //         <div>
-                //           Predominant color: <strong>{data}</strong>
-                //         </div>
-                //       );
-                //     // </div>
-                //     }}
-                // </Color>
+                    <div> 
+                        <Color src={img} crossOrigin="anonymous" format="hex">
+                            {({ data, loading }) => {
+                            // if (loading) return <Loading />;
+                            console.log("data", data)
+                            let color = data
+                            return (
+                                    <div className={styles.return} style={{backgroundColor: `${color}`}}>
+                                        {/* // <p style={{color: data}}>Predominant color: <strong>{data}</strong></p> */}
+                                        <SongCard data={this.state.songData} /> 
+                                    </div>
+                                );
+                            }}
+                        </Color>
+                        <button className={styles.trackbutton} onClick={this.handleClick}>Get another random song</button>
+                        {/* <button className={styles.trackbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button> */}
+
+                    </div>
                 : 
-                <h1 className={styles.instructfill}>Get a new track or album!</h1>}
+                <div className={styles.return}>
+                    <h1 className={styles.instructfill}>Get a new track!</h1>
+                    <button className={styles.newsongbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
                     {/* <SongCard data={this.state.songData} /> */}
-                
+                </div>
+                }
             </div>
         )
     }

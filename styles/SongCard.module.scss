@@ -14,6 +14,8 @@ $screen-xxl: 1600px;
 //     grid-gap: 1rem;
 // }
 
+
+
 .card {
     background-color: white;
     display: flex;
@@ -32,14 +34,17 @@ $screen-xxl: 1600px;
     justify-content: center;
     // width: min-content;
     &.info {
-        padding-left: 30px;
+        padding-left: 20px;
         // padding-right: 30px;
         // width: 50%;
         // margin-bottom: auto;
         max-width: 300px;
+        max-height: 300px;
+        height: 300px;
+        width: 300px;
     }
     &.albumcover {
-        background: blue;
+        // background: blue;
         // margin-bottom: auto;
     }
     &.spotify {
@@ -48,29 +53,58 @@ $screen-xxl: 1600px;
     }
 }
 
-p.title {
-    color: yellow;
+h1.title {
+    // color: yellow;
+    // font-family: 'Alfa Slab One', cursive;
+    // font-family: 'Poppins', sans-serif;
+    font-family: 'Rubik', sans-serif;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    font-weight: bolder;
+    font-size: 40px;
+    // font-style: italic;
+    
+    margin: 0;
+    padding: 0;
 }
 
 p.artist {
-    color: green;
+    // color: green;
+    font-family: 'Poppins', sans-serif;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    
+    margin: 0;
+    font-weight: bold;
+    font-size: 30px;
 }
 
 p.album {
-    color: blue;
+    // color: blue;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    
+    margin: 0;
+    font-size: 20px;
 
+}
+
+p.explicit {
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+p.attempt {
+    margin: 0;
+    font-size: 11px;
 }
 
 @media(max-width: 767px){
     .card {
         flex-direction: column;
+    }
+
+    .section {
+        &.info {
+            padding-left: 10px;
+        }
     }
 }
