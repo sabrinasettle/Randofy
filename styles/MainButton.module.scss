@@ -1,17 +1,27 @@
 button.newsongbutton {
-    color: red;
+    // color: red;
     font-size: 30px;
     margin-bottom: 20px;
     border-radius: 50px;
+    // padding-left: 3em;
+    margin-left: 3em;
+    &:hover {
+        background-color: blue;
+    }
 }
 
 h1.instructfill {
-    color: red;
+    // color: red;
+    text-align: center;
 }
 
 .return {
     padding-top: 30px;
     padding-bottom: 30px;
     min-height: 400px;
-    background-color: indigo;
+    // background-color: rgb(221, 158, 21);
+}
+
+.sectioncenter{
+    // padding-left: 3em;
 }

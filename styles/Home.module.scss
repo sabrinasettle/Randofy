@@ -1,0 +1,29 @@
+header.header {
+  display: inline;
+}
+
+h1.title {
+  font-family: 'Righteous', cursive;
+  letter-spacing: 0.1ch;
+  font-size: 45px;
+  padding-left: 1em;
+}
+
+a.link{
+  font-family: 'Righteous', cursive;
+  position:absolute;
+  top: 2.5em;
+  right: 4em;
+  font-size: 20px;
+  &:hover{
+    background-color: blueviolet;
+  }
+}
+
+.section {
+  height: max-content;
+}
+
+.sectionmain {
+  height: calc(100vh - 500px);
+}

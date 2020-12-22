@@ -42,6 +42,7 @@ $screen-xxl: 1600px;
         max-height: 300px;
         height: 300px;
         width: 300px;
+        text-overflow: ellipsis;
     }
     &.albumcover {
         // background: blue;
@@ -61,7 +62,9 @@ h1.title {
     word-wrap: break-word;
     overflow-wrap: break-word;
     font-weight: bolder;
-    font-size: 40px;
+    // font-size: 40px;
+    font-size: 2em;
+    text-overflow: ellipsis;
     // font-style: italic;
     
     margin: 0;
@@ -75,7 +78,9 @@ p.artist {
     overflow-wrap: break-word;
     margin: 0;
     font-weight: bold;
-    font-size: 30px;
+    // font-size: 30px;
+    font-size: 1em;
+    text-overflow: ellipsis;
 }
 
 p.album {

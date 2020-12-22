@@ -31,6 +31,7 @@ class SongCard extends React.Component {
                         />
                     </div>
                     <div className={`${styles.section} ${styles.info}`}>
+                        {/* https://stackoverflow.com/questions/52166900/fit-text-within-a-container-by-reducing-font-size-and-truncating-text */}
                         <h1 className={styles.title}> {this.props.data.track_name}</h1>
                         <p className={styles.artist}> {this.props.data.track_artist}</p>
                         <p className={styles.album}> {this.props.data.album_name}</p>

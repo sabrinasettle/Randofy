@@ -116,9 +116,11 @@ class MainButton extends React.Component {
                     </div>
                 : 
                 <div className={styles.return}>
-                    <h1 className={styles.instructfill}>Get a new track!</h1>
-                    <button className={styles.newsongbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
-                    {/* <SongCard data={this.state.songData} /> */}
+                    <div className={styles.sectioncenter}>
+                        <h1 className={styles.instructfill}>Get a new track!</h1>
+                        <button className={styles.newsongbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
+                        {/* <SongCard data={this.state.songData} /> */}
+                    </div>
                 </div>
                 }
             </div>

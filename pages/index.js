@@ -4,7 +4,7 @@ import MainButton from '../components/mainButton'
 import React from 'react';
 import liststyles from '../styles/List.module.scss'
 import {SpotifyContext, withSpotify} from '../context'
-// import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.scss'
 
 import { NoteConsumer } from '../context/spotifyUser';
 import axios from 'axios';
@@ -77,14 +77,20 @@ class Home extends React.Component {
     // transfer the li into a card???
     let htmlList = (
       <ul className={liststyles.list}>
-        <p>List of Songs</p>
+        
+        <div>
+          <p>Title Artist Is naughty? Attempts </p>
+        </div>
         {this.state.songList.map((dataObj) => {
           return (
             <li className={liststyles.cards} key={dataObj.track_id}>
               <p>Song: {dataObj.track_name} </p>
               <p>Artist: {dataObj.track_artist} </p>
+              <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
+              <p>Number of attempts to get this song: {dataObj.attempts}</p>
               <a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a>
               <a>Add to Playlist</a>
+              <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
             </li>
           )}
         )}
@@ -92,15 +98,19 @@ class Home extends React.Component {
     );
     return htmlList;
   }
+
+  Loading = () => {
+
+  }
   
   render() {
-    const {isLoading} = this.state
+    const {isLoading, songList} = this.state
     return (
       <>
         <Head>
           <html lang='en-us' />
           <meta charSet="utf-8" />
-          <title>randofy: The random Spotify song Generator</title>
+          <title>Randofy: The random Spotify song Generator</title>
           <meta name="description" content="Generate a completely random Spotify song with a click!" />
           <link rel="preconnect" href="https://fonts.gstatic.com"></link>
           <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
@@ -112,13 +122,14 @@ class Home extends React.Component {
         </Head>
         {/* Consumer start here? */}
         <SpotifyContext.Consumer>
-          {spotifyUser => spotifyUser ? <p>User</p> : <p>No User</p>}
+          {/* User / No User testing */}
+          {spotifyUser => spotifyUser ? <p></p> : <p></p>}
           {/* move login into a condtional */}
           {/* <User data={spotifyuser} /> */}
-          </SpotifyContext.Consumer>
-            <header>
-              <h1 className="title">Randofy</h1>
-              <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
+        </SpotifyContext.Consumer>
+            <header className={styles.header}>
+              <h1 className={styles.title}>Randofy</h1>
+              <a className={styles.link}>About</a>
             </header>
             {/* <NoteConsumer>
               {({ state }) => (
@@ -131,14 +142,12 @@ class Home extends React.Component {
 
 
             <MainButton updateList={this.updateList}/>
-            <div className="section-main">
-                    {isLoading ? <p>Loading...</p> : <this.List />}
+            <div className={styles.sectionmain}>
+                    { songList.length < 1 ? 
+                    <p>Click the button to get some songs!</p> 
+                    : 
+                    <this.List />}
             </div>
-            <footer>
-                <a>About</a>
-
-            </footer>
-        
       </>
     )
   }

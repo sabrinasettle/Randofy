@@ -36,7 +36,7 @@ https://blog.maximeheckel.com/posts/data-fetching-with-next-js
 
 # To Do
 
-[] Make back ground of MainButton return a different color based on an image. This may work https://alligator.io/react/extract-dominant-colors-from-images/ or https://lokeshdhakar.com/projects/color-thief/#api
+[x] Make back ground of MainButton return a different color based on an image. This may work https://alligator.io/react/extract-dominant-colors-from-images/ or https://lokeshdhakar.com/projects/color-thief/#api
 
 [] Get context working
 
@@ -47,3 +47,5 @@ https://blog.maximeheckel.com/posts/data-fetching-with-next-js
 [] Loading animation and logic. Watch this https://www.youtube.com/watch?v=0LstwqHt8G8
 
 [] add button disable while isLoaded is false in mainButton
+
+[] get text in different sizes depending on length of text in SongCard
