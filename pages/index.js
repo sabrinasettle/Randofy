@@ -16,44 +16,44 @@ class Home extends React.Component {
     this.state = {
       songList: [],
       isLoading: true,
-      code: null,
+      // code: null,
       // test: "butts",
     }
   }
 
   componentDidMount(){
     // gets params of code from the redirect on login
-    const params = new URLSearchParams(window.location.search.substring(1))
-    const code = params.get("code");
-    console.log("code from login is", code);
+    // const params = new URLSearchParams(window.location.search.substring(1))
+    // const code = params.get("code");
+    // console.log("code from login is", code);
     // original testing console.log
     // console.log("props location", this.props.location.search)
-    if (code) {
-      this.setState({
-        code: code,
-      }, () => {
-        // callback gets from the backend the user data
-        axios.get(`https://randofy-backend.herokuapp.com/token`, {
-          code
-        })
-        .then(response => {
-          // console.log(response);
-          // gets the user https://api.spotify.com/v1/me
-          // https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
-          // needs the access_token and token_type in the request
-          console.log("token", response.data.access_token)
-          console.log("expries_in", response.data.expires_in)
-          console.log("type", response.data.token_type)
-        })
-        .catch(error => {
-          console.log(error);
-        })
+    // if (code) {
+    //   this.setState({
+    //     code: code,
+    //   }, () => {
+    //     // callback gets from the backend the user data
+    //     axios.get(`https://randofy-backend.herokuapp.com/token`, {
+    //       code
+    //     })
+    //     .then(response => {
+    //       // console.log(response);
+    //       // gets the user https://api.spotify.com/v1/me
+    //       // https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
+    //       // needs the access_token and token_type in the request
+    //       console.log("token", response.data.access_token)
+    //       console.log("expries_in", response.data.expires_in)
+    //       console.log("type", response.data.token_type)
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     })
 
-        console.log("index state code is", this.state.code);
-        console.log(code)
-      });
-      // send to backend route to get the user data
-    }
+    //     console.log("index state code is", this.state.code);
+    //     console.log(code)
+    //   });
+    //   // send to backend route to get the user data
+    // }
   }
 
   updateList = (data) => {
@@ -123,7 +123,7 @@ class Home extends React.Component {
         {/* Consumer start here? */}
         <SpotifyContext.Consumer>
           {/* User / No User testing */}
-          {spotifyUser => spotifyUser ? <p></p> : <p></p>}
+          {User => User && User.spotifyUser ? <p>User</p> : <p>No User</p>}
           {/* move login into a condtional */}
           {/* <User data={spotifyuser} /> */}
         </SpotifyContext.Consumer>
