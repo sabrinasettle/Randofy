@@ -123,7 +123,11 @@ class Home extends React.Component {
         {/* Consumer start here? */}
         <SpotifyContext.Consumer>
           {/* User / No User testing */}
-          {User => User && User.spotifyUser ? <p>User</p> : <p>No User</p>}
+          {User => User && User.spotifyUser ? (<div>
+            <p>{User.spotifyUser.display_name}</p> 
+            <input type="button" onClick={() => User.destroySesh()} value="logout" ></input>
+          </div>)
+          : <p>No User</p>}
           {/* move login into a condtional */}
           {/* <User data={spotifyuser} /> */}
         </SpotifyContext.Consumer>

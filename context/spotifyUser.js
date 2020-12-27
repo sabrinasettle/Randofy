@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import SpotifyContext from './context'
+import SpotifyWebApi from 'spotify-web-api-js';
+
 import axios from 'axios';
 // first we will make a new context
 const withSpotify = Component => {
@@ -7,39 +9,69 @@ const withSpotify = Component => {
     constructor(props) {
       super(props);
       this.State = {
-        spotifyUser: JSON.parse(localStorage.getItem('spotifyUser')),
-        // me: JSON.parse(localStorage.getItem('me')),
+        spotifyUser: null,
       };
+      this.spotify = new SpotifyWebApi()
     };
 
-    createSession = () => {
+    // createSession = () => {
       
-    };
+    // };
     
     destroySession = () => {
       // clear the localStorage 
       // and the SpotifyUser object gets emptied
       // this is done by updating the state
       // will this work?? I mean does the user even get to login in everytime or is a straight apporal of the app in the first place?
-      localStorage.setItem('spotifyUser', {});
-      localStorage.setItem('code', null);
-      this.setState({
-        spotifyUser: {},
-      })
+      localStorage.removeItem('spotifyUser');
+      localStorage.removeItem('access_token');
+      this.setState({ spotifyUser: null })
     };
 
-    tokenCall = async (code, callback) => {
+    setAccessToken = (access_token) => this.spotify.setAccessToken(access_token);
+    getAccessToken = () => this.spotify.getAccessToken();
+
+    getMe = async () => await this.spotify.getMe().then(res => {
+      console.log(res)
+      this.setState({spotifyUser: res});
+      localStorage.setItem("spotifyUser", JSON.stringify(res));
+    })
+
+    tokenCall = async (code) => {
       // gets the user https://api.spotify.com/v1/me
       // https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
       // needs the access_token and token_type in the request
+
         return await axios.get(`https://randofy-backend.herokuapp.com/token`, {
-          code
+          params: {code}
         })
-        .then(response => {
+        .then(async response => {
           console.log("token", response.data.access_token)
           console.log("expries_in", response.data.expires_in)
           console.log("type", response.data.token_type)
-          callback(response.data);
+          // response.data
+          localStorage.setItem("access_token", response.data.access_token);
+          
+          this.setAccessToken(response.data.access_token);
+          console.log(response);
+          this.getMe();
+          // axios.get("https://api.spotify.com/v1/me", {
+          //   headers: {
+          //     'Authorization': `Bearer ${response.data.access_token}`
+          //   }
+          //   })
+          // .then(res => {
+          //   console.log("TELL ME", res)
+          //   this.setState({
+          //     spotifyUser: ReadableStream.data
+          //   },
+          //   () => {
+          //     console.log(this.state.spotifyUser);
+          //     localStorage.setItem('spotifyUser', res.data);
+          //   });
+          //   console.log('res', res);
+          // })
+          // .catch(err => console.error(err))
         })
         .catch(error => {
           console.log(error);
@@ -47,47 +79,37 @@ const withSpotify = Component => {
     };
 
     componentDidMount(){
-      // Check to see if the user exists then if not and have access_token then get the user
-      // let code = localStorage.getItem('code')
-      const tokenCallback = (data) => {
-        if (data.access_token){
-          axios.get(`https://api.spotify.com/v1/me`, `Authorization: Bearer ${data.access_token}`)
-          .then(response => {
-            this.setState({
-              spotifyUser: response.data
-            },
-            () => {
-              console.log(this.state.spotifyUser);
-              localStorage.setItem('spotifyUser', response.data);
-            });
-            console.log('res', response);
-          })
-          
+      if (this.getAccessToken() === null){
+        const access_token = localStorage.getItem("access_token");
+        if (access_token){
+          this.setAccessToken(access_token);
         }
-      };
+      }
 
-      // create listener
-      if (this.state.spotifyUser){
+      let spotuser = localStorage.getItem("spotifyUser")
+      if (spotuser){
+        console.log(typeof spotuser)
+        if (typeof spotuser === "string"){
+          spotuser = JSON.parse(spotuser);
+        }
+        console.log("has storage", spotuser)
+        this.setState({
+          spotifyUser: spotuser,
+        }, () => location.replace(window.location.host))
         // we have the user or 'me'
       }
       else {
-        let code = localStorage.getItem('code');
-        if(code){
-          // get the spotifyUser
-          // the call to /token using code as params
-          this.tokenCall(code, tokenCallback);
-          // make an auth request to Spotify
-
-        }
-        else {
+        console.log("does no have storage")
           const params = new URLSearchParams(window.location.search.substring(1))
-          code = params.get("code");
+          let code = params.get("code");
           console.log("from SPUSER", code)
           localStorage.setItem('code', code);
           // get the spotifyUser with the code
-          this.tokenCall(code, tokenCallback)
+          if (code){
+            this.tokenCall(code);
+          }
 
-        }
+        
       }
 
     };
