@@ -1,15 +1,58 @@
-.trackbutton {
-    color: red;
-    font-size: 40px;
-    margin-bottom: 20px;
+button.newsongbutton {
+    font-family: 'Rubik', sans-serif;
+    font-size: 25px;
+    border-radius: 50%;
+    height: 250px;
+    padding: 20px;
+    border: none;
+    &:hover {
+        background-color: blue;
+    }
+    &:focus {
+        outline: 0;
+    }
+}
+
+button.trackbutton {
+    font-family: 'Rubik', sans-serif;
+    font-size: 30px;
+    border: none;
+    &:hover {
+        border: none;
+        background-color: blue;
+    }
 }
 
 h1.instructfill {
-    color: red;
+    font-family: 'Rubik', sans-serif;
+    // color: red;
+    // text-align: center;
 }
 
 .return {
+    
+    min-height: 380px;
+    
+    // background-color: rgb(221, 158, 21);
+}
+
+.buttonsection{
+    width: 100%;
+    display:inline-block;
+    text-align:center;
+    padding-top: 50px;
+    // padding-left: 3em;
+}
+
+.cardsection {
+    width: 100%;
     padding-top: 30px;
-    min-height: 400px;
-    background-color: indigo;
+    padding-bottom: 30px;
+}
+
+.sectioncenter {
+    // background-color: rgb(221, 158, 21);
+    text-align: center;
+    height: 380px;
+    padding: auto;
 }

@@ -5,6 +5,12 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   height: 100vh;
+  overscroll-behavior: none;
+  background-color: rgb(34, 34, 34);
+  color: white;
+
+  // background-color: rgb(250, 246, 231);
+  // background-color: gray;
 }
 
 a {
@@ -15,3 +21,14 @@ a {
 * {
   box-sizing: border-box;
 }
+
+footer {
+  // position:absolute;
+    height: 50px;
+    background-color: red;
+    bottom: 0px;
+    // left: 0px;
+    // right: 0px;
+    // margin-bottom: 0px
+}
+
