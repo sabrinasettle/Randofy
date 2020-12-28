@@ -96,28 +96,28 @@ class MainButton extends React.Component {
             // <input type="button" disabled={isSending} onClick={sendRequest} />
             <div className="section">
                 {isLoaded ? 
-                    <div> 
+                    <div className={styles.return}> 
                         <Color src={img} crossOrigin="anonymous" format="hex">
                             {({ data, loading }) => {
                             // if (loading) return <Loading />;
                             console.log("data", data)
                             let color = data
                             return (
-                                    <div className={styles.return} style={{backgroundColor: `${color}`}}>
+                                <div className={styles.cardsection} style={{backgroundColor: `${color}`}}>
                                         {/* // <p style={{color: data}}>Predominant color: <strong>{data}</strong></p> */}
                                         <SongCard data={this.state.songData} /> 
                                     </div>
                                 );
                             }}
                         </Color>
-                        <button className={styles.trackbutton} onClick={this.handleClick}>Get another random song</button>
-                        {/* <button className={styles.trackbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button> */}
-
+                        <div className={styles.buttonsection}>
+                            <button className={styles.trackbutton} onClick={this.handleClick}>Get another random song</button>
+                        </div>
                     </div>
                 : 
                 <div className={styles.return}>
                     <div className={styles.sectioncenter}>
-                        <h1 className={styles.instructfill}>Get a new track!</h1>
+                        <h1 className={styles.instructfill}>Click the button to get a random song!</h1>
                         <button className={styles.newsongbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
                         {/* <SongCard data={this.state.songData} /> */}
                     </div>

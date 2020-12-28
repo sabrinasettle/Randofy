@@ -60,10 +60,10 @@ class Home extends React.Component {
     this.setState({
       isLoading: true
     })
-    let temparr = this.state.songList
-    temparr.push(data)
+    let temp_arr = this.state.songList
+    temp_arr.push(data)
     this.setState({
-      songList: temparr,
+      songList: temp_arr,
       isLoading: false,
     });
     const { songList } = this.state;
@@ -77,20 +77,24 @@ class Home extends React.Component {
     // transfer the li into a card???
     let htmlList = (
       <ul className={liststyles.list}>
-        
-        <div>
-          <p>Title Artist Is naughty? Attempts </p>
-        </div>
-        {this.state.songList.map((dataObj) => {
+        {this.state.songList.map((dataObj, index) => {
           return (
             <li className={liststyles.cards} key={dataObj.track_id}>
-              <p>Song: {dataObj.track_name} </p>
-              <p>Artist: {dataObj.track_artist} </p>
-              <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
-              <p>Number of attempts to get this song: {dataObj.attempts}</p>
-              <a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a>
-              <a>Add to Playlist</a>
-              <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
+              <div className={liststyles.fbcard}>
+
+                <div className={liststyles.index}>
+                  {index + 1}
+                </div>
+                <div className={liststyles.span}>
+                <p>Song: {dataObj.track_name} </p>
+                <p>Artist: {dataObj.track_artist} </p>
+                <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
+                <p>Number of attempts to get this song: {dataObj.attempts}</p>
+                <a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a>
+                <a>Add to Playlist</a>
+                <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
+                </div>
+              </div>
             </li>
           )}
         )}
@@ -144,10 +148,13 @@ class Home extends React.Component {
             <MainButton updateList={this.updateList}/>
             <div className={styles.sectionmain}>
                     { songList.length < 1 ? 
-                    <p>Click the button to get some songs!</p> 
+                    <p></p> 
                     : 
                     <this.List />}
             </div>
+            {/* <footer> */}
+              {/* About */}
+            {/* </footer> */}
       </>
     )
   }
