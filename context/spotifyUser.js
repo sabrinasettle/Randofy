@@ -66,11 +66,18 @@ const withSpotify = Component => {
         this.setState({ playlist });
         localStorage.setItem("playlist", JSON.stringify(playlist))
       })
-      
+    }
+
+    addToPlaylist = async (song_id) => {
+      await this.checkTime();
+
     }
 
     checkPlaylist = async () => {
       await this.checkTime();
+
+      // make this part moduler so that you can search thru all of a users playlists to see -
+      // if the playlist exists, must be repeated until offset >= response.data.total - 50 
       return await axios.get("https://api.spotify.com/v1/me/playlists?limit=50", {
         headers: {
           'Authorization': `Bearer ${this.state.auth.access_token}`
@@ -89,6 +96,9 @@ const withSpotify = Component => {
           this.getPlaylist(filtered[0].id)
         }
         else {
+          // repeat unless offset is > response.data.total - 50 
+
+          // then create playlist as last resort.
           this.createPlaylist()
         }
         //filter through playlists to find randofy, if no randofy playlist, create it.
@@ -197,7 +207,7 @@ const withSpotify = Component => {
       if (playlist){
         this.setState({ playlist });
       }
-      
+
       let spotuser = localStorage.getItem("spotifyUser")
       if (spotuser){
         console.log(typeof spotuser)
