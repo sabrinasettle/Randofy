@@ -50,14 +50,47 @@ const withSpotify = Component => {
       })
     };
 
-    checkPlaylist = async () => {
+    getPlaylist = async (playlist_id) => {
       await this.checkTime();
-      return await axios.get("https://api.spotify.com/v1/me/playlists", `limit=50&offset=0`, {
+      return await axios.get(`https://api.spotify.com/v1/playlists/${playlist_id}`, {
         headers: {
           'Authorization': `Bearer ${this.state.auth.access_token}`
         }
       })
       .then(response => {
+        const playlist = {
+          id: response.data.id,
+          tracks: response.data.tracks.items,
+          href: response.data.href
+        }
+        this.setState({ playlist });
+        localStorage.setItem("playlist", JSON.stringify(playlist))
+      })
+      
+    }
+
+    checkPlaylist = async () => {
+      await this.checkTime();
+      return await axios.get("https://api.spotify.com/v1/me/playlists?limit=50", {
+        headers: {
+          'Authorization': `Bearer ${this.state.auth.access_token}`
+        }
+      })
+      .then(response => {
+        const items = response.data.items;
+        const filtered = items.filter((item) => {
+          if (item.name === "Randofy"){
+            return item.id
+          }
+        })
+        if (filtered.length){
+          console.log(filtered[0])
+          //get playlist and set state.
+          this.getPlaylist(filtered[0].id)
+        }
+        else {
+          this.createPlaylist()
+        }
         //filter through playlists to find randofy, if no randofy playlist, create it.
         //set playlist object in state. pass as prop to class. 
       })
@@ -153,14 +186,18 @@ const withSpotify = Component => {
         })
     };
 
-    componentDidMount(){
-      if (this.state.auth === null){
-        const auth = JSON.parse(localStorage.getItem("auth"));
-        if (auth){
-          this.setState({ auth });
-        }
+    async componentDidMount(){
+      // check to see if last session is valid
+      const auth = JSON.parse(localStorage.getItem("auth"));
+      if (auth){
+        this.setState({ auth });
       }
 
+      const playlist = JSON.parse(localStorage.getItem("playlist"));
+      if (playlist){
+        this.setState({ playlist });
+      }
+      
       let spotuser = localStorage.getItem("spotifyUser")
       if (spotuser){
         console.log(typeof spotuser)
@@ -170,6 +207,8 @@ const withSpotify = Component => {
         console.log("has storage", spotuser)
         this.setState({
           spotifyUser: spotuser,
+        }, () => {
+          this.checkPlaylist();
         })
         // we have the user or 'me'
       }
@@ -179,7 +218,8 @@ const withSpotify = Component => {
         let code = params.get("code");
         // get the spotifyUser with the code
         if (code){
-          this.tokenCall(code);
+          await this.tokenCall(code);
+          await this.checkPlaylist();
         }
       }
     };
