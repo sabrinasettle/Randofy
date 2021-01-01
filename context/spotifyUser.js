@@ -3,15 +3,21 @@ import SpotifyContext from './context'
 // import SpotifyWebApi from 'spotify-web-api-js';
 
 import axios from 'axios';
+
+
+const DEFAULT_STATE = {
+  spotifyUser: null,
+  auth: null,
+  playlist: null,
+  id_list: null,
+}
 // first we will make a new context
 const withSpotify = Component => {
   class WithSpotify extends Component {
     constructor(props) {
       super(props);
       this.State = {
-        spotifyUser: null,
-        auth: null,
-        playlist: null
+        ...DEFAULT_STATE
       };
       // this.spotify = new SpotifyWebApi()
     };
@@ -29,9 +35,6 @@ const withSpotify = Component => {
         }
       })
       .then(response => {
-        // response.data.id
-        // response.data.tracks.items
-        // response.data.href
         const playlist = {
           id: response.data.id,
           tracks: response.data.tracks.items,
@@ -68,17 +71,68 @@ const withSpotify = Component => {
       })
     }
 
+    getPlaylistItems = async () => {
+      await this.checkTime();
+
+      let id_list = [];
+      this.state.playlist.tracks.map(track => {
+        return id_list.push(track.track.id);
+      })
+      console.log(id_list)
+      this.setState({ id_list });
+
+    }
+
     addToPlaylist = async (song_id) => {
       await this.checkTime();
-      console.log("adding ", song_id, "with ", this.state.auth.access_token)
+
+      if (this.state.id_list.includes(song_id)){
+        console.log("already In Playlist")
+        return (0)
+      }
       const song_uri = "spotify:track:" + song_id;
-      await axios.post(`https://api.spotify.com/v1/playlists/${this.state.playlist.id}/tracks?uris=${song_uri}`,{
+      await axios.post(`https://api.spotify.com/v1/playlists/${this.state.playlist.id}/tracks?uris=${song_uri}`,{}, {
         headers: {
           "Accept": "application/json",
           'Authorization': `Bearer ${this.state.auth.access_token}`,
-          'Content-Type': 'application/json'
         }
       })
+      .then( () => {
+        let id_list = this.state.id_list ? this.state.id_list : [];
+        id_list.push(song_id);
+        this.setState({ id_list });
+        return 1 // update song list with new song_id
+      })
+      .catch(err => console.error(err)); // let the user know that the song could not be added
+    }
+
+    removeFromPlaylist = async (song_id) => {
+      await this.checkTime();
+
+      if (!this.state.id_list.includes(song_id)){
+        console.log("already removed")
+        return (0)
+      }
+      const song_uri = "spotify:track:" + song_id;
+      await axios.delete(`https://api.spotify.com/v1/playlists/${this.state.playlist.id}/tracks`,  {
+        headers: {
+          'Authorization': `Bearer ${this.state.auth.access_token}`,
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        data: {
+          tracks: [{ uri: song_uri }]
+        }
+      })
+      .then( () => {
+        let id_list = this.state.id_list;
+        const index = id_list.indexOf(song_id);
+
+        id_list.splice(index, 1);
+        this.setState({ id_list });
+        return 1 // update song list with new song_id
+      })
+      .catch(err => console.error(err)); // let the user know that the song could not be added
     }
 
     checkPlaylist = async () => {
@@ -105,6 +159,7 @@ const withSpotify = Component => {
             console.log(filtered[0])
             //get playlist and set state.
             this.getPlaylist(filtered[0].id)
+            .then(() =>  this.getPlaylistItems() )
           }
           else if (offset + 50 >= total){
             // repeat unless offset is > response.data.total - 50 
@@ -174,8 +229,8 @@ const withSpotify = Component => {
     checkTime = async () => {
       if (this.state.auth && new Date() > this.state.auth.expiresAt){
         console.log("sending refresh token to backend...")
-        // return await axios.get(`https://randofy-backend.herokuapp.com/token/refresh`, {
-        return await axios.get(`http://localhost:3000/token/refresh`, {
+        return await axios.get(`https://randofy-backend.herokuapp.com/token/refresh`, {
+        // return await axios.get(`http://localhost:3000/token/refresh`, {
           params: {refresh_token: this.state.auth.refresh_token}
         })
         .then(response => {
@@ -208,7 +263,7 @@ const withSpotify = Component => {
           localStorage.setItem('spotifyUser', JSON.stringify(response.data));
           console.log('res', response);
           setTimeout(() => {
-            window.location.replace(window.location.host.includes("localhost") ? "http://" : "https://" +  window.location.host)
+            window.location.replace(window.location.host.includes("localhost") ? "http://" +  window.location.host : "https://" +  window.location.host)
           }, 500);
       })
       .catch(err => console.error(err))
@@ -249,7 +304,7 @@ const withSpotify = Component => {
 
       const playlist = JSON.parse(localStorage.getItem("playlist"));
       if (playlist){
-        this.setState({ playlist });
+        this.setState({ playlist }, () => this.getPlaylistItems() );
       }
 
       let spotuser = localStorage.getItem("spotifyUser")
@@ -289,6 +344,8 @@ const withSpotify = Component => {
           spotifyUser: this.state.spotifyUser,
            destroySesh: this.destroySession,
            addToPlaylist: this.addToPlaylist,
+           removeFromPlaylist: this.removeFromPlaylist,
+           id_list: this.state.id_list,
           }}> 
           <Component {...this.props} />
         </SpotifyContext.Provider>

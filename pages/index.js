@@ -79,9 +79,8 @@ class Home extends React.Component {
       <ul className={liststyles.list}>
         
         <div>
-          <p>Title Artist Is naughty? Attempts </p>
         </div>
-        {this.state.songList.map((dataObj) => {
+        {this.state.songList.reverse().map((dataObj) => {
           return (
             <li className={liststyles.cards} key={dataObj.track_id}>
               <p>Song: {dataObj.track_name} </p>
@@ -89,8 +88,10 @@ class Home extends React.Component {
               <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
               <p>Number of attempts to get this song: {dataObj.attempts}</p>
               <p><a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a></p>
-              {User ?  <input onClick={() => User.addToPlaylist(dataObj.track_id)}value="add to playlist"></input> 
-              : <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
+              {User && User.id_list ? !User.id_list.includes(dataObj.track_id) 
+              ?  <input type="button" onClick={() => User.addToPlaylist(dataObj.track_id)}value="add to playlist" readOnly={true} ></input> 
+              :  <input type="button" onClick={() => User.removeFromPlaylist(dataObj.track_id)}value="Remove from playlist" readOnly={true} ></input>
+              :  <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
             }
             </li>
           )}
