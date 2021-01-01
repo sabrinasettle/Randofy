@@ -72,7 +72,7 @@ class Home extends React.Component {
     console.log("localStorage", list);
   }
 
-  List = () => {
+  List = ({User}) => {
     const openSpot = 'https://open.spotify.com/track/'
     // transfer the li into a card???
     let htmlList = (
@@ -88,9 +88,10 @@ class Home extends React.Component {
               <p>Artist: {dataObj.track_artist} </p>
               <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
               <p>Number of attempts to get this song: {dataObj.attempts}</p>
-              <a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a>
-              <a>Add to Playlist</a>
-              <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
+              <p><a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a></p>
+              {User ?  <input onClick={() => User.addToPlaylist(dataObj.track_id)}value="add to playlist"></input> 
+              : <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
+            }
             </li>
           )}
         )}
@@ -123,18 +124,51 @@ class Home extends React.Component {
         {/* Consumer start here? */}
         <SpotifyContext.Consumer>
           {/* User / No User testing */}
-          {User => User && User.spotifyUser ? (<div>
+          {User => User && User.spotifyUser ? (
+          <div>
             <p>{User.spotifyUser.display_name}</p> 
             <input type="button" onClick={() => User.destroySesh()} value="logout" ></input>
-          </div>)
-          : <p>No User</p>}
-          {/* move login into a condtional */}
-          {/* <User data={spotifyuser} /> */}
-        </SpotifyContext.Consumer>
             <header className={styles.header}>
               <h1 className={styles.title}>Randofy</h1>
               <a className={styles.link}>About</a>
             </header>
+            <MainButton updateList={this.updateList}/>
+            <div className={styles.sectionmain}>
+              { songList.length < 1 ? 
+              <p>Click the button to get some songs!</p> 
+              : 
+              <this.List User={User} />}
+            </div>
+          </div>
+          ) : 
+          <div>
+            <p>No User</p>
+            <header className={styles.header}>
+              <h1 className={styles.title}>Randofy</h1>
+              <a className={styles.link}>About</a>
+            </header>
+            <MainButton updateList={this.updateList}/>
+            <div className={styles.sectionmain}>
+                    { songList.length < 1 ? 
+                    <p>Click the button to get some songs!</p> 
+                    : 
+                    <this.List />}
+            </div>
+          </div> }
+          {/* move login into a condtional */}
+          {/* <User data={spotifyuser} /> */}
+        </SpotifyContext.Consumer>
+            {/* <header className={styles.header}>
+              <h1 className={styles.title}>Randofy</h1>
+              <a className={styles.link}>About</a>
+            </header>
+            <MainButton updateList={this.updateList}/>
+            <div className={styles.sectionmain}>
+                    { songList.length < 1 ? 
+                    <p>Click the button to get some songs!</p> 
+                    : 
+                    <this.List />}
+            </div> */}
             {/* <NoteConsumer>
               {({ state }) => (
                 <p>
@@ -145,13 +179,6 @@ class Home extends React.Component {
 
 
 
-            <MainButton updateList={this.updateList}/>
-            <div className={styles.sectionmain}>
-                    { songList.length < 1 ? 
-                    <p>Click the button to get some songs!</p> 
-                    : 
-                    <this.List />}
-            </div>
       </>
     )
   }

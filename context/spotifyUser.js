@@ -70,40 +70,83 @@ const withSpotify = Component => {
 
     addToPlaylist = async (song_id) => {
       await this.checkTime();
-
+      console.log("adding ", song_id, "with ", this.state.auth.access_token)
+      const song_uri = "spotify:track:" + song_id;
+      await axios.post(`https://api.spotify.com/v1/playlists/${this.state.playlist.id}/tracks?uris=${song_uri}`,{
+        headers: {
+          "Accept": "application/json",
+          'Authorization': `Bearer ${this.state.auth.access_token}`,
+          'Content-Type': 'application/json'
+        }
+      })
     }
 
     checkPlaylist = async () => {
       await this.checkTime();
 
-      // make this part moduler so that you can search thru all of a users playlists to see -
-      // if the playlist exists, must be repeated until offset >= response.data.total - 50 
-      return await axios.get("https://api.spotify.com/v1/me/playlists?limit=50", {
-        headers: {
+      const doCheckForPlaylist = async (offset, total) => {
+        return await axios.get(`https://api.spotify.com/v1/me/playlists?limit=50&offset=${offset}`, {
+         headers: {
           'Authorization': `Bearer ${this.state.auth.access_token}`
         }
-      })
-      .then(response => {
-        const items = response.data.items;
-        const filtered = items.filter((item) => {
-          if (item.name === "Randofy"){
-            return item.id
+       })
+        .then(response => {
+          const items = response.data.items;
+          if (total === -1){
+            total = response.data.total;
           }
-        })
-        if (filtered.length){
-          console.log(filtered[0])
-          //get playlist and set state.
-          this.getPlaylist(filtered[0].id)
-        }
-        else {
-          // repeat unless offset is > response.data.total - 50 
 
-          // then create playlist as last resort.
-          this.createPlaylist()
-        }
-        //filter through playlists to find randofy, if no randofy playlist, create it.
-        //set playlist object in state. pass as prop to class. 
-      })
+          const filtered = items.filter((item) => {
+            if (item.name === "Randofy"){
+              return item.id
+            }
+          })
+          if (filtered.length){
+            console.log(filtered[0])
+            //get playlist and set state.
+            this.getPlaylist(filtered[0].id)
+          }
+          else if (offset + 50 >= total){
+            // repeat unless offset is > response.data.total - 50 
+            // then create playlist as last resort.
+            this.createPlaylist()
+          }
+          else{
+            doCheckForPlaylist(offset + 50, total);
+          }
+          //filter through playlists to find randofy, if no randofy playlist, create it.
+          //set playlist object in state. pass as prop to class. 
+        })
+      }
+      doCheckForPlaylist(0, -1);
+      // make this part moduler so that you can search thru all of a users playlists to see -
+      // if the playlist exists, must be repeated until offset >= response.data.total - 50 
+      // return await axios.get("https://api.spotify.com/v1/me/playlists?limit=50", {
+      //   headers: {
+      //     'Authorization': `Bearer ${this.state.auth.access_token}`
+      //   }
+      // })
+      // .then(response => {
+      //   const items = response.data.items;
+      //   const filtered = items.filter((item) => {
+      //     if (item.name === "Randofy"){
+      //       return item.id
+      //     }
+      //   })
+      //   if (filtered.length){
+      //     console.log(filtered[0])
+      //     //get playlist and set state.
+      //     this.getPlaylist(filtered[0].id)
+      //   }
+      //   else {
+      //     // repeat unless offset is > response.data.total - 50 
+
+      //     // then create playlist as last resort.
+      //     this.createPlaylist()
+      //   }
+      //   //filter through playlists to find randofy, if no randofy playlist, create it.
+      //   //set playlist object in state. pass as prop to class. 
+      // })
       //
     }
 
@@ -131,7 +174,8 @@ const withSpotify = Component => {
     checkTime = async () => {
       if (this.state.auth && new Date() > this.state.auth.expiresAt){
         console.log("sending refresh token to backend...")
-        return await axios.get(`https://randofy-backend.herokuapp.com/token/refresh`, {
+        // return await axios.get(`https://randofy-backend.herokuapp.com/token/refresh`, {
+        return await axios.get(`http://localhost:3000/token/refresh`, {
           params: {refresh_token: this.state.auth.refresh_token}
         })
         .then(response => {
@@ -164,7 +208,7 @@ const withSpotify = Component => {
           localStorage.setItem('spotifyUser', JSON.stringify(response.data));
           console.log('res', response);
           setTimeout(() => {
-            location.replace(window.location.host.includes("localhost") ? "http://" : "https://" +  window.location.host)
+            window.location.replace(window.location.host.includes("localhost") ? "http://" : "https://" +  window.location.host)
           }, 500);
       })
       .catch(err => console.error(err))
@@ -241,8 +285,12 @@ const withSpotify = Component => {
 
     render(){
       return(
-        <SpotifyContext.Provider value={{spotifyUser: this.state.spotifyUser, destroySesh: this.destroySession}}> 
-          <Component {...this.props}/>
+        <SpotifyContext.Provider value={{
+          spotifyUser: this.state.spotifyUser,
+           destroySesh: this.destroySession,
+           addToPlaylist: this.addToPlaylist,
+          }}> 
+          <Component {...this.props} />
         </SpotifyContext.Provider>
       );
     };
