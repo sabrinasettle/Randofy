@@ -1,5 +1,5 @@
 header.header {
-  display: inline;
+  display: block;
 }
 
 h1.title {
@@ -7,14 +7,22 @@ h1.title {
   letter-spacing: 0.1ch;
   font-size: 45px;
   padding-left: 1em;
+  display: inline-block;
+}
+
+nav.mainnav {
+  float: right;
+  padding-right: 20px;
+  text-align: center;
 }
 
 a.link{
   font-family: 'Righteous', cursive;
-  position:absolute;
-  top: 2.5em;
-  right: 4em;
+  // position:absolute;
+  // top: 2.5em;
+  // right: 4em;
   font-size: 20px;
+  padding: 10px;
   &:hover{
     background-color: blueviolet;
   }

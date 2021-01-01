@@ -1,10 +1,16 @@
 import Head from 'next/head'
-import SongCard from '../components/songCard'
 import MainButton from '../components/mainButton'
 import React from 'react';
 import liststyles from '../styles/List.module.scss'
 import {SpotifyContext, withSpotify} from '../context'
 import styles from '../styles/Home.module.scss'
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import RadioIcon from '@material-ui/icons/Radio';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import Button from '@material-ui/core/Button';
+
 
 import { NoteConsumer } from '../context/spotifyUser';
 import axios from 'axios';
@@ -90,9 +96,17 @@ class Home extends React.Component {
                 <p>Artist: {dataObj.track_artist} </p>
                 <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
                 <p>Number of attempts to get this song: {dataObj.attempts}</p>
-                <a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a>
-                <a>Add to Playlist</a>
-                <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
+                {/* <ul>
+                  <li> */}
+                    <a href={openSpot + dataObj.track_id} target="_blank"><i><PlayCircleOutlineIcon /></i>Open Song </a>
+
+                  {/* </li>
+                  <li> */}
+                    <a><i><ControlPointIcon/></i>Add to Playlist</a>
+
+                  {/* </li>
+                  
+                </ul> */}
                 </div>
               </div>
             </li>
@@ -133,7 +147,10 @@ class Home extends React.Component {
         </SpotifyContext.Consumer>
             <header className={styles.header}>
               <h1 className={styles.title}>Randofy</h1>
-              <a className={styles.link}>About</a>
+              <nav className={styles.mainnav}>
+                <a className={styles.link} href='https://randofy-backend.herokuapp.com/login'><i><ExitToAppIcon/></i>Login</a>
+                <a className={styles.link}>About</a>
+              </nav>
             </header>
             {/* <NoteConsumer>
               {({ state }) => (

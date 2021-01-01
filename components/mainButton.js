@@ -90,6 +90,13 @@ class MainButton extends React.Component {
         // if type is track or album change the button text based on that
         let {songData, isLoaded} = this.state;
         let img = this.state.imgImg
+
+
+        const text = 'Click the button to get a random song!';
+        const classFont = '';
+        const direction = 1;
+        const arc = 150;
+
         if (isLoaded)
             console.log("img", img);
         return (
@@ -117,6 +124,7 @@ class MainButton extends React.Component {
                 : 
                 <div className={styles.return}>
                     <div className={styles.sectioncenter}>
+                    
                         <h1 className={styles.instructfill}>Click the button to get a random song!</h1>
                         <button className={styles.newsongbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
                         {/* <SongCard data={this.state.songData} /> */}
