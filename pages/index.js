@@ -78,7 +78,7 @@ class Home extends React.Component {
     console.log("localStorage", list);
   }
 
-  List = () => {
+  List = ({spotifyUser}) => {
     const openSpot = 'https://open.spotify.com/track/'
     // transfer the li into a card???
     let htmlList = (
@@ -96,17 +96,17 @@ class Home extends React.Component {
                 <p>Artist: {dataObj.track_artist} </p>
                 <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
                 <p>Number of attempts to get this song: {dataObj.attempts}</p>
-                {/* <ul>
-                  <li> */}
-                    <a href={openSpot + dataObj.track_id} target="_blank"><i><PlayCircleOutlineIcon /></i>Open Song </a>
+               
+                  <a href={openSpot + dataObj.track_id} target="_blank"><i><PlayCircleOutlineIcon /></i>Open Song </a>
 
-                  {/* </li>
-                  <li> */}
-                    <a><i><ControlPointIcon/></i>Add to Playlist</a>
+                  { spotifyUser && spotifyUser.songIds ? !spotifyUser.songIds.includes(dataObj.track_id)
+                    ? <button onClick={() => spotifyUser.addToPlaylist(dataObj.track_id)}><i><ControlPointIcon/></i>Add to Playlist</button> 
+                    : <button onclick={() => spotifyUser.removeFromPlaylist(dataObj.track_id)}><i><ControlPointIcon/></i>Remove from Playlist</button>
+                  : <div></div>
+                  }
+                  {/* <button><i><ControlPointIcon/></i>Add to Playlist</button> */}
 
-                  {/* </li>
-                  
-                </ul> */}
+                 
                 </div>
               </div>
             </li>
@@ -141,24 +141,43 @@ class Home extends React.Component {
         {/* Consumer start here? */}
         <SpotifyContext.Consumer>
           {/* User / No User testing */}
-          {spotifyUser => spotifyUser ? <p></p> : <p></p>}
-          {/* move login into a condtional */}
-          {/* <User data={spotifyuser} /> */}
-        </SpotifyContext.Consumer>
+          {spotifyUser => spotifyUser && spotifyUser.spotifyUser ? 
+          (<div>
+            <p>{spotifyUser.spotifyUser.display_name}</p>
+            <button onClick={() => spotifyUser.destroySesh()}>Logout</button>
             <header className={styles.header}>
-              <h1 className={styles.title}>Randofy</h1>
-              <nav className={styles.mainnav}>
-                <a className={styles.link} href='https://randofy-backend.herokuapp.com/login'><i><ExitToAppIcon/></i>Login</a>
-                <a className={styles.link}>About</a>
-              </nav>
-            </header>
-            {/* <NoteConsumer>
-              {({ state }) => (
-                <p>
-                hi I'm {state.spotifyUser}
-                </p>
-                )}
-              </NoteConsumer> */}
+          <h1 className={styles.title}>Randofy</h1>
+          <nav className={styles.mainnav}>
+            <a className={styles.link} href='https://randofy-backend.herokuapp.com/login'><i><ExitToAppIcon/></i>Login</a>
+            <a className={styles.link}>About</a>
+          </nav>
+        </header>
+
+
+
+            <MainButton updateList={this.updateList}/>
+            <div className={styles.sectionmain}>
+                    { songList.length < 1 ? 
+                    <p></p> 
+                    : 
+                    <this.List spotifyUser={spotifyUser} />}
+            </div>
+
+
+
+            </div>) 
+          : (<div>
+            <p>No User</p>
+
+
+
+            <header className={styles.header}>
+          <h1 className={styles.title}>Randofy</h1>
+          <nav className={styles.mainnav}>
+            <a className={styles.link} href='https://randofy-backend.herokuapp.com/login'><i><ExitToAppIcon/></i>Login</a>
+            <a className={styles.link}>About</a>
+          </nav>
+        </header>
 
 
 
@@ -169,9 +188,10 @@ class Home extends React.Component {
                     : 
                     <this.List />}
             </div>
-            {/* <footer> */}
-              {/* About */}
-            {/* </footer> */}
+            </div>)
+          }
+          
+        </SpotifyContext.Consumer>
       </>
     )
   }
