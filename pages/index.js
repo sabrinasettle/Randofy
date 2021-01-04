@@ -10,6 +10,7 @@ import RadioIcon from '@material-ui/icons/Radio';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Button from '@material-ui/core/Button';
+import CardNav from '../components/listNav'
 
 
 import { NoteConsumer } from '../context/spotifyUser';
@@ -84,6 +85,28 @@ class Home extends React.Component {
     let htmlList = (
       <ul className={liststyles.list}>
         {this.state.songList.map((dataObj, index) => {
+          // need to make a check if the SpotifyUser exists!!!
+
+          // separte function????
+          // taking dataObj, spotifyUser if any????
+          let song;
+          let user;
+          const id = dataObj.track_id;
+          if (spotifyUser){
+            console.log("user exists");
+          }
+          else {
+            console.log("user does not exist")
+          };
+          if (spotifyUser && spotifyUser.songIds){
+            !spotifyUser.songIds.includes(dataObj.track_id) ? song = false : song = true;
+          };
+
+          spotifyUser && spotifyUser.spotifyUser ? user = true : user = false;
+          // if user then hand the functions to it
+
+          const parentData = {user: user, song: song, songId: id, spotifyUser: spotifyUser};
+
           return (
             <li className={liststyles.cards} key={dataObj.track_id}>
               <div className={liststyles.fbcard}>
@@ -96,8 +119,11 @@ class Home extends React.Component {
                 <p>Artist: {dataObj.track_artist} </p>
                 <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
                 <p>Number of attempts to get this song: {dataObj.attempts}</p>
-               
-                  <a href={openSpot + dataObj.track_id} target="_blank"><i><PlayCircleOutlineIcon /></i>Open Song </a>
+                {/* Need to send the user true/false value and the song true/false value */}
+                
+                <CardNav data={parentData} />
+
+                {/* <a href={openSpot + dataObj.track_id} target="_blank"><i><PlayCircleOutlineIcon /></i>Open Song </a> */}
 
                   { spotifyUser && spotifyUser.songIds ? !spotifyUser.songIds.includes(dataObj.track_id)
                     ? <button onClick={() => spotifyUser.addToPlaylist(dataObj.track_id)}><i><ControlPointIcon/></i>Add to Playlist</button> 
@@ -174,7 +200,7 @@ class Home extends React.Component {
             <header className={styles.header}>
           <h1 className={styles.title}>Randofy</h1>
           <nav className={styles.mainnav}>
-            <a className={styles.link} href='https://randofy-backend.herokuapp.com/login'><i><ExitToAppIcon/></i>Login</a>
+            <a className={styles.link} href='https://randofy-backend.herokuapp.com/login'><i><ExitToAppIcon/></i>Logout</a>
             <a className={styles.link}>About</a>
           </nav>
         </header>

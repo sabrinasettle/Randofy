@@ -35,13 +35,13 @@ class SongCard extends React.Component {
     render() {
         // let fontSize = this.fontSize();
         // console.log("size", fontSize)
-        console.log("data in card", this.props.data)
-        console.log("FUCKKKK");
-        const o_sys = window.navigator.platform
+
+        // for knowing what OS its on
+        // const o_sys = window.navigator.platform
+
         const divStyle = {
             fontSize: this.fontSize(),
         };
-
         return (
             <div >
                 {this.props.data ? (
@@ -60,15 +60,9 @@ class SongCard extends React.Component {
                             <h1 className={styles.title} style={divStyle}> {this.props.data.track_name}</h1>
                             <p className={styles.artist}> {this.props.data.track_artist}</p>
                             <p className={styles.album}> {this.props.data.album_name}</p>
-                        {/* </div> */}
-
                         
-                        {/* <p className={styles.explicit}>{this.props.data.is_explicit ? 'Explicit' : 'Nonexplicit'}</p> */}
-                        {/* <p className={styles.attempt}>Number of attempts to get this song: {this.props.data.attempts}</p> */}
                     </div>
-                    {/* <div className={`${styles.section} ${styles.spotify}`}>
-                        <a href='https://spotify-randomizer-backend.herokuapp.com/login'>Listen On Spotify</a>
-                    </div> */}
+                    
                 </div>
                 ) : <div></div> }
             </div>
