@@ -34,7 +34,7 @@ class Home extends React.Component {
       isLoading: true
     })
     let temp_arr = this.state.songList
-    temp_arr.push(data)
+    temp_arr.unshift(data)
     this.setState({
       songList: temp_arr,
       isLoading: false,
@@ -50,7 +50,11 @@ class Home extends React.Component {
       <ul className={liststyles.list}>
         {this.state.songList.map((dataObj, index) => {
           // need to make a check if the SpotifyUser exists!!!
-
+          const len = this.state.songList.length;
+          console.log("len", len);
+          console.log((index - len) + 1)
+          console.log("thing", this.state.songList.indexOf(dataObj))
+          let i = (index + len);
           // separte function????
           // taking dataObj, spotifyUser if any????
           let song;
@@ -75,9 +79,8 @@ class Home extends React.Component {
           return (
             <li className={liststyles.cards} key={dataObj.track_id}>
               <div className={liststyles.fbcard}>
-
                 <div className={liststyles.index}>
-                  {index + 1}
+                  {index}
                 </div>
                 <div className={liststyles.span}>
                 <p>Song: {dataObj.track_name} </p>

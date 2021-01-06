@@ -1,26 +1,101 @@
+
+
+
+.btn {
+    position: relative;
+    color: white;
+    width: 256px;
+    height: 256px;
+    line-height: 64px;
+    transition: all 0.3s;
+    background-color: transparent;
+    border: none;
+    font-family: 'Rubik', sans-serif;
+    font-size: 25px;
+    &:focus {
+        outline: 0;
+    }
+}
+  
+  .btn::before, .btn::after {
+    content: '';
+    position: absolute;
+    transition: all 0.3s;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+ /* BTN TWO */
+  .btntwo::before, .btntwo::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    transition: all 0.3s;
+    border: 1px solid white;
+    border-radius: 10px;
+    // background-color: white;
+  }
+  
+  .btntwo:hover::after {
+    border-radius: 30%;
+    animation-name: rotatecw;
+    animation-duration: 2s;
+  }
+  .btntwo:hover::before {
+    border-radius: 30%;
+    animation-name: rotateccw; 
+    animation-duration: 3s;
+  }
+  .btntwo:hover::after, .btntwo:hover::before {
+    // left: 96px;
+    width: 100%;
+    
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+  
+  @keyframes rotatecw {
+      from {transform: rotate(0deg);}
+      to {transform: rotate(360deg);}
+  }
+  
+  @keyframes rotateccw {
+      from {transform: rotate(0deg);}
+      to {transform: rotate(-360deg);}
+  }
+
+
+
 button.newsongbutton {
     font-family: 'Rubik', sans-serif;
     font-size: 25px;
     border-radius: 50%;
     height: 250px;
     padding: 20px;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background-color: transparent;
     &:hover {
-        background-color: blue;
+        border: 1px solid rgba(255, 255, 255, 0.5);
     }
     &:focus {
         outline: 0;
     }
+    
 }
 
 button.trackbutton {
     font-family: 'Rubik', sans-serif;
     font-size: 30px;
     border: none;
-    &:hover {
-        border: none;
-        background-color: blue;
-    }
+    padding: 10px;
+    border-radius: 10px;
 }
 
 h1.instructfill {
@@ -54,5 +129,6 @@ h1.instructfill {
     // background-color: rgb(221, 158, 21);
     text-align: center;
     height: 380px;
-    padding: auto;
+    // padding: auto;
+    padding-top: 60px;
 }
