@@ -61,10 +61,10 @@ class MainButton extends React.Component {
         
         axios.get(`https://randofy-backend.herokuapp.com/random`)
         .then(response => {
-            console.log("response from axios", response.data);
-            console.log("test", this.state.isLoaded)
+            // console.log("response from axios", response.data);
+            // console.log("test", this.state.isLoaded)
             if (this.props.updateList){
-                console.log("props from parent exist")
+                // console.log("props from parent exist")
                 this.props.updateList(response.data);
             }
             this.setState({
@@ -74,7 +74,7 @@ class MainButton extends React.Component {
             });
           })
           .catch(error => {
-            console.log("error", error);
+            // console.log("error", error);
             this.setState({
                 isLoaded: true,
                 error: error,
@@ -90,6 +90,13 @@ class MainButton extends React.Component {
         // if type is track or album change the button text based on that
         let {songData, isLoaded} = this.state;
         let img = this.state.imgImg
+
+
+        const text = 'Click the button to get a random song!';
+        const classFont = '';
+        const direction = 1;
+        const arc = 150;
+
         if (isLoaded)
             console.log("img", img);
         return (
@@ -100,7 +107,7 @@ class MainButton extends React.Component {
                         <Color src={img} crossOrigin="anonymous" format="hex">
                             {({ data, loading }) => {
                             // if (loading) return <Loading />;
-                            console.log("data", data)
+                            // console.log("data", data)
                             let color = data
                             return (
                                 <div className={styles.cardsection} style={{backgroundColor: `${color}`}}>
@@ -117,6 +124,7 @@ class MainButton extends React.Component {
                 : 
                 <div className={styles.return}>
                     <div className={styles.sectioncenter}>
+                    
                         <h1 className={styles.instructfill}>Click the button to get a random song!</h1>
                         <button className={styles.newsongbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
                         {/* <SongCard data={this.state.songData} /> */}

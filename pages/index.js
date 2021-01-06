@@ -1,10 +1,14 @@
 import Head from 'next/head'
-import SongCard from '../components/songCard'
 import MainButton from '../components/mainButton'
 import React from 'react';
 import liststyles from '../styles/List.module.scss'
 import {SpotifyContext, withSpotify} from '../context'
 import styles from '../styles/Home.module.scss'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Button from '@material-ui/core/Button';
+import CardNav from '../components/listNav'
+import Nav from '../components/Nav';
+
 
 import { NoteConsumer } from '../context/spotifyUser';
 import axios from 'axios';
@@ -22,38 +26,7 @@ class Home extends React.Component {
   }
 
   componentDidMount(){
-    // gets params of code from the redirect on login
-    const params = new URLSearchParams(window.location.search.substring(1))
-    const code = params.get("code");
-    console.log("code from login is", code);
-    // original testing console.log
-    // console.log("props location", this.props.location.search)
-    if (code) {
-      this.setState({
-        code: code,
-      }, () => {
-        // callback gets from the backend the user data
-        axios.get(`https://randofy-backend.herokuapp.com/token`, {
-          code
-        })
-        .then(response => {
-          // console.log(response);
-          // gets the user https://api.spotify.com/v1/me
-          // https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
-          // needs the access_token and token_type in the request
-          console.log("token", response.data.access_token)
-          console.log("expries_in", response.data.expires_in)
-          console.log("type", response.data.token_type)
-        })
-        .catch(error => {
-          console.log(error);
-        })
-
-        console.log("index state code is", this.state.code);
-        console.log(code)
-      });
-      // send to backend route to get the user data
-    }
+   
   }
 
   updateList = (data) => {
@@ -67,17 +40,38 @@ class Home extends React.Component {
       isLoading: false,
     });
     const { songList } = this.state;
-    localStorage.setItem('songList', songList);
     var list = localStorage.getItem('songList')
-    console.log("localStorage", list);
   }
 
-  List = () => {
+  List = ({spotifyUser}) => {
     const openSpot = 'https://open.spotify.com/track/'
     // transfer the li into a card???
     let htmlList = (
       <ul className={liststyles.list}>
         {this.state.songList.map((dataObj, index) => {
+          // need to make a check if the SpotifyUser exists!!!
+
+          // separte function????
+          // taking dataObj, spotifyUser if any????
+          let song;
+          let user;
+          let spotUser;
+          const id = dataObj.track_id;
+          if (spotifyUser){
+            spotUser = spotifyUser;
+          }
+          else {
+            spotUser = null;
+          };
+          if (spotifyUser && spotifyUser.songIds){
+            !spotifyUser.songIds.includes(dataObj.track_id) ? song = false : song = true;
+          };
+
+          spotifyUser && spotifyUser.spotifyUser ? user = true : user = false;
+          // if user then hand the functions to it
+
+          const parentData = {user: user, song: song, songId: id, spotifyUser: spotUser};
+
           return (
             <li className={liststyles.cards} key={dataObj.track_id}>
               <div className={liststyles.fbcard}>
@@ -90,9 +84,9 @@ class Home extends React.Component {
                 <p>Artist: {dataObj.track_artist} </p>
                 <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
                 <p>Number of attempts to get this song: {dataObj.attempts}</p>
-                <a href={openSpot + dataObj.track_id} target="_blank"> Open Song </a>
-                <a>Add to Playlist</a>
-                <a href='https://randofy-backend.herokuapp.com/login'>Login</a>
+                {/* Need to send the user true/false value and the song true/false value */}
+                
+                <CardNav data={parentData} />                 
                 </div>
               </div>
             </li>
@@ -103,12 +97,8 @@ class Home extends React.Component {
     return htmlList;
   }
 
-  Loading = () => {
-
-  }
-  
   render() {
-    const {isLoading, songList} = this.state
+    const {isLoading, songList, spotifyUser} = this.state
     return (
       <>
         <Head>
@@ -118,69 +108,45 @@ class Home extends React.Component {
           <meta name="description" content="Generate a completely random Spotify song with a click!" />
           <link rel="preconnect" href="https://fonts.gstatic.com"></link>
           <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
-          {/* <link href="https://fonts.googleapis.com/css2?family=Bungee+Outline&display=swap" rel="stylesheet"></link> */}
-          {/* <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet"></link> */}
-          {/* I like the one below */}
-          {/* <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet"></link> */}
           <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&display=swap" rel="stylesheet"></link>
         </Head>
-        {/* Consumer start here? */}
+        
         <SpotifyContext.Consumer>
-          {/* User / No User testing */}
-          {spotifyUser => spotifyUser ? <p></p> : <p></p>}
-          {/* move login into a condtional */}
-          {/* <User data={spotifyuser} /> */}
-        </SpotifyContext.Consumer>
+          {/* User / No User */}
+          {spotifyUser => spotifyUser && spotifyUser.spotifyUser ? 
+          (<div>
             <header className={styles.header}>
               <h1 className={styles.title}>Randofy</h1>
-              <a className={styles.link}>About</a>
+              <nav className={styles.mainnav}>
+                <Nav spotifyUser={spotifyUser} />
+              </nav>
             </header>
-            {/* <NoteConsumer>
-              {({ state }) => (
-                <p>
-                hi I'm {state.spotifyUser}
-                </p>
-                )}
-              </NoteConsumer> */}
-
-
-
             <MainButton updateList={this.updateList}/>
             <div className={styles.sectionmain}>
-                    { songList.length < 1 ? 
-                    <p></p> 
-                    : 
-                    <this.List />}
+              { songList.length < 1 ? 
+              <p></p> 
+              : 
+              <this.List spotifyUser={spotifyUser} />}
             </div>
-            {/* <footer> */}
-              {/* About */}
-            {/* </footer> */}
+          </div>) 
+          : (<div>
+              <header className={styles.header}>
+                <h1 className={styles.title}>Randofy</h1>
+                <Nav spotifyUser={null} />
+              </header>
+              <MainButton updateList={this.updateList}/>
+              <div className={styles.sectionmain}>
+                { songList.length < 1 ? 
+                <p></p> 
+                : 
+                <this.List />}
+              </div>
+            </div>)
+          }
+        </SpotifyContext.Consumer>
       </>
     )
   }
 }
 
-// export default Home;
-
 export default withSpotify(Home);
-
-
-
-
-
-// Used to test backend orignally without components 
-// export async function getServerSideProps(context) {
-
-//   const res = await fetch(`https://spotify-randomizer-backend.herokuapp.com/random`)
-//   const data = await res.json()
-  
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     }
-//   }
-  
-//   return {
-//     props: { data } // will be passed to the page component as props
-//   }
-// }
