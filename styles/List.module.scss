@@ -40,4 +40,9 @@ li.cards {
 .span{
     display: inline-block;
     padding-left: 30px;
+    // word-wrap: break-word;
+    overflow-wrap: break-word;
+    p{
+        max-width: 400px;
+    }
 }

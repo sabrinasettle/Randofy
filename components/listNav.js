@@ -61,7 +61,7 @@ class CardNav extends React.Component {
                         Open Song in Spotify
                     </Button>
                 </Link>
-                {this.props.data.user ? <this.PlaylistButton /> : <p> Please Login</p> }
+                {this.props.data.user ? <this.PlaylistButton /> : <p></p> }
             </div>
         )
     }

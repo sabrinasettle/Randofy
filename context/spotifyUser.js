@@ -119,12 +119,13 @@ const withSpotify = Component => {
 
           // throw all in the localStorage
           localStorage.setItem('auth', JSON.stringify(response.data));
+          
           this.setState({
             auth: response.data
           },
           () => {
             // after successful auth set get current user
-            this.getUser();
+           this.getUser();
           });
         })
         .catch(error => {
@@ -337,8 +338,9 @@ const withSpotify = Component => {
       const code = params.get("code");
       // this checks for if only existing property is code
       if (code){
-        await this.tokenCall(code);
-        await this.checkForPlaylist();
+        await this.tokenCall(code)
+        .then(() => this.checkForPlaylist);
+        // await this.checkForPlaylist();
       }
 
     };
