@@ -5,7 +5,11 @@ import RadioIcon from '@material-ui/icons/Radio';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
 import { ThreeSixty } from '@material-ui/icons';
+import styles from '../styles/Home.module.scss'
+
+
 
 const openSpot = 'https://open.spotify.com/track/'
 class CardNav extends React.Component {
@@ -16,34 +20,48 @@ class CardNav extends React.Component {
             user: false,
             song: false,
         };
-        // this.handleClick = this.handleClick.bind(this);
     }
 
-    Add = () => {
-        return <button onClick={() => {console.log("remove")}}><i><ControlPointIcon/></i>Add to Playlist</button> 
-    }
-
-    Remove = () => {
-        return <button onclick={() => {console.log("remove")}}><i><ControlPointIcon/></i>Remove from Playlist</button>
-    }
 
     PlaylistButton = () => {
         if (this.props.data.song){
-            <this.Remove />
+            return <Button 
+                startIcon={<ControlPointIcon />} 
+                onClick={() => this.props.data.spotifyUser.removeFromPlaylist(this.props.data.songId)}
+                >
+                    Remove from Playlist
+                </Button>
         }
         else{
-            <this.Add />
+            return <Button 
+                startIcon={<ControlPointIcon />} 
+                onClick={() => this.props.data.spotifyUser.addToPlaylist(this.props.data.songId)}
+                >
+                    Add to Playlist
+                </Button> 
         }
     }
 
+
     render() {
         // if the user is true then show all the links if not then yeah
+        // console.log(this.props.data.spotifyUser)
+        const href = openSpot + this.props.data.songId
         return (
             <div>
                 {/* this link should be in both versions */}
-                <a href={openSpot + this.props.data.songId} target="_blank"><i><PlayCircleOutlineIcon /></i>Open Song </a>
+                <Link
+                    href={href}
+                    target="_blank"
+                    rel="noopener"
+                >
+                    <Button
+                        startIcon={<PlayCircleOutlineIcon />}
+                    >
+                        Open Song in Spotify
+                    </Button>
+                </Link>
                 {this.props.data.user ? <this.PlaylistButton /> : <p> Please Login</p> }
-                {/* <this.PlaylistButton /> */}
             </div>
         )
     }

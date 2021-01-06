@@ -11,22 +11,24 @@ h1.title {
 }
 
 nav.mainnav {
+  
   float: right;
   padding-right: 20px;
+  padding-top: 40px;
   text-align: center;
 }
 
-a.link{
-  font-family: 'Righteous', cursive;
-  // position:absolute;
-  // top: 2.5em;
-  // right: 4em;
-  font-size: 20px;
-  padding: 10px;
-  &:hover{
-    background-color: blueviolet;
-  }
-}
+// a.link{
+//   font-family: 'Righteous', cursive;
+//   // position:absolute;
+//   // top: 2.5em;
+//   // right: 4em;
+//   // font-size: 20px;
+//   // padding: 10px;
+//   &:hover{
+//     // background-color: rgba(177, 177, 177, 0.438);
+//   }
+// }
 
 .section {
   height: max-content;

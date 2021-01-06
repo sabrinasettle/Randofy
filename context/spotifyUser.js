@@ -55,10 +55,6 @@ const withSpotify = Component => {
         })
       }
     }
-
-    // createSession = () => {
-      
-    // };
     
     destroySession = () => {
       // clear the localStorage 
@@ -83,7 +79,8 @@ const withSpotify = Component => {
         () => {
           // refresh of the page. removing the 'code' from url
           // prettifies the url
-          window.location.replace(window.location.host.includes('localhost') ? 'http://' + window.location.host : 'https://' + window.location.host);
+          window.history.pushState('', "Randofy", (window.location.host.includes('localhost') ? 'http://' + window.location.host : 'https://' + window.location.host));
+          // window.location.replace(window.location.host.includes('localhost') ? 'http://' + window.location.host : 'https://' + window.location.host);
         })
       })
       .catch(error => {
@@ -183,7 +180,7 @@ const withSpotify = Component => {
 
     };
 
-    checkPlaylist = async () => {
+    checkForPlaylist = async () => {
       // looks for the playlist 'Randofy' in user playlists to see if its available
       await this.checkTime();
       const findPlaylist = async (offset, total) => {
@@ -192,7 +189,6 @@ const withSpotify = Component => {
           headers: {'Authorization': `Bearer ${this.state.auth.access_token}`}
         })
         .then(response => {
-
           const items = response.data.items;
           if (total === -1){
             total = response.data.total
@@ -230,10 +226,12 @@ const withSpotify = Component => {
 
     addToPlaylist = async (songId) => {
       await this.checkTime();
-      if (this.state.songIds.includes(songId)){
+      // creates playlist if there is none
+      await this.checkForPlaylist();
+      
+      if (this.state.songIds && this.state.songIds.includes(songId)){
         return 0;
-      }
-      else {
+      }else {
         const songUri = 'spotify:track:' + songId;
         return await axios.post(`https://api.spotify.com/v1/playlists/${this.state.playlist.id}/tracks?uris=${songUri}`, {}, 
         {
@@ -250,8 +248,12 @@ const withSpotify = Component => {
           })
         })
         .catch(error => {
+          console.log("error in addSong")
           this.setState({
             error: error
+          },
+          () => {
+            console.log(this.state.error)
           })
           // what happens????
         })
@@ -322,7 +324,7 @@ const withSpotify = Component => {
       if (playlist){
         this.setState({
           playlist: playlist
-        })
+        }, () => this.getPlaylistItems())
       }
       if (user){
         this.setState({
@@ -336,8 +338,7 @@ const withSpotify = Component => {
       // this checks for if only existing property is code
       if (code){
         await this.tokenCall(code);
-        // make later
-        // await this.checkPlaylist();
+        await this.checkForPlaylist();
       }
 
     };
@@ -370,29 +371,3 @@ const withSpotify = Component => {
 }
 
 export default withSpotify;
-
-
-// first attempt
-// Then create a provider Component
-// class NoteProvider extends Component {
-//   state = {
-//     // spotifyUser: localStorage ? JSON.parse(localStorage.getItem('spotifyUser')) : null,
-//   };
-//   render() {
-//     return (
-//       <NoteContext.Provider
-//         value={{
-//           state: this.state,
-//         }}
-//       >
-//         {this.props.children}
-//       </NoteContext.Provider>
-//     );
-//   }
-// }
-
-// then make a consumer which will surface it
-// const NoteConsumer = NoteContext.Consumer;
-
-// export default NoteProvider;
-// export { NoteConsumer };

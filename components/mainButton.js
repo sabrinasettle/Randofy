@@ -61,10 +61,10 @@ class MainButton extends React.Component {
         
         axios.get(`https://randofy-backend.herokuapp.com/random`)
         .then(response => {
-            console.log("response from axios", response.data);
-            console.log("test", this.state.isLoaded)
+            // console.log("response from axios", response.data);
+            // console.log("test", this.state.isLoaded)
             if (this.props.updateList){
-                console.log("props from parent exist")
+                // console.log("props from parent exist")
                 this.props.updateList(response.data);
             }
             this.setState({
@@ -74,7 +74,7 @@ class MainButton extends React.Component {
             });
           })
           .catch(error => {
-            console.log("error", error);
+            // console.log("error", error);
             this.setState({
                 isLoaded: true,
                 error: error,
@@ -107,7 +107,7 @@ class MainButton extends React.Component {
                         <Color src={img} crossOrigin="anonymous" format="hex">
                             {({ data, loading }) => {
                             // if (loading) return <Loading />;
-                            console.log("data", data)
+                            // console.log("data", data)
                             let color = data
                             return (
                                 <div className={styles.cardsection} style={{backgroundColor: `${color}`}}>
