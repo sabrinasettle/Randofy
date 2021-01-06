@@ -14,9 +14,9 @@ class Nav extends React.Component {
             <nav className={styles.mainnav}>
                 {this.props.spotifyUser ? 
                     <Button 
-                    onClick={() => spotifyUser.destroySesh()}
+                    onClick={() => this.props.spotifyUser.destroySesh()}
                     >
-                        {spotifyUser.spotifyUser.display_name} Logout
+                        {this.props.spotifyUser.display_name} Logout
                     </Button>
                 : <Link href='https://randofy-backend.herokuapp.com/login'>
                         <Button 
