@@ -23,9 +23,11 @@ class Home extends React.Component {
       code: null,
       // test: "butts",
     }
+    this.handleLeavePage = this.handleLeavePage.bind(this)
   }
 
   componentDidMount(){
+    window.addEventListener("beforeunload", this.handleLeavePage);
     this.setState({isLoading: true});
     var list = JSON.parse(localStorage.getItem('songList'));
     if (list){
@@ -34,6 +36,18 @@ class Home extends React.Component {
         isLoading: false,
       });
     }
+  }
+
+  componentWillUnmount() {
+    // this.handleLeavePage()
+    window.removeEventListener("beforeunload", this.handleLeavePage);
+  }
+
+  handleLeavePage = (e) => {
+    localStorage.removeItem('songList');
+    // const confirmationMessage = 'Some message';
+    // e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+    // return confirmationMessage;              // Gecko, WebKit, Chrome <34
   }
 
   updateList = (data) => {
@@ -49,6 +63,10 @@ class Home extends React.Component {
     localStorage.setItem('songList', JSON.stringify(temp_arr));
     // const { songList } = temp_arr;
     // var list = localStorage.getItem('songList')
+  }
+
+  clearList = () => {
+
   }
 
   List = ({spotifyUser}) => {
