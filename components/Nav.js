@@ -24,7 +24,7 @@ class Nav extends React.Component {
                         </Button>
                     </Link>
                 }
-                <Link className={styles.link}>
+                <Link href='/about' className={styles.link}>
                     <Button>
                         About
                     </Button>

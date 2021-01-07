@@ -12,6 +12,7 @@
     border: none;
     font-family: 'Rubik', sans-serif;
     font-size: 25px;
+    border-radius: 10px;
     &:focus {
         outline: 0;
     }
@@ -29,7 +30,7 @@
   }
   
  /* BTN TWO */
-  .btntwo::before, .btntwo::after {
+  .newsongbutton::before, .newsongbutton::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -40,20 +41,19 @@
     transition: all 0.3s;
     border: 1px solid white;
     border-radius: 10px;
-    // background-color: white;
   }
   
-  .btntwo:hover::after {
+  .newsongbutton:hover::after {
     border-radius: 30%;
     animation-name: rotatecw;
     animation-duration: 2s;
   }
-  .btntwo:hover::before {
+  .newsongbutton:hover::before {
     border-radius: 30%;
     animation-name: rotateccw; 
     animation-duration: 3s;
   }
-  .btntwo:hover::after, .btntwo:hover::before {
+  .newsongbutton:hover::after, .newsongbutton:hover::before {
     // left: 96px;
     width: 100%;
     
@@ -73,29 +73,56 @@
 
 
 
-button.newsongbutton {
-    font-family: 'Rubik', sans-serif;
-    font-size: 25px;
-    border-radius: 50%;
-    height: 250px;
-    padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    background-color: transparent;
-    &:hover {
-        border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-    &:focus {
-        outline: 0;
-    }
+// button.newsongbutton {
+//     font-family: 'Rubik', sans-serif;
+//     font-size: 25px;
+//     border-radius: 50%;
+//     height: 250px;
+//     padding: 20px;
+//     border: 1px solid rgba(255, 255, 255, 0.5);
+//     background-color: transparent;
+//     &:hover {
+//         border: 1px solid rgba(255, 255, 255, 0.5);
+//     }
+//     &:focus {
+//         outline: 0;
+//     }
     
+// }
+
+.trackbutton::before {
+    transition: transform 0.15s, 0.15s border-radius 0.15s;
+    opacity: 0;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0.1, 0.1);
+    border-radius: 50%;
 }
 
-button.trackbutton {
+.trackbutton:hover::before {
+    opacity: 1;
+    transform: scale(1, 1);
+    border-radius: 0;
+    border-radius: 10px;
+}
+
+.trackbutton::after {
+    transition: all 0.3s;
+    border-radius: 10px;
+    border: 1px solid white;
+}
+
+.trackbutton:hover::after {
+    opacity: 0;
+}
+
+.trackbutton {
     font-family: 'Rubik', sans-serif;
     font-size: 30px;
     border: none;
     padding: 10px;
     border-radius: 10px;
+    width: 400px;
+    height: 100px;
 }
 
 h1.instructfill {
@@ -116,6 +143,7 @@ h1.instructfill {
     display:inline-block;
     text-align:center;
     padding-top: 50px;
+    padding-bottom: 30px;
     // padding-left: 3em;
 }
 

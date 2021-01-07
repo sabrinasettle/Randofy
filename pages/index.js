@@ -4,14 +4,12 @@ import React from 'react';
 import liststyles from '../styles/List.module.scss'
 import {SpotifyContext, withSpotify} from '../context'
 import styles from '../styles/Home.module.scss'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import Button from '@material-ui/core/Button';
+// import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+// import Button from '@material-ui/core/Button';
 import CardNav from '../components/listNav'
 import Nav from '../components/Nav';
 
-
-import { NoteConsumer } from '../context/spotifyUser';
-import axios from 'axios';
+// import axios from 'axios';
 
 // export default function Home({data}) {
 class Home extends React.Component {
@@ -23,9 +21,11 @@ class Home extends React.Component {
       code: null,
       // test: "butts",
     }
+    this.handleLeavePage = this.handleLeavePage.bind(this)
   }
 
   componentDidMount(){
+    window.addEventListener("beforeunload", this.handleLeavePage);
     this.setState({isLoading: true});
     var list = JSON.parse(localStorage.getItem('songList'));
     if (list){
@@ -34,6 +34,18 @@ class Home extends React.Component {
         isLoading: false,
       });
     }
+  }
+
+  componentWillUnmount() {
+    // this.handleLeavePage()
+    window.removeEventListener("beforeunload", this.handleLeavePage);
+  }
+
+  handleLeavePage = (e) => {
+    localStorage.removeItem('songList');
+    // const confirmationMessage = 'Some message';
+    // e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+    // return confirmationMessage;              // Gecko, WebKit, Chrome <34
   }
 
   updateList = (data) => {
@@ -49,6 +61,10 @@ class Home extends React.Component {
     localStorage.setItem('songList', JSON.stringify(temp_arr));
     // const { songList } = temp_arr;
     // var list = localStorage.getItem('songList')
+  }
+
+  clearList = () => {
+
   }
 
   List = ({spotifyUser}) => {
@@ -88,7 +104,7 @@ class Home extends React.Component {
             <li className={liststyles.cards} key={dataObj.track_id}>
               <div className={liststyles.fbcard}>
                 <div className={liststyles.index}>
-                  {index}
+                  {index + 1}
                 </div>
                 <div className={liststyles.span}>
                 <p>Song: {dataObj.track_name} </p>
