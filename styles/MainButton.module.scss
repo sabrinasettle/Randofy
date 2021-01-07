@@ -30,7 +30,7 @@
   }
   
  /* BTN TWO */
-  .btntwo::before, .btntwo::after {
+  .newsongbutton::before, .newsongbutton::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -43,17 +43,17 @@
     border-radius: 10px;
   }
   
-  .btntwo:hover::after {
+  .newsongbutton:hover::after {
     border-radius: 30%;
     animation-name: rotatecw;
     animation-duration: 2s;
   }
-  .btntwo:hover::before {
+  .newsongbutton:hover::before {
     border-radius: 30%;
     animation-name: rotateccw; 
     animation-duration: 3s;
   }
-  .btntwo:hover::after, .btntwo:hover::before {
+  .newsongbutton:hover::after, .newsongbutton:hover::before {
     // left: 96px;
     width: 100%;
     
