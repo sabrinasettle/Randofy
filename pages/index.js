@@ -26,7 +26,14 @@ class Home extends React.Component {
   }
 
   componentDidMount(){
-   
+    this.setState({isLoading: true});
+    var list = JSON.parse(localStorage.getItem('songList'));
+    if (list){
+      this.setState({
+        songList: list,
+        isLoading: false,
+      });
+    }
   }
 
   updateList = (data) => {
@@ -39,8 +46,9 @@ class Home extends React.Component {
       songList: temp_arr,
       isLoading: false,
     });
-    const { songList } = this.state;
-    var list = localStorage.getItem('songList')
+    localStorage.setItem('songList', JSON.stringify(temp_arr));
+    // const { songList } = temp_arr;
+    // var list = localStorage.getItem('songList')
   }
 
   List = ({spotifyUser}) => {
@@ -120,9 +128,7 @@ class Home extends React.Component {
           (<div>
             <header className={styles.header}>
               <h1 className={styles.title}>Randofy</h1>
-              <nav className={styles.mainnav}>
-                <Nav spotifyUser={spotifyUser} />
-              </nav>
+              <Nav spotifyUser={spotifyUser} />
             </header>
             <MainButton updateList={this.updateList}/>
             <div className={styles.sectionmain}>

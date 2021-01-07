@@ -7,16 +7,14 @@ import styles from '../styles/Home.module.scss'
 
 // {spotifyUser.spotifyUser.display_name} Logout
 class Nav extends React.Component {
-    
     render() {
         return(
-            
             <nav className={styles.mainnav}>
                 {this.props.spotifyUser ? 
                     <Button 
                     onClick={() => this.props.spotifyUser.destroySesh()}
                     >
-                        {this.props.spotifyUser.display_name} Logout
+                        {this.props.spotifyUser.spotifyUser.display_name} Logout
                     </Button>
                 : <Link href='https://randofy-backend.herokuapp.com/login'>
                         <Button 
