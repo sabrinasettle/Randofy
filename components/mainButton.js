@@ -58,13 +58,9 @@ class MainButton extends React.Component {
     
     
     handleClick = () => {
-        
         axios.get(`https://randofy-backend.herokuapp.com/random`)
         .then(response => {
-            // console.log("response from axios", response.data);
-            // console.log("test", this.state.isLoaded)
             if (this.props.updateList){
-                // console.log("props from parent exist")
                 this.props.updateList(response.data);
             }
             this.setState({
@@ -72,18 +68,13 @@ class MainButton extends React.Component {
                 songData: response.data,
                 imgImg: response.data.album_image.url
             });
-          })
-          .catch(error => {
-            // console.log("error", error);
+        })
+        .catch(error => {
             this.setState({
                 isLoaded: true,
                 error: error,
             });
-          })
-    
-        // console.log("Clicked!");
-        // console.log(self.state.isLoaded)
-        // console.log('song data state', self.state.songData)
+        })
     }
 
     render() {
@@ -118,7 +109,7 @@ class MainButton extends React.Component {
                             }}
                         </Color>
                         <div className={styles.buttonsection}>
-                            <button className={styles.trackbutton} onClick={this.handleClick}>Get another random song</button>
+                            <button className={styles.btn + ' ' + styles.trackbutton} onClick={this.handleClick}>Get another random song</button>
                         </div>
                     </div>
                 : 

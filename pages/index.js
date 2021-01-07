@@ -104,7 +104,7 @@ class Home extends React.Component {
             <li className={liststyles.cards} key={dataObj.track_id}>
               <div className={liststyles.fbcard}>
                 <div className={liststyles.index}>
-                  {index}
+                  {index + 1}
                 </div>
                 <div className={liststyles.span}>
                 <p>Song: {dataObj.track_name} </p>
