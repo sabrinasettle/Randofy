@@ -4,14 +4,12 @@ import React from 'react';
 import liststyles from '../styles/List.module.scss'
 import {SpotifyContext, withSpotify} from '../context'
 import styles from '../styles/Home.module.scss'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import Button from '@material-ui/core/Button';
+// import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+// import Button from '@material-ui/core/Button';
 import CardNav from '../components/listNav'
 import Nav from '../components/Nav';
 
-
-import { NoteConsumer } from '../context/spotifyUser';
-import axios from 'axios';
+// import axios from 'axios';
 
 // export default function Home({data}) {
 class Home extends React.Component {
