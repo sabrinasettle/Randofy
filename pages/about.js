@@ -3,8 +3,9 @@ import Head from 'next/head';
 import Nav from '../components/Nav'
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
-import styles from '../styles/Home.module.scss';
-import page from '../styles/About.module.scss'
+// import styles from '../styles/Home.module.scss';
+import styles from '../styles/About.module.scss'
+import Header from '../components/Header'
 
 // import styles from '../styles/Home.module.scss'
 
@@ -69,7 +70,6 @@ class About extends React.Component {
     randomizeQuote = () => {
         let array = this.quoteOptions();
         const random = Math.floor(Math.random() * array.length);
-        console.log(random, array[random]);
         return (array[random]);
     };
 
@@ -85,54 +85,50 @@ class About extends React.Component {
                     <link rel="preconnect" href="https://fonts.gstatic.com"></link>
                     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
                 </Head>
-                <header className={styles.header}>
-                    <h1 className={styles.title}><Link>Randofy</Link></h1>
-                    <nav className={styles.mainnav}>
-                        <Link href='/'>Go Back</Link>
-                    </nav>
-                </header>
-                <div>
-                    <div className="section def">
+                <Header />
+                <div id={styles.grid}>
+                    <div className={styles.section} id={styles.dict}>
                         <h2>
-                            <p id={page.term}>melomaniac</p>
-                            <p id="from">in British English</p>
-                            <p id="prounce">(ˌmɛləˈmeɪnɪæk)</p>
-                            <p id="type">NOUN</p>
-                            <p id="def">
+                            <p id={styles.term}>melomaniac</p>
+                            <p id={styles.from}>in British English</p>
+                            <p id={styles.prounce}>(ˌmɛləˈmeɪnɪæk)</p>
+                            <p id={styles.type}>NOUN</p>
+                            <p id={styles.def}>
                                 a person with a great enthusiasm for music
                             </p>
                         </h2>
                     </div>
 
                     {/* If user than show their username here */}
-                    {this.props.spotifyUser ? <h1>Hi {this.props.spotifyUser.spotifyUser.display_name}</h1> : <h1>Hi There!</h1>}
-                    <div className="section about">
-                        <h1>About</h1>
+                    {this.props.spotifyUser ? <h1 className={styles.title}>Hi {this.props.spotifyUser.spotifyUser.display_name}</h1> : <h1 className={styles.title}>Hi There!</h1>}
+                    <div className={styles.section} id={styles.about}>
+                        <h1 className={styles.title}>About</h1>
                         <p>
                             This site was created by two web developers with eclectic music taste and it’s for everyone who has ever been stumped to what to listen or just restless within their own known discography. It generates a new random song from the Spotify database, and while we use their resources the information can be easily used to find songs on YouTube.
                         </p>
                         <p>
                             You can check out our Randofy finds <Link href="https://open.spotify.com/playlist/1fehOuEhzy0BS64ji8hmhU">here</Link> and <Link href="https://open.spotify.com/playlist/2BTnvHQf3DuoKMXI6LFMmS">here</Link>!
                         </p>
-
-                        If you are interested in reaching us we can be reached at.
-
+                        <p>
+                            If you are interested in reaching us we can be reached at.
+                        </p>
                         <p>
                             Find us on Github <Link>here</Link> and <Link>here</Link>.
                         </p>
                     </div>
-                    <div className="section usage">
-                        <h1>Usage</h1>
+                    <div className={styles.section} id= {styles.usage}>
+                        <h1 className={styles.title}>Usage</h1>
                         We use Spotify to authenicate our users and on signin a Randofy playlist will be created so that its an easy home for any songs generated that you wanna listen to later.
                     </div>
-                    <div className="section" id="legal">
-                        <h1>Legal</h1>
+                    <div className={styles.section} id={styles.legal}>
+                        <h1 className={styles.title}>Legal</h1>
                         We will not keep nor use your data in anyway BTW.
                     </div>
-                    <div className="section quote">
-                        <p id="quote">"{quote.quote}"</p>
-                        <p id="author">{quote.author}</p>
-                        <p id="source">{quote.source}</p>
+                    <div className={styles.section} id={styles.quotes}>
+                        <p id={styles.quote}>"{quote.quote}"</p>
+                        <span>
+                            {quote.source ? <p id={styles.author}>{quote.author}, {quote.source} </p> : <p id={styles.author}>{quote.author}</p>}
+                        </span>
                     </div>
                 </div>
             </>

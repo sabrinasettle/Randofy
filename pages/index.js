@@ -8,6 +8,7 @@ import styles from '../styles/Home.module.scss'
 // import Button from '@material-ui/core/Button';
 import CardNav from '../components/listNav'
 import Nav from '../components/Nav';
+import Header from '../components/Header'
 
 // import axios from 'axios';
 
@@ -141,11 +142,11 @@ class Home extends React.Component {
           {/* User / No User */}
           {spotifyUser => spotifyUser && spotifyUser.spotifyUser ? 
           (<div>
-            {/* <Header spotifyUser={spotifyUser} />*/}
-            <header className={styles.header}>
+            <Header spotifyUser={spotifyUser} />
+            {/* <header className={styles.header}>
               <h1 className={styles.title}>Randofy</h1>
               <Nav spotifyUser={spotifyUser} />
-            </header>
+            </header> */}
             <MainButton updateList={this.updateList}/>
             <div className={styles.sectionmain}>
               { songList.length < 1 ? 
@@ -155,11 +156,11 @@ class Home extends React.Component {
             </div>
           </div>) 
           : (<div>
-              {/* <Header spotifyUser={null} />*/}
-              <header className={styles.header}>
+              <Header spotifyUser={null} />
+              {/* <header className={styles.header}>
                 <h1 className={styles.title}>Randofy</h1>
                 <Nav spotifyUser={null} />
-              </header>
+              </header> */}
               <MainButton updateList={this.updateList}/>
               <div className={styles.sectionmain}>
                 { songList.length < 1 ? 
