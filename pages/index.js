@@ -131,17 +131,17 @@ class Home extends React.Component {
         <Head>
           <html lang='en-us' />
           <meta charSet="utf-8" />
-          <title>Randofy: The random Spotify song Generator</title>
+          <title>Randofy</title>
           <meta name="description" content="Generate a completely random Spotify song with a click!" />
           <link rel="preconnect" href="https://fonts.gstatic.com"></link>
-          <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
-          <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&display=swap" rel="stylesheet"></link>
+          <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
         </Head>
         
         <SpotifyContext.Consumer>
           {/* User / No User */}
           {spotifyUser => spotifyUser && spotifyUser.spotifyUser ? 
           (<div>
+            {/* <Header spotifyUser={spotifyUser} />*/}
             <header className={styles.header}>
               <h1 className={styles.title}>Randofy</h1>
               <Nav spotifyUser={spotifyUser} />
@@ -155,6 +155,7 @@ class Home extends React.Component {
             </div>
           </div>) 
           : (<div>
+              {/* <Header spotifyUser={null} />*/}
               <header className={styles.header}>
                 <h1 className={styles.title}>Randofy</h1>
                 <Nav spotifyUser={null} />
