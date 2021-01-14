@@ -136,6 +136,7 @@ class Home extends React.Component {
           <meta name="description" content="Generate a completely random Spotify song with a click!" />
           <link rel="preconnect" href="https://fonts.gstatic.com"></link>
           <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
+          <meta name="google-site-verification" content="U0dN7iMS6_CGDy31qxDUYcDzAWx3Bl5WyQbG8of7tKQ" />
         </Head>
         
         <SpotifyContext.Consumer>

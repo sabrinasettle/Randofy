@@ -11,6 +11,10 @@ h1.title {
     // display: inline-block;
 }
 
+h1.subtitle {
+    font-size: 35px;
+}
+
 .hail {
 
 }
@@ -21,24 +25,25 @@ h1.title {
 
 }
 
-.section#quotes {
-
-}
 
 .section#dict {
     padding-bottom: 15px;
 }
 
 .section#about {
-
+    
 }
 
 .section#usage {
-
+    
 }
 
 .section#legal {
-    background-color: blue;
+    padding-bottom: 30px;
+}
+
+.section#quotes {
+    padding-bottom: 30px;
 }
 
 p#term {
@@ -78,10 +83,6 @@ p#author:before{
 p#author {
     font-weight: bolder;
 }
-
-// p#author:after {
-//     content: ',';
-// }
 
 p#source {
     color: darkgreen;

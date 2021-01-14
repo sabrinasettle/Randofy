@@ -81,7 +81,7 @@ class About extends React.Component {
                     <html lang='en-us' />
                     <meta charSet="utf-8" />
                     <title>Randofy</title>
-                    <meta name="description" content="Generate a completely random Spotify song with a click!" />
+                    <meta name="description" content="About Randofy and its purpose" />
                     <link rel="preconnect" href="https://fonts.gstatic.com"></link>
                     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
                 </Head>
@@ -102,7 +102,7 @@ class About extends React.Component {
                     {/* If user than show their username here */}
                     {this.props.spotifyUser ? <h1 className={styles.title}>Hi {this.props.spotifyUser.spotifyUser.display_name}</h1> : <h1 className={styles.title}>Hi There!</h1>}
                     <div className={styles.section} id={styles.about}>
-                        <h1 className={styles.title}>About</h1>
+                        <h1 className={styles.title + ' ' + styles.subtitle}>About</h1>
                         <p>
                             This site was created by two web developers with eclectic music taste and it’s for everyone who has ever been stumped to what to listen or just restless within their own known discography. It generates a new random song from the Spotify database, and while we use their resources the information can be easily used to find songs on YouTube.
                         </p>
@@ -117,12 +117,12 @@ class About extends React.Component {
                         </p>
                     </div>
                     <div className={styles.section} id= {styles.usage}>
-                        <h1 className={styles.title}>Usage</h1>
+                        <h1 className={styles.title + ' ' + styles.subtitle}>Usage</h1>
                         We use Spotify to authenicate our users and on signin a Randofy playlist will be created so that its an easy home for any songs generated that you wanna listen to later.
                     </div>
                     <div className={styles.section} id={styles.legal}>
-                        <h1 className={styles.title}>Legal</h1>
-                        We will not keep nor use your data in anyway BTW.
+                        <h1 className={styles.title + ' ' + styles.subtitle}>Legal</h1>
+                        We will not keep nor use your personal data in anyway BTW.
                     </div>
                     <div className={styles.section} id={styles.quotes}>
                         <p id={styles.quote}>"{quote.quote}"</p>
