@@ -88,8 +88,9 @@ class MainButton extends React.Component {
         const direction = 1;
         const arc = 150;
 
-        if (isLoaded)
-            console.log("img", img);
+        if (isLoaded){
+            // console.log("img", img);
+        }
         return (
             // <input type="button" disabled={isSending} onClick={sendRequest} />
             <div className="section">

@@ -249,12 +249,12 @@ const withSpotify = Component => {
           })
         })
         .catch(error => {
-          console.log("error in addSong")
+          // console.log("error in addSong")
           this.setState({
             error: error
           },
           () => {
-            console.log(this.state.error)
+            // console.log(this.state.error)
           })
           // what happens????
         })
