@@ -1,13 +1,9 @@
 import React from 'react';
 import Head from 'next/head';
-import Nav from '../components/Nav'
-import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
-// import styles from '../styles/Home.module.scss';
 import styles from '../styles/About.module.scss'
 import Header from '../components/Header';
-
-// import styles from '../styles/Home.module.scss'
+import Footer from '../components/Footer';
 
 class About extends React.Component {
     
@@ -122,7 +118,7 @@ class About extends React.Component {
                     </div>
                     <div className={styles.section} id={styles.legal}>
                         <h1 className={styles.title + ' ' + styles.subtitle}>Legal</h1>
-                        We will not keep nor use your personal data in anyway BTW.
+                        We will not keep nor use your personal data in anyway, BTW.
                     </div>
                     <div className={styles.section} id={styles.quotes}>
                         <p id={styles.quote}>"{quote.quote}"</p>
@@ -131,6 +127,7 @@ class About extends React.Component {
                         </span>
                     </div>
                 </div>
+                <Footer />
             </>
         )
     }

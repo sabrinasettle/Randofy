@@ -173,7 +173,7 @@ class Home extends React.Component {
             </div>)
           }
         </SpotifyContext.Consumer>
-        <Footer />
+        {/* <Footer /> */}
       </>
     )
   }
