@@ -133,7 +133,7 @@ class Home extends React.Component {
         <Head>
           <html lang='en-us' />
           <meta charSet="utf-8" />
-          <title>Randofy</title>
+          <title>Randofy - Spotify Song Randomizer </title>
           <meta name="description" content="Generate a completely random Spotify song with a click!" />
           <link rel="preconnect" href="https://fonts.gstatic.com"></link>
           <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
