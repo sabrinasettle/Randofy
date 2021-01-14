@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 // import styles from '../styles/Home.module.scss';
 import styles from '../styles/About.module.scss'
-import Header from '../components/Header'
+import Header from '../components/Header';
 
 // import styles from '../styles/Home.module.scss'
 
@@ -110,7 +110,7 @@ class About extends React.Component {
                             You can check out our Randofy finds <Link href="https://open.spotify.com/playlist/1fehOuEhzy0BS64ji8hmhU">here</Link> and <Link href="https://open.spotify.com/playlist/2BTnvHQf3DuoKMXI6LFMmS">here</Link>!
                         </p>
                         <p>
-                            If you are interested in reaching us we can be reached at.
+                            If you are interested in reaching us we can be reached on <Link>Twitter</Link>.
                         </p>
                         <p>
                             Find us on Github <Link>here</Link> and <Link>here</Link>.

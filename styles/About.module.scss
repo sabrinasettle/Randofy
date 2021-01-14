@@ -21,7 +21,12 @@ h1.subtitle {
 
 .section {
     // background-color: coral;
-    
+    width: 70%;
+    font-size: 20px;
+    line-height: 1.2em;
+    letter-spacing: 2px;
+    padding-bottom: 20px;
+    padding-top: 10px;
 
 }
 
@@ -77,6 +82,7 @@ p#def {
 }
 
 p#author:before{
+    letter-spacing: 0px;
     content: '—— ';
 }
 

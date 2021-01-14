@@ -8,7 +8,8 @@ import styles from '../styles/Home.module.scss'
 // import Button from '@material-ui/core/Button';
 import CardNav from '../components/listNav'
 import Nav from '../components/Nav';
-import Header from '../components/Header'
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 // import axios from 'axios';
 
@@ -172,6 +173,7 @@ class Home extends React.Component {
             </div>)
           }
         </SpotifyContext.Consumer>
+        <Footer />
       </>
     )
   }
