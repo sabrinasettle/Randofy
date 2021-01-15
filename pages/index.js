@@ -71,18 +71,16 @@ class Home extends React.Component {
 
   List = ({spotifyUser}) => {
     const openSpot = 'https://open.spotify.com/track/'
+    const len = this.state.songList.length;
     // transfer the li into a card???
     let htmlList = (
       <ul className={liststyles.list}>
+        {/* Ha Sam, I got here first */}
+        {len > 1 ? <h1 className={liststyles.count}>{len} songs generated</h1> : <h1 className={liststyles.count}>{len} song generated</h1>}
         {this.state.songList.map((dataObj, index) => {
-          // need to make a check if the SpotifyUser exists!!!
-          const len = this.state.songList.length;
-          console.log("len", len);
-          console.log((index - len) + 1)
-          console.log("thing", this.state.songList.indexOf(dataObj))
-          let i = (index + len);
-          // separte function????
-          // taking dataObj, spotifyUser if any????
+          // need to make a check if the SpotifyUser exists!!!          
+          let i = (len - index);
+
           let song;
           let user;
           let spotUser;
@@ -106,7 +104,7 @@ class Home extends React.Component {
             <li className={liststyles.cards} key={dataObj.track_id}>
               <div className={liststyles.fbcard}>
                 <div className={liststyles.index}>
-                  {index + 1}
+                  {i}
                 </div>
                 <div className={liststyles.span}>
                 <p>Song: {dataObj.track_name} </p>
