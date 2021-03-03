@@ -22,6 +22,7 @@ class MainButton extends React.Component {
     }
     
     handleClick = () => {
+        // Returns so that multiple presses don't happen
         if (this.state.isLoading) return;
         this.setState({isLoading: true});
         axios.get(`https://randofy-backend.herokuapp.com/random`)
@@ -62,8 +63,6 @@ class MainButton extends React.Component {
         // if type is track or album change the button text based on that
         let {songData, isLoaded, isLoading} = this.state;
         let img = this.state.imgImg
-
-
         const text = this.buttonText();
         let disabled = isLoading;
         return (
