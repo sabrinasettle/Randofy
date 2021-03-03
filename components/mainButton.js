@@ -12,6 +12,7 @@ class MainButton extends React.Component {
         this.state = {
             error: "",
             isLoaded: false,
+            isLoading: false,
             // song: null,
             songData: null,
             type: this.props.type ? this.props.type : "track",
@@ -19,45 +20,10 @@ class MainButton extends React.Component {
         };
         this.handleClick = this.handleClick.bind(this);
     }
-
-    componentDidMount() {
-        //   fetch(`https://spotify-randomizer-backend.herokuapp.com/random`)
-        //   .then(res => res.json())
-        //   .then(data => {
-        //     console.log(data);
-        //   })
-        //   .then(
-        //       (data) => {
-        //           this.setState({
-        //               isLoaded: true,
-        //               song: data,
-        //           });
-        //       },
-        //       (error) => {
-        //           this.setState({
-        //               isLoaded: true,
-        //               error: true,
-        //           });
-        //       }
-        //   )
-
-        //   console.log(this.state.data);
-    }
-
-    // useEffect(() => {
-        // const result = await axios(
-        //     'https://hn.algolia.com/api/v1/search?query=redux',
-        // );
-    
-        // setData(result.data);
-    // });
-    // useEffect(() => {
-    //     // Update the document title using the browser API
-    //     document.title = `You clicked ${count} times`;
-    // });
-    
     
     handleClick = () => {
+        if (this.state.isLoading) return;
+        this.setState({isLoading: true});
         axios.get(`https://randofy-backend.herokuapp.com/random`)
         .then(response => {
             if (this.props.updateList){
@@ -65,6 +31,7 @@ class MainButton extends React.Component {
             }
             this.setState({
                 isLoaded: true,
+                isLoading: false,
                 songData: response.data,
                 imgImg: response.data.album_image.url
             });
@@ -72,56 +39,57 @@ class MainButton extends React.Component {
         .catch(error => {
             this.setState({
                 isLoaded: true,
+                isLoading: false,
                 error: error,
             });
         })
     }
 
+    buttonText = () => {
+        // Dynamic Text for button
+        if (this.state.isLoading == true) {
+            return 'Loading';
+        }
+        else if (this.state.isLoaded == true && this.state.isLoading == false) {
+            return 'Get another random song';
+        } 
+        else{
+            return 'Get a random song';
+        }
+    }
+
     render() {
         // if type is track or album change the button text based on that
-        let {songData, isLoaded} = this.state;
+        let {songData, isLoaded, isLoading} = this.state;
         let img = this.state.imgImg
 
 
-        const text = 'Click the button to get a random song!';
-        const classFont = '';
-        const direction = 1;
-        const arc = 150;
-
-        if (isLoaded){
-            // console.log("img", img);
-        }
+        const text = this.buttonText();
+        let disabled = isLoading;
         return (
-            // <input type="button" disabled={isSending} onClick={sendRequest} />
             <div className="section">
                 {isLoaded ? 
                     <div className={styles.return}> 
                         <Color src={img} crossOrigin="anonymous" format="hex">
-                            {({ data, loading }) => {
-                            // if (loading) return <Loading />;
-                            // console.log("data", data)
+                            {({ data}) => {
                             let color = data
                             return (
                                 <div className={styles.cardsection} style={{backgroundColor: `${color}`}}>
-                                        {/* // <p style={{color: data}}>Predominant color: <strong>{data}</strong></p> */}
                                         <SongCard data={this.state.songData} /> 
                                     </div>
                                 );
                             }}
                         </Color>
                         <div className={styles.buttonsection}>
-                            <button className={styles.btn + ' ' + styles.trackbutton} onClick={this.handleClick}>Get another random song</button>
+                            <button className={styles.btn + ' ' + styles.trackbutton} onClick={this.handleClick} disabled={disabled}>{this.buttonText()}</button>
                         </div>
                     </div>
                 : 
-                <div className={styles.return}>
-                    <div className={styles.sectioncenter}>
-                    
-                        {/* <h1 className={styles.instructfill}>Click the button to get a random song!</h1> */}
-                        <button className={styles.btn + ' ' + styles.newsongbutton} onClick={this.handleClick}>{isLoaded ?  'Get another random song': 'Get a random song' }</button>
-                        {/* <SongCard data={this.state.songData} /> */}
+                    <div className={styles.return}>
+                        <div className={styles.sectioncenter}>
+                            <button className={styles.btn + ' ' + styles.newsongbutton} onClick={this.handleClick} disabled={disabled}>{text}</button>
+                        </div>
                     </div>
-                </div>
                 }
             </div>
         )

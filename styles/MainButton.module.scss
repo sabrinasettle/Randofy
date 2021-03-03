@@ -54,9 +54,13 @@
     animation-duration: 3s;
   }
   .newsongbutton:hover::after, .newsongbutton:hover::before {
-    // left: 96px;
     width: 100%;
-    
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+
+  .newsongbutton:disabled::after, .newsongbutton:disabled::before {
+    width: 100%;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
   }
