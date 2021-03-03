@@ -1,6 +1,6 @@
 # About Randofy
 
-This is the frontend for the application [Randofy](rendofy.vercel.app), using Next.js and the Spotify API. This app deilvers randomized songs from the Spotify database. You can login and save them into a playlist, or copy and paste into your preferred music application. 
+This is the frontend for the application [Randofy](http://randofy.vercel.app/), using Next.js and the Spotify API. This app deilvers randomized songs from the Spotify database. You can login and save them into a playlist, or copy and paste into your preferred music application. 
 
 ## Learn More
 ### Deployed on Vercel
