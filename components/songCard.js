@@ -6,7 +6,7 @@ import styles from '../styles/SongCard.module.scss'
 class SongCard extends React.Component {
     constructor(props){
         super(props);
-        console.log(props);
+        // console.log(props);
         this.state = { 
             // isLoaded: false,
             visible: false,
