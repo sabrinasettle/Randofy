@@ -1,6 +1,15 @@
 nav.mainnav {
     float: right;
     padding-right: 20px;
-    padding-top: 40px;
+    padding-top: 25px;
     text-align: center;
+}
+
+ul.mainul {
+    list-style-type: none;
+}
+
+li.link {
+    display: inline;
+    padding-right: 16px;
 }
