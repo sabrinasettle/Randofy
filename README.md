@@ -17,3 +17,5 @@ To learn more about Next.js, take a look at the following resources:
 
 ### Notes
 https://blog.maximeheckel.com/posts/data-fetching-with-next-js
+
+- Start dev - ```npm run dev```
