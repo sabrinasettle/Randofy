@@ -1,47 +1,19 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# About Randofy
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+This is the frontend for the application [Randofy](http://randofy.vercel.app/), using Next.js and the Spotify API. This app deilvers randomized songs from the Spotify database. You can login and save them into a playlist, or copy and paste into your preferred music application. 
 
 ## Learn More
+### Deployed on Vercel
+
+[Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+### About Next.js
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-
 ### Notes
 https://blog.maximeheckel.com/posts/data-fetching-with-next-js
-
-
-# To Do
-
-[x] Make back ground of MainButton return a different color based on an image. This may work https://alligator.io/react/extract-dominant-colors-from-images/ or https://lokeshdhakar.com/projects/color-thief/#api
-
-[] Styling the List
-
-[] Loading animation and logic. Watch this https://www.youtube.com/watch?v=0LstwqHt8G8
-
-[] add button disable while isLoaded is false in mainButton
-
-[] get text in different sizes depending on length of text in SongCard
