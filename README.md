@@ -38,10 +38,6 @@ https://blog.maximeheckel.com/posts/data-fetching-with-next-js
 
 [x] Make back ground of MainButton return a different color based on an image. This may work https://alligator.io/react/extract-dominant-colors-from-images/ or https://lokeshdhakar.com/projects/color-thief/#api
 
-[] Get context working
-
-[] Get localStorage working as well
-
 [] Styling the List
 
 [] Loading animation and logic. Watch this https://www.youtube.com/watch?v=0LstwqHt8G8

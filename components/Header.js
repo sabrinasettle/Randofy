@@ -5,6 +5,7 @@ import styles from '../styles/Header.module.scss';
 
 class Header extends React.Component {
     render(){
+        console.log(this.props.spotifyUser, "header")
         return(
             <header className={styles.header}>
                 <h1 className={styles.title}><Link href='/'>Randofy</Link></h1>

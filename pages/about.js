@@ -4,6 +4,8 @@ import Link from '@material-ui/core/Link';
 import styles from '../styles/About.module.scss'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { SpotifyContext } from '../context'
+
 
 class About extends React.Component {
     
@@ -19,11 +21,6 @@ class About extends React.Component {
                 author: "Marilyn Manson",
                 source: null
             },
-            // {
-            //     quote: "I Wanna Hold Your Hand.’ First single. Fucking brilliant. Perhaps the most fucking brilliant song ever written. Because they nailed it. That’s what everyone wants. Not 24-7 hot wet sex. Not a marriage that lasts a hundred years. Not a Porsche or a blow job or a million-dollar crib. No. They wanna hold your hand. They have a feeling that they can’t hide.",
-            //     author: "Rachel Cohn",
-            //     source: "Nick & Norah's Infinite Playlist",
-            // },
             {
                 quote: "I love the relationship that anyone has with music ... because there's something in us that is beyond the reach of words, something that eludes and defies our best attempts to spit it out. ... It's the best part of us probably ...",
                 author: "Nick Hornby", 
@@ -81,7 +78,19 @@ class About extends React.Component {
                     <link rel="preconnect" href="https://fonts.gstatic.com"></link>
                     <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
                 </Head>
-                <Header />
+                <SpotifyContext.Consumer>
+                {spotifyUser => spotifyUser && spotifyUser.spotifyUser ? 
+                    (
+                        <div>
+                            <Header spotifyUser={spotifyUser} />
+                        </div>
+                    ) : (
+                        <div>
+                            <Header spotifyUser={null} />
+                        </div>
+                    )
+                }
+                </SpotifyContext.Consumer>
                 <div id={styles.grid}>
                     <div className={styles.section} id={styles.dict}>
                         <h2>
