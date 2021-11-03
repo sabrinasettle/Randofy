@@ -2,10 +2,8 @@ import Head from 'next/head'
 import MainButton from '../components/mainButton'
 import React from 'react';
 import liststyles from '../styles/List.module.scss'
-import {SpotifyContext, withSpotify} from '../context'
+import { SpotifyContext, withSpotify } from '../context'
 import styles from '../styles/Home.module.scss'
-// import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-// import Button from '@material-ui/core/Button';
 import CardNav from '../components/listNav'
 import Nav from '../components/Nav';
 import Header from '../components/Header';
@@ -61,12 +59,6 @@ class Home extends React.Component {
       isLoading: false,
     });
     localStorage.setItem('songList', JSON.stringify(temp_arr));
-    // const { songList } = temp_arr;
-    // var list = localStorage.getItem('songList')
-  }
-
-  clearList = () => {
-
   }
 
   List = ({spotifyUser}) => {
@@ -112,7 +104,6 @@ class Home extends React.Component {
                 <p>{dataObj.is_explicit ? 'Explicit' : 'Nonexplicit'}</p>
                 <p>Number of attempts to get this song: {dataObj.attempts}</p>
                 {/* Need to send the user true/false value and the song true/false value */}
-                
                 <CardNav data={parentData} />                 
                 </div>
               </div>
@@ -126,13 +117,14 @@ class Home extends React.Component {
 
   render() {
     const {isLoading, songList, spotifyUser} = this.state
+    console.log(spotifyUser, "index");
     return (
       <>
         <Head>
           <html lang='en-us' />
           <meta charSet="utf-8" />
-          <title>Randofy - Spotify Song Randomizer </title>
-          <meta name="description" content="Generate a completely random Spotify song with a click!" />
+          <title>Randofy - Spotify Track Randomizer </title>
+          <meta name="description" content="Generate a completely random track from Spotify with a click!" />
           <link rel="preconnect" href="https://fonts.gstatic.com"></link>
           <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Poppins&family=Righteous&family=Rubik&family=JetBrains+Mono&display=swap" rel="stylesheet"></link>
           <meta name="google-site-verification" content="U0dN7iMS6_CGDy31qxDUYcDzAWx3Bl5WyQbG8of7tKQ" />
@@ -143,10 +135,6 @@ class Home extends React.Component {
           {spotifyUser => spotifyUser && spotifyUser.spotifyUser ? 
           (<div>
             <Header spotifyUser={spotifyUser} />
-            {/* <header className={styles.header}>
-              <h1 className={styles.title}>Randofy</h1>
-              <Nav spotifyUser={spotifyUser} />
-            </header> */}
             <MainButton updateList={this.updateList}/>
             <div className={styles.sectionmain}>
               { songList.length < 1 ? 
@@ -157,10 +145,6 @@ class Home extends React.Component {
           </div>) 
           : (<div>
               <Header spotifyUser={null} />
-              {/* <header className={styles.header}>
-                <h1 className={styles.title}>Randofy</h1>
-                <Nav spotifyUser={null} />
-              </header> */}
               <MainButton updateList={this.updateList}/>
               <div className={styles.sectionmain}>
                 { songList.length < 1 ? 
