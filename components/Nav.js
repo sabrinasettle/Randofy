@@ -22,7 +22,7 @@ class Nav extends React.Component {
                         {this.props.spotifyUser ? 
                             <li className={styles.link}>
                                 <Button 
-                                variant="contained"
+                                variant="outlined" style={{borderColor:"white"}}
                                 onClick={() => this.props.spotifyUser.destroySesh()}
                                 >
                                     Logout
