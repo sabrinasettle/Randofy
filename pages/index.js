@@ -117,7 +117,7 @@ class Home extends React.Component {
 
   render() {
     const {isLoading, songList, spotifyUser} = this.state
-    console.log(spotifyUser, "index");
+    // console.log(spotifyUser, "index");
     return (
       <>
         <Head>
