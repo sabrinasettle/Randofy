@@ -25,7 +25,7 @@ class MainButton extends React.Component {
         // Returns so that multiple presses don't happen
         if (this.state.isLoading) return;
         this.setState({isLoading: true});
-        axios.get(`https://randofy-backend.herokuapp.com/random`)
+        axios.get(`https://randofy-backend.vercel.app/api/random`)
         .then(response => {
             if (this.props.updateList){
                 this.props.updateList(response.data);
