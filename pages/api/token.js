@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 	});
 
 	const response = await spotifyRes.json();
-	console.log(response);
+	// console.log(response);
 	if (response.status === 200) {
 		res.status(200).send(response.data);
 	} else {

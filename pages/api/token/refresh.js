@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 	).toString('base64');
 
 	const grant = `grant_type=refresh_token&refresh_token=${refresh}&client_id=${process.env['SPOT_ID']}&client_secret=${process.env['SPOT_SECRET']}`;
-	console.log(grant);
+	// console.log(grant);
 	const spotifyRes = await fetch('https://accounts.spotify.com/api/token', {
 		method: 'POST',
 		headers: {
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 		body: `grant_type=refresh_token&refresh_token=${refresh}`,
 	});
 	const response = await spotifyRes.json();
-	console.log(response);
+	// console.log(response);
 	if (response.status === 200) {
 		res.status(200).send(response.data);
 	} else {
