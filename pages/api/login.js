@@ -1,7 +1,7 @@
 var clientId = process.env['SPOT_ID'];
 var redirect_uri =
 	process.env.NODE_ENV === 'development'
-		? 'http://localhost:3000'
+		? 'http://localhost:3000/'
 		: 'https://randofy.vercel.app/';
 
 export default function handler(req, res) {
@@ -12,8 +12,8 @@ export default function handler(req, res) {
 			'?response_type=code' +
 			'&client_id=' +
 			clientId +
-			(scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+			(scopes ? '&scope=' + scopes : '') +
 			'&redirect_uri=' +
-			encodeURIComponent(redirect_uri),
+			redirect_uri,
 	);
 }
