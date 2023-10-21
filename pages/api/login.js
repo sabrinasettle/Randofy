@@ -1,6 +1,3 @@
-// import express from "express";
-// const router = express.Router();
-
 var clientId = process.env['SPOT_ID'];
 var redirect_uri =
 	process.env.NODE_ENV === 'development'
@@ -20,9 +17,3 @@ export default function handler(req, res) {
 			encodeURIComponent(redirect_uri),
 	);
 }
-
-// router.get("/a", function (req, res, next) {
-//   res.send(`<p>testing</p>`);
-// });
-
-// export { router as LOGIN };
