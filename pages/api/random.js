@@ -1,5 +1,3 @@
-import express from 'express';
-const router = express.Router();
 import getRandomSearch from '../../lib/js/helpers/randomLib.mjs';
 import { spotifyApi } from '../../lib/js/spotify-api/SpotifyClient.mjs';
 
