@@ -7,8 +7,14 @@ export const config = {
 	},
 };
 
+var redirect_uri =
+	process.env.NODE_ENV === 'development'
+		? 'http://localhost:3000/'
+		: 'https://randofy.vercel.app/';
+
 export default async function handler(req, res) {
 	const code = req.query.code;
+	// console.log(code);
 	const encoded = Buffer.from(
 		process.env['SPOT_ID'] + ':' + process.env['SPOT_SECRET'],
 	).toString('base64');
@@ -21,10 +27,7 @@ export default async function handler(req, res) {
 			'Cache-Control': 'no-cache',
 			Authorization: `Basic ${encoded}`,
 		},
-		body: `grant_type=authorization_code&code=${encodeURIComponent(
-			code,
-		)}&redirect_uri=${encodeURIComponent('https://randofy.vercel.app/')}
-		}`,
+		body: `grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}`,
 	});
 
 	const response = await spotifyRes.json();
