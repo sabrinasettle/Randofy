@@ -6,7 +6,6 @@ export default function Document() {
 			<Head>
 				<html lang="en-us" />
 				<meta charSet="utf-8" />
-				<title>Randofy - Spotify Track Randomizer </title>
 				<meta
 					name="description"
 					content="Generate a completely random track from Spotify with a click!"
