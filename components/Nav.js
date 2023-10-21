@@ -29,9 +29,7 @@ class Nav extends React.Component {
 								</li>
 							) : (
 								<li className={styles.link}>
-									<Link
-										href="https://randofy-backend.herokuapp.com/login/"
-										styles={{ paddingLeft: '10px' }}>
+									<Link href="/api/login" styles={{ paddingLeft: '10px' }}>
 										<Button variant="outlined" style={{ borderColor: 'white' }}>
 											Login to Spotify
 										</Button>
