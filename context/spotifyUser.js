@@ -31,7 +31,7 @@ const withSpotify = Component => {
 			// checks if auth is present and if a new time is greater than the time for auth
 			if (this.state.auth && new Date() > this.state.auth.expires_at) {
 				return await axios
-					.get(`https://randofy-backend.herokuapp.com/token/refresh`, {
+					.get(`/api/token/refresh`, {
 						params: { refresh_token: this.state.auth.refresh_token },
 					})
 					.then(response => {
@@ -110,7 +110,7 @@ const withSpotify = Component => {
 			// https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
 			// needs the access_token and token_type in the request
 			return await axios
-				.get(`https://randofy-backend.herokuapp.com/token`, {
+				.get(`/api/token`, {
 					params: {
 						code,
 					},
