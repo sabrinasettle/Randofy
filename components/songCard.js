@@ -64,11 +64,6 @@ class SongCard extends React.Component {
               </h1>
               <p className={styles.artist}> {this.props.data.track_artist}</p>
               <p className={styles.album}> {this.props.data.album_name}</p>
-              {this.props.data.preview_url && (
-                <audio controls>
-                  <source src={this.props.data.preview_url}></source>
-                </audio>
-              )}
             </div>
           </div>
         ) : (
