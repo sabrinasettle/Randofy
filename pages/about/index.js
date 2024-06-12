@@ -119,12 +119,12 @@ function About({ ...props }) {
 					</p>
 					<div>
 						<p>
-							You can check out our Randofy finds
-							<Link href="https://open.spotify.com/playlist/1fehOuEhzy0BS64ji8hmhU">
+							You can check out our Randofy finds{' '}
+							<Link styles={'color: blue'} href="https://open.spotify.com/playlist/1fehOuEhzy0BS64ji8hmhU">
 								here
 							</Link>{' '}
 							and{' '}
-							<Link href="https://open.spotify.com/playlist/2BTnvHQf3DuoKMXI6LFMmS">
+							<Link styles={'color: blue'} href="https://open.spotify.com/playlist/2BTnvHQf3DuoKMXI6LFMmS">
 								here
 							</Link>
 							!
@@ -136,11 +136,11 @@ function About({ ...props }) {
 					</p>
 					<span>
 						Find us on Github{' '}
-						<Link href="https://github.com/settleformore" target="_blank">
+						<Link styles={'color: blue'} href="https://github.com/sabrinasettle" target="_blank">
 							here
 						</Link>{' '}
 						and{' '}
-						<Link href="https://github.com/SLO42" target="_blank">
+						<Link styles={'color: blue'} href="https://github.com/SLO42" target="_blank">
 							here
 						</Link>
 						.
