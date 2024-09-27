@@ -29,11 +29,61 @@
     --border-secondary: var(--white-100);
 }
 
+.text-xl {
+    font-size: 20px;
+    line-height: 30px;
+}
+.text-lg {
+    font-size: 18px;
+    line-height: 28px;
+}
+.text-md {
+    font-size: 16px;
+    line-height: 24px;
+}
+.text-sm {
+    font-size: 14px;
+    line-height: 20px;
+}
+.text-xs {
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.display-2xl {
+    font-size: 72px;
+    line-height: 90px;
+    letter-spacing: -2%;
+}
+.display-xl {
+    font-size: 60px;
+    line-height: 72px;
+    letter-spacing: -2%;
+}
+.display-l {
+    font-size: 48px;
+    line-height: 60px;
+    letter-spacing: -2%;
+}
+.display-md {
+    font-size: 36px;
+    line-height: 44px;
+    letter-spacing: -2%;
+}
+.display-sm {
+    font-size: 30px;
+    line-height: 38px;
+}
+.display-xs {
+    font-size: 24px;
+    line-height: 32px;
+}
+
 html,
 body {
     padding: 0;
     margin: 0;
-    font-family: var(--font_hanken_grotesk);
+    font-family: var(--font-hanken_grotesk);
     height: 100vh;
     background-color: var(--gray-800);
     color: var(--white-100);
