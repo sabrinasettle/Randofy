@@ -1,0 +1,43 @@
+:root {
+    --gray-800: #1c1c1c;
+    --gray-700: #252525;
+    --gray-600: #535353;
+    --gray-500: #a2a2a2;
+    --gray-400: #3d3c3c;
+    --gray-300: #cdcdcd;
+    --gray-200: #d9d9d9;
+    --gray-100: #f5f5f5;
+
+    --white-100: #f9fbf7;
+
+    --focus-gradient: linear-gradient(
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0.58),
+        rgba(0, 0, 0, 0.92),
+        rgba(0, 0, 0, 1)
+    );
+    --transparent-background: hsl(0, 0, 100, 9%);
+
+    --content-color-primary: var(--white-100);
+    --content-color-secondary: var(--gray-300);
+    --content-color-ter: var(--gray-100);
+
+    --button-surface-primary: var(--gray-600);
+    --button-surface-secondary: var(--white-100);
+
+    --border-primary: var(--gray-400);
+    --border-secondary: var(--white-100);
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: var(--font_hanken_grotesk);
+    height: 100vh;
+    background-color: var(--gray-800);
+    color: var(--white-100);
+}
+
+a {
+}
