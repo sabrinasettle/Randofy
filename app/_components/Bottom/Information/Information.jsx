@@ -7,7 +7,7 @@ export default function Information() {
   return (
     <button
       id={styles["information-btn"]}
-      className="btn btn__overlay"
+      className="btn btn__overlay text-sm"
       onClick={() => setIsOpen(!isOpen)}
     >
       Icon

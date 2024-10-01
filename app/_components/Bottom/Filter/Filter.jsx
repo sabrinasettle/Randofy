@@ -11,7 +11,7 @@ export default function Filter() {
       {isOpen && <div className="filter-modal"></div>}
       <button
         id={styles["filter-btn"]}
-        className="btn btn__overlay"
+        className="btn btn__overlay text-sm"
         onClick={() => setIsOpen(!isOpen)}
       >
         Filter

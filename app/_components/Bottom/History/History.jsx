@@ -7,7 +7,7 @@ export default function History() {
   return (
     <button
       id={styles["history-btn"]}
-      className="btn btn__overlay"
+      className="btn btn__overlay btn__center text-sm"
       onClick={() => setIsOpen(!isOpen)}
     >
       History

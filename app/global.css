@@ -125,6 +125,11 @@ li {
     font-family: var(--font-hanken_grotesk);
 }
 
+.btn__center {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 .btn__cta {
     background-color: var(--button-surface-secondary);
     color: var(--gray-700);
@@ -146,6 +151,7 @@ li {
     padding: 12px 48px;
     top: 10px;
     left: 50%;
+    transform: translateX(-50%);
 }
 
 #sign-in {
