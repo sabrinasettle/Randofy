@@ -1,0 +1,25 @@
+.song-card {
+    width: 240px;
+    height: 240px;
+    border-radius: 20px;
+    padding: 4px;
+}
+
+.ghost {
+    background-color: var(--transparent-background-gray);
+    border: var(--gray-700);
+}
+
+.content {
+    border-radius: 16px;
+    width: 100%;
+}
+
+.song-title {
+}
+.song-artist {}
+
+.active {
+    width: 298px;
+    height: 298px;
+}

@@ -2,6 +2,7 @@
     --gray-800: #1c1c1c;
     --gray-700: #252525;
     --gray-600: #535353;
+    /* 353535 */
     --gray-500: #a2a2a2;
     --gray-400: #3d3c3c;
     --gray-300: #cdcdcd;
@@ -17,12 +18,13 @@
         rgba(0, 0, 0, 1)
     );
     --transparent-background: hsl(0, 0, 100, 9%);
+    --transparent-background-gray: hsl(0, 0, 16, 20%);
 
     --content-color-primary: var(--white-100);
     --content-color-secondary: var(--gray-300);
     --content-color-ter: var(--gray-100);
 
-    --button-surface-primary: var(--gray-600);
+    --button-surface-primary: var(--gray-700);
     --button-surface-secondary: var(--white-100);
 
     --border-primary: var(--gray-400);
@@ -79,15 +81,79 @@
     line-height: 32px;
 }
 
+.bold {
+    font-weight: 700;
+}
+.semi-bold {
+    font-weight: 600;
+}
+.medium {
+    font-weight: 500;
+}
+.reg {
+    font-weight: 400;
+}
+.light {
+    font-weight: 300;
+}
+
 html,
 body {
     padding: 0;
     margin: 0;
     font-family: var(--font-hanken_grotesk);
-    height: 100vh;
+    /* height: 100vh; */
     background-color: var(--gray-800);
     color: var(--white-100);
 }
 
 a {
+}
+
+ul,
+li {
+    margin: 0;
+    padding: 0;
+}
+
+.btn {
+    background-color: var(--button-surface-primary);
+    color: var(--content-color-primary);
+    border-radius: 40px;
+    padding: 12px 16px;
+    border: var(--border-primary) 1px solid;
+    font-family: var(--font-hanken_grotesk);
+}
+
+.btn__cta {
+    background-color: var(--button-surface-secondary);
+    color: var(--gray-700);
+}
+
+.btn__overlay {
+    z-index: 40;
+    position: absolute;
+}
+
+.btn__active {
+    border: var(--border-secondary) 1px solid;
+}
+
+.btn__hover {
+}
+
+#generate {
+    padding: 12px 48px;
+    top: 10px;
+    left: 50%;
+}
+
+#sign-in {
+    top: 10px;
+    right: 10px;
+}
+
+#title {
+    top: 10px;
+    left: 10px;
 }

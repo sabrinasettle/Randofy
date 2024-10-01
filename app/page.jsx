@@ -1,7 +1,13 @@
+import SongList from "./_components/SongList/SongList";
+import Top from "./_components/Top";
+import Bottom from "./_components/Bottom";
+
 export default function Main() {
   return (
     <div>
-      <p>Start Here</p>
+      <Top />
+      <SongList />
+      <Bottom />
     </div>
   );
 }
