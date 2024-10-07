@@ -3,9 +3,12 @@ import { useState } from "react";
 import GhostCard from "../GhostCard/GhostCard";
 import SongCard from "../SongCard/SongCard";
 import styles from "./SongList.module.scss";
+import { useSpotifyContext } from "../../context/spotify-context";
 
 const DefaultSongList = () => {
   const [isHover, setIsHover] = useState(false);
+
+  const { spotifyClient } = useSpotifyContext();
 
   function hoverOver() {
     setIsHover(!isHover);

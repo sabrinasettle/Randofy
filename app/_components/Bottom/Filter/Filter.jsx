@@ -6,13 +6,18 @@ import { useState } from "react";
 // button is absolute
 export default function Filter() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   return (
     <>
       {isOpen && <div className="filter-modal"></div>}
       <button
         id={styles["filter-btn"]}
-        className="btn btn__overlay text-sm"
-        onClick={() => setIsOpen(!isOpen)}
+        className={
+          !isActive
+            ? `btn btn__overlay text-sm`
+            : `btn btn__overlay btn__active text-sm`
+        }
+        onClick={() => setIsActive(!isActive)}
       >
         Filter
       </button>
