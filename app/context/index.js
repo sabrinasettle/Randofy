@@ -1,4 +1,3 @@
-import SpotifyContext from './context'
-import withSpotify from './spotifyUser'
+import SpotifyContext from "./context";
 
-export {SpotifyContext, withSpotify}
+export { SpotifyContext };

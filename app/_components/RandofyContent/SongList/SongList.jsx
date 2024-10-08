@@ -1,28 +1,36 @@
 "use client";
 import { useState } from "react";
 import GhostCard from "../GhostCard/GhostCard";
-import SongCard from "../SongCard/SongCard";
+// import SongCard from "../SongCard/SongCard";
 import styles from "./SongList.module.scss";
-import { useSpotifyContext } from "../../context/spotify-context";
+import { useSpotifyContext } from "../../../context/spotify-context";
 
+// add isLoading from RandofyContent
 const DefaultSongList = () => {
   const [isHover, setIsHover] = useState(false);
 
   const { spotifyClient } = useSpotifyContext();
 
-  function hoverOver() {
-    setIsHover(!isHover);
-  }
+  // function hoverOver() {
+  //   setIsHover(!isHover);
+  // }
 
   const defaultCards = Array.from({ length: 5 }).map((_, index) => (
     <GhostCard key={index} value={index + 1} hover={isHover} />
   ));
+
+  async function generateSongs() {
+    //isLoading
+    const songs = await spotifyClient.getSongs();
+    //isLoading
+  }
 
   return (
     <div
       className={styles["list-container"]}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
+      onClick={generateSongs}
     >
       {isHover && (
         <div className={styles["overlay-text"]}>
