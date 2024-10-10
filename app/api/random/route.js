@@ -46,9 +46,10 @@ const getData = async (req, max) => {
     tracks?.map((item) => {
       recommendedTracks.push({
         track_name: item.name,
+        track_artists: item.artists,
         is_explicit: item.explicit,
         album_name: item.album?.name,
-        album_image: item.album.images[1],
+        album_image: item.album.images[0],
         track_id: item.id,
         //could be null
         preview_url: item.preview_url,

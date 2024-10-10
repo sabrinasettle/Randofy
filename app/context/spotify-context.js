@@ -12,6 +12,7 @@ export function SpotifyClientProvider({ children }) {
   const [error, setError] = React.useState(null);
   const [filters, setFilters] = React.useState({}); //set default filters here
   const [currentSongs, setCurrentSongs] = React.useState([]);
+  const [selectedSong, setSelectedSong] = React.useState({});
 
   let defaultFilters = {
     numberOfSongs: 5,
@@ -22,6 +23,7 @@ export function SpotifyClientProvider({ children }) {
     tempo: [0.0, 1.0], //float range from 0.0 to 1.0
     valence: [0.0, 1.0], //float range from 0.0 to 1.0
     speechiness: [0.0, 1.0], //float range from 0.0 to 1.0
+    market: "",
   };
 
   React.useEffect(() => {
@@ -251,6 +253,7 @@ export function SpotifyClientProvider({ children }) {
     setFilters,
     getSongs,
     currentSongs,
+    setCurrentSongs,
     //isLoading?
   };
 
