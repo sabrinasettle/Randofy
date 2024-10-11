@@ -13,6 +13,7 @@ export function SpotifyClientProvider({ children }) {
   const [filters, setFilters] = React.useState({}); //set default filters here
   const [currentSongs, setCurrentSongs] = React.useState([]);
   const [selectedSong, setSelectedSong] = React.useState({});
+  const [isLoading, setIsLoading] = React.useState(false);
 
   let defaultFilters = {
     numberOfSongs: 5,
@@ -231,15 +232,19 @@ export function SpotifyClientProvider({ children }) {
   };
 
   const getSongs = async () => {
+    setIsLoading(true);
     // await checkTokenTime();
     const params = new URLSearchParams();
     params.set("filters", JSON.stringify(filters));
     const res = await fetch("/api/random?" + params.toString());
 
     if (!res.ok) {
-      setError(res.json());
+      setError(await res.json());
+      setIsLoading(false);
     } else {
-      const data = res.json();
+      const data = await res.json();
+      setCurrentSongs(data.recommendedTracks);
+      setIsLoading(false);
       // setCurrentSongs
       //add it to history
       // localStorage.setItem("spotifyUser", JSON.stringify(data));
@@ -248,12 +253,26 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
+  // const generateSongs = async () => {
+  //   setIsLoading(!isLoading);
+  //   const songs = await getSongs();
+  //   if (songs && songs.length !== 0) {
+  //     setCurrentSongs(songs.recommendedTracks);
+  //     // setSonglist(songs.recommendedTracks);
+  //   }
+  //   setIsLoading(!isLoading);
+
+  //   //isLoading
+  // };
+
   const spotifyClient = {
     getPlaylist,
     setFilters,
     getSongs,
+    // generateSongs,
     currentSongs,
     setCurrentSongs,
+    isLoading,
     //isLoading?
   };
 
