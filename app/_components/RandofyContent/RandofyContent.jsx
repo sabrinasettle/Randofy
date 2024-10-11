@@ -4,23 +4,10 @@ import { useState } from "react";
 import SongList from "./SongList/SongList";
 import GhostList from "./GhostCard/GhostList";
 import { useSpotifyContext } from "../../context/spotify-context";
+import Loading from "../Loading/Loading";
 
 // Have a cancel button that abandons the search?? if isLoading
-const GenerateButton = () => {
-  const { spotifyClient } = useSpotifyContext();
-
-  // async function generateSongs() {
-  //   setIsLoading(!isLoading);
-  //   const songs = await spotifyClient.getSongs();
-  //   if (songs && songs.length !== 0) {
-  //     spotifyClient.setCurrentSongs(songs.recommendedTracks);
-  //     // setSonglist(songs.recommendedTracks);
-  //   }
-  //   setIsLoading(!isLoading);
-
-  //   //isLoading
-  // }
-
+const GenerateButton = ({ spotifyClient }) => {
   return (
     <button
       id="generate"
@@ -33,25 +20,17 @@ const GenerateButton = () => {
 };
 
 export default function RandofyContent() {
-  const [isLoading, setIsLoading] = useState(false);
   const { spotifyClient } = useSpotifyContext();
 
-  // async function getRandomSongs() {
-  //   setIsLoading(!isLoading);
-  //   const songs = await spotifyClient.getSongs();
-
-  //   // const songs = spotifyClient.currentSongs;
-  //   // console.log(songs);
-  //   setIsLoading(!isLoading);
-  // }
-  //
-  // spotifyClient.currentSongs;
-
+  function showItem() {
+    if (spotifyClient.isLoading) return <Loading />;
+    else if (spotifyClient.currentSongs.length !== 0) return <SongList />;
+    return <GhostList />;
+  }
   return (
     <>
-      <GenerateButton isLoading={isLoading} setIsLoading={setIsLoading} />
-      {/* spotifyClient.currentSongs.length > 0 */}
-      {spotifyClient.currentSongs.length === 0 ? <GhostList /> : <SongList />}
+      <GenerateButton spotifyClient={spotifyClient} />
+      <div className="content-container">{showItem()}</div>
     </>
   );
 }

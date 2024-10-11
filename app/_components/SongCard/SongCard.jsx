@@ -28,7 +28,7 @@ export default function SongCard({
     let artistString = "";
     for (let i = 0; i < len; i++) {
       // i === len - 1 || i === 0
-      if (i === 0 || i == len - 1) {
+      if ((i === 0 && i == len - 1) || i == len - 1) {
         artistString += artistArray[i];
       } else if (i !== len - 1) {
         artistString += artistArray[i] + ", ";

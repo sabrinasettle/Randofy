@@ -102,7 +102,6 @@ body {
     padding: 0;
     margin: 0;
     font-family: var(--font-hanken_grotesk);
-    /* height: 100vh; */
     background-color: var(--gray-800);
     color: var(--white-100);
 }
@@ -183,8 +182,9 @@ li {
     position: absolute;
     background: linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.9) 0%,
-        rgba(0, 0, 0, 0) 50%
+        rgba(0, 0, 0, 0.9) 20%,
+        rgba(0, 0, 0, 0.6) 50%,
+        rgba(0, 0, 0, 0) 100%
     );
 }
 
@@ -254,4 +254,12 @@ li {
     gap: 12px;
     list-style-type: none;
     padding-top: 12px;
+}
+
+.content-container {
+    position: relative;
+    width: min-content;
+    height: min-content;
+    overflow-x: scroll;
+    margin: 12% auto auto auto;
 }
