@@ -23,7 +23,7 @@ export default function GhostList() {
         </div>
       )}
 
-      <ul className={styles["song-list"]}>{defaultCards}</ul>
+      <ul className="song-list">{defaultCards}</ul>
     </div>
   );
 }

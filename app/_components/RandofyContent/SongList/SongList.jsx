@@ -31,7 +31,8 @@ export default function SongList() {
     <div>
       <div className="scrollbar"></div>
       <div className={styles["list-container"]}>
-        <ul>
+        <ul className="song-list">
+          {/* song-list */}
           {spotifyClient.currentSongs.length > 0 &&
             spotifyClient.currentSongs.map((song, index) => (
               <SongCard

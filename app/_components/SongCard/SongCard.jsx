@@ -47,7 +47,7 @@ export default function SongCard({
   }
 
   function listItemClassname() {
-    let string = "content";
+    let string = "card songcard";
 
     if (isHover && isActive()) {
       string += " " + "songcard__active" + " " + "songcard__hover";
@@ -61,21 +61,23 @@ export default function SongCard({
   }
 
   return (
-    // active and hover will affect the li element
     <li
-      //   className={isActive ? `song-card` : `song-card active`}
       className={listItemClassname()}
       key={`${song.track_name}` + `${song.track_id}`}
       onClick={moveOrNot}
       onMouseEnter={hoverOver}
       onMouseLeave={hoverOver}
     >
-      <div>
-        <img src={song.album_image.url} />
+      <div className="content">
+        <div className={isActive() ? `overlay overlay__active` : `overlay`}>
+          <div className="album-image-container">
+            <img className="album-image" src={song.album_image.url} />
+          </div>
+        </div>
         {isActive() && (
-          <div>
-            <h2 className="song-title">{song.track_name}</h2>
-            <h3 className="song-artist">{createArtists()}</h3>
+          <div className="song-details">
+            <p className="song-title semi-bold text-md">{song.track_name}</p>
+            <p className="song-artist reg text-md">{createArtists()}</p>
           </div>
         )}
       </div>
