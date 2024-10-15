@@ -1,5 +1,8 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
+import { useColor } from "color-thief-react";
+import { useSpotifyContext } from "../../context/spotify-context";
 
 export default function SongCard({
   song,
@@ -9,6 +12,12 @@ export default function SongCard({
   scrollTo,
 }) {
   const [isHover, setIsHover] = useState(false);
+  const { spotifyClient } = useSpotifyContext();
+  const { data, loading, error } = useColor(
+    song.album_image.url,
+    "rgbString",
+    {},
+  );
 
   function hoverOver() {
     setIsHover(!isHover);
@@ -27,7 +36,6 @@ export default function SongCard({
 
     let artistString = "";
     for (let i = 0; i < len; i++) {
-      // i === len - 1 || i === 0
       if ((i === 0 && i == len - 1) || i == len - 1) {
         artistString += artistArray[i];
       } else if (i !== len - 1) {
@@ -40,8 +48,10 @@ export default function SongCard({
 
   function moveOrNot() {
     if (isActive()) {
+      spotifyClient.setSelectedSong({ index: index, song: { song } });
       songIsActive(index);
     } else {
+      spotifyClient.setSelectedSong({ index: index, song });
       scrollTo(index);
     }
   }
@@ -56,22 +66,37 @@ export default function SongCard({
     } else if (!isActive() && isHover) {
       string += " " + "songcard__hover";
     }
-
     return string;
   }
+
+  let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
+
+  const smImage = "240";
+  const lgImage = "298";
+
+  // console.log(data);
+  //
+  let keyString = `${song.track_name}` + `${song.track_id}`;
 
   return (
     <li
       className={listItemClassname()}
-      key={`${song.track_name}` + `${song.track_id}`}
+      key={keyString}
       onClick={moveOrNot}
       onMouseEnter={hoverOver}
       onMouseLeave={hoverOver}
+      style={{ backgroundColor: data }}
     >
       <div className="content">
         <div className={isActive() ? `overlay overlay__active` : `overlay`}>
           <div className="album-image-container">
-            <img className="album-image" src={song.album_image.url} />
+            <Image
+              className="album-image"
+              src={song.album_image.url}
+              height={isActive() ? lgImage : smImage}
+              width={isActive() ? lgImage : smImage}
+              alt={alt}
+            />
           </div>
         </div>
         {isActive() && (

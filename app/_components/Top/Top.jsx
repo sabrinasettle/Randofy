@@ -1,13 +1,15 @@
 // import GenerateButton from "./Generate/GenerateButton";
 "use client";
-import SignIn from "./SignIn/SignInButton";
+import Link from "next/link";
 import Title from "./Title/Title";
 
 export default function Top() {
   return (
     <>
       <Title />
-      <SignIn />
+      <Link id="history-link" className="link" href={"/history"}>
+        History
+      </Link>
     </>
   );
 }

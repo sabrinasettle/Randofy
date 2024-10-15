@@ -243,12 +243,16 @@ export function SpotifyClientProvider({ children }) {
       setIsLoading(false);
     } else {
       const data = await res.json();
+      let song = data.recommendedTracks[0];
       setCurrentSongs(data.recommendedTracks);
       setIsLoading(false);
+      setSelectedSong({ index: 0, song });
+
       // setCurrentSongs
       //add it to history
       // localStorage.setItem("spotifyUser", JSON.stringify(data));
       //current display
+
       return data;
     }
   };
@@ -269,11 +273,11 @@ export function SpotifyClientProvider({ children }) {
     getPlaylist,
     setFilters,
     getSongs,
-    // generateSongs,
     currentSongs,
     setCurrentSongs,
     isLoading,
-    //isLoading?
+    setSelectedSong,
+    selectedSong,
   };
 
   const context = {

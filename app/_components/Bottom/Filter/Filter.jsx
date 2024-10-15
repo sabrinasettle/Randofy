@@ -7,9 +7,22 @@ import { useState } from "react";
 export default function Filter() {
   const [isOpen, setIsOpen] = useState(false);
   const [isActive, setIsActive] = useState(false);
+
+  function handleOpen() {
+    setIsActive(!isActive);
+    setIsOpen(!isOpen);
+  }
+
   return (
     <>
-      {isOpen && <div className="filter-modal"></div>}
+      {isOpen && (
+        <div className={styles["filter-modal"]}>
+          <div>
+            <input type="range" id="volume" name="volume" min="0" max="11" />
+            <label for="volume">Volume</label>
+          </div>
+        </div>
+      )}
       <button
         id={styles["filter-btn"]}
         className={
@@ -17,7 +30,7 @@ export default function Filter() {
             ? `btn btn__overlay text-sm`
             : `btn btn__overlay btn__active text-sm`
         }
-        onClick={() => setIsActive(!isActive)}
+        onClick={handleOpen}
       >
         Filter
       </button>

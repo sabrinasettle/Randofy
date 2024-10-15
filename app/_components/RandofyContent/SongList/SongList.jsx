@@ -26,6 +26,27 @@ export default function SongList() {
     setActiveCard(index);
   }
 
+  function createArtists(song) {
+    let artistArray = [];
+    let len = song.track_artists.length;
+    song.track_artists.map((item) => {
+      artistArray.push(item.name);
+    });
+
+    let artistString = "";
+    for (let i = 0; i < len; i++) {
+      if ((i === 0 && i == len - 1) || i == len - 1) {
+        artistString += artistArray[i];
+      } else if (i !== len - 1) {
+        artistString += artistArray[i] + ", ";
+      }
+    }
+
+    return artistString;
+  }
+
+  // console.log(spotifyClient.selectedSong.song.track_name);
+
   return (
     <div>
       <div className="scrollbar"></div>
@@ -40,11 +61,19 @@ export default function SongList() {
                 activeCard={activeCard}
                 songIsActive={songIsActive}
                 scrollTo={scrollTo}
+                createArtists={createArtists}
               />
             ))}
         </ul>
       </div>
-      <div className="Music Player"></div>
+      <div className="Music Player">
+        {spotifyClient.currentSongs.length > 0 && (
+          <div>
+            <div>{spotifyClient.selectedSong.song.track_name}</div>
+            <div>{createArtists(spotifyClient.selectedSong.song)}</div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

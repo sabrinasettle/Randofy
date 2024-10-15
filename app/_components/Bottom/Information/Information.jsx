@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import styles from "../Bottom.module.scss";
+import { Info } from "lucide-react";
 
 export default function Information() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function Information() {
       }
       onClick={() => setIsActive(!isActive)}
     >
-      Icon
+      <Info size={20} />
     </button>
   );
 }
