@@ -96,9 +96,10 @@ $thumb-size: 14px;
 }
 
 .control-wrapper {
-    width: 100%;
+    width: calc(100% - 28px);
     height: $thumb-size;
     position: absolute;
+    padding-left: 7px;
 }
 
 .rail {
@@ -120,6 +121,15 @@ $thumb-size: 14px;
     top: 25%;
 }
 
+.dot__active {
+    height: 8px;
+    width: 8px;
+    position: absolute;
+    background: #d9d9d9;
+    border-radius: 50%;
+    top: 25%;
+}
+
 .inner-rail {
     position: absolute;
     height: 100%;
@@ -132,7 +142,7 @@ $thumb-size: 14px;
     border-radius: 50%;
     background: #d9d9d9;
     top: 50%;
-    margin-left: calc(14px / -2);
+    margin-right: calc($thumb-size / -6);
     transform: translate3d(0, -50%, 0);
     z-index: 2;
     position: absolute;

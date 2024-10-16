@@ -42,6 +42,10 @@ export default function FilterSlider({
   const minPos = ((range.min - min) / (max - min)) * 100;
   const maxPos = ((range.max - min) / (max - min)) * 100;
 
+  const isActiveMarker = (position) => {
+    return position < minPos || position > maxPos;
+  };
+
   console.log(minPos, maxPos, range.min, range.max);
 
   return (
@@ -78,14 +82,22 @@ export default function FilterSlider({
           </div>
           <div className={styles["control-wrapper"]}>
             <div className={styles.control} style={{ left: `${minPos}%` }} />
-            <div className={styles.dot} style={{ left: "25%" }} />
-            <div className={styles.dot} style={{ left: "50%" }} />
-            <div className={styles.dot} style={{ left: "75%" }} />
-            <div className={styles.rail}>
-              <div
-                className={styles["inner-rail"]}
-                style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }}
-              />
+            <div
+              className={styles["rail-wrapper"]}
+              style={{ height: "100%", width: "100%" }}
+            >
+              <div className={styles.dot} style={{ left: "0%" }} />
+              <div className={styles.dot} style={{ left: "25%" }} />
+              <div className={styles.dot} style={{ left: "50%" }} />
+              <div className={styles.dot} style={{ left: "75%" }} />
+              <div className={styles.dot} style={{ left: "100%" }} />
+
+              <div className={styles.rail}>
+                <div
+                  className={styles["inner-rail"]}
+                  style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }}
+                />
+              </div>
             </div>
             <div className={styles.control} style={{ left: `${maxPos}%` }} />
           </div>
