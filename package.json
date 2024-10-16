@@ -21,6 +21,7 @@
 		"image-to-base64": "^2.2.0",
 		"lucide-react": "^0.453.0",
 		"next": "latest",
+		"rc-slider": "^11.1.7",
 		"react": "^18.2.0",
 		"sass": "^1.69.4"
 	},

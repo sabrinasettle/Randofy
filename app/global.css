@@ -103,7 +103,7 @@ body {
     padding: 0;
     margin: 0;
     font-family: var(--font-hanken_grotesk);
-    background-color: var(--gray-800);
+    background-color: var(--gray-900);
     color: var(--white-100);
 }
 
@@ -290,4 +290,14 @@ main {
 .player-song-data {
     padding: 16px;
     height: 100%;
+}
+
+.close-modal {
+    display: flex;
+    width: 100%;
+    justify-content: right;
+}
+
+input[type="range"] {
+    margin: 0;
 }
