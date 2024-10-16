@@ -250,7 +250,10 @@ export function SpotifyClientProvider({ children }) {
 
       // setCurrentSongs
       //add it to history
-      // localStorage.setItem("spotifyUser", JSON.stringify(data));
+      localStorage.setItem(
+        "spotifyUser",
+        JSON.stringify(data.recommendedTracks),
+      );
       //current display
 
       return data;
