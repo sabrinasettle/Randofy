@@ -13,11 +13,11 @@ export default function SongCard({
 }) {
   const [isHover, setIsHover] = useState(false);
   const { spotifyClient } = useSpotifyContext();
-  const { data, loading, error } = useColor(
-    song.album_image.url,
-    "rgbString",
-    {},
-  );
+  const { data, loading, error } = useColor(song.album_image.url, "rgbString", {
+    crossOrigin: "Anonymous",
+  });
+
+  // console.log(data);
 
   function hoverOver() {
     setIsHover(!isHover);
