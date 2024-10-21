@@ -1,5 +1,6 @@
 "use client";
 
+import { env } from "process";
 import React from "react";
 const SpotifyContext = React.createContext(null);
 export default SpotifyContext;
@@ -231,6 +232,43 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
+  const updateSongHistory = (songs) => {
+    // localStorage.removeItem("history");
+    // check if local storage can be reached else return
+    let songHistory = JSON.parse(localStorage.getItem("history"));
+    const date = new Date();
+    const dateKey = date.toLocaleDateString();
+
+    // const tomorrow = new Date();
+    // tomorrow.setDate(date.getDate() + 1);
+    // const tomorrowKey = tomorrow.toLocaleDateString();
+    // console.log(dateKey, tomorrowKey);
+
+    if (!songHistory) {
+      localStorage.setItem(
+        "history",
+        JSON.stringify({ [dateKey]: { songs: songs } }),
+      );
+    } else {
+      if (songHistory[dateKey] !== undefined) {
+        const songList = songHistory[dateKey].songs;
+        songs.map((newSong) => {
+          songList.push(newSong);
+        });
+        songHistory[dateKey] = { songs: songList };
+        localStorage.setItem("history", JSON.stringify(songHistory));
+      } else {
+        songHistory[dateKey] = { songs: songs };
+        localStorage.setItem("history", JSON.stringify(songHistory));
+        // console.log(localStorage.getItem("history"));
+        // localStorage.setItem(
+        //   "history",
+        //   JSON.stringify({ [dateKey]: { songs: songs } }),
+        // );
+      }
+    }
+  };
+
   const getSongs = async () => {
     setIsLoading(true);
     // await checkTokenTime();
@@ -248,12 +286,7 @@ export function SpotifyClientProvider({ children }) {
       setIsLoading(false);
       setSelectedSong({ index: 0, song });
 
-      // setCurrentSongs
-      //add it to history
-      localStorage.setItem(
-        "spotifyUser",
-        JSON.stringify(data.recommendedTracks),
-      );
+      updateSongHistory(data.recommendedTracks);
       //current display
 
       return data;
