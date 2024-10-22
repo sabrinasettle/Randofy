@@ -7,7 +7,7 @@ import { useSpotifyContext } from "../../context/spotify-context";
 export default function SongCard({
   song,
   index,
-  activeCard,
+  activeCard = -1,
   songIsActive,
   scrollTo,
 }) {

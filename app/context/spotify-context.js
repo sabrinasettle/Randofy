@@ -1,6 +1,5 @@
 "use client";
 
-import { env } from "process";
 import React from "react";
 const SpotifyContext = React.createContext(null);
 export default SpotifyContext;
@@ -15,6 +14,8 @@ export function SpotifyClientProvider({ children }) {
   const [currentSongs, setCurrentSongs] = React.useState([]);
   const [selectedSong, setSelectedSong] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
+  const [generationHistory, setGenerationHistory] = React.useState({});
+  //setGenerationHistory = { key: song[]} where song is {title,...}
 
   let defaultFilters = {
     numberOfSongs: 5,
@@ -32,6 +33,7 @@ export function SpotifyClientProvider({ children }) {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const spotifyUser = JSON.parse(localStorage.getItem("spotifyUser"));
     const playlist = JSON.parse(localStorage.getItem("playlist"));
+    const history = JSON.parse(localStorage.getItem("history"));
     if (auth) {
       setAuth(auth);
     }
@@ -40,6 +42,9 @@ export function SpotifyClientProvider({ children }) {
     }
     if (playlist) {
       setPlaylist(playlist);
+    }
+    if (history) {
+      setGenerationHistory(history);
     }
     setFilters(defaultFilters);
 
@@ -235,37 +240,21 @@ export function SpotifyClientProvider({ children }) {
   const updateSongHistory = (songs) => {
     // localStorage.removeItem("history");
     // check if local storage can be reached else return
-    let songHistory = JSON.parse(localStorage.getItem("history"));
+    const songHistory = JSON.parse(localStorage.getItem("history"));
     const date = new Date();
     const dateKey = date.toLocaleDateString();
 
-    // const tomorrow = new Date();
-    // tomorrow.setDate(date.getDate() + 1);
-    // const tomorrowKey = tomorrow.toLocaleDateString();
-    // console.log(dateKey, tomorrowKey);
-
     if (!songHistory) {
-      localStorage.setItem(
-        "history",
-        JSON.stringify({ [dateKey]: { songs: songs } }),
-      );
+      localStorage.setItem("history", JSON.stringify({ [dateKey]: songs }));
     } else {
-      if (songHistory[dateKey] !== undefined) {
-        const songList = songHistory[dateKey].songs;
-        songs.map((newSong) => {
-          songList.push(newSong);
-        });
-        songHistory[dateKey] = { songs: songList };
-        localStorage.setItem("history", JSON.stringify(songHistory));
-      } else {
-        songHistory[dateKey] = { songs: songs };
-        localStorage.setItem("history", JSON.stringify(songHistory));
-        // console.log(localStorage.getItem("history"));
-        // localStorage.setItem(
-        //   "history",
-        //   JSON.stringify({ [dateKey]: { songs: songs } }),
-        // );
+      if (!songHistory[dateKey]) {
+        songHistory[dateKey] = [];
       }
+      const songList = [...songHistory[dateKey], ...songs];
+      songHistory[dateKey] = songList;
+      localStorage.setItem("history", JSON.stringify(songHistory));
+
+      setGenerationHistory(songHistory);
     }
   };
 
@@ -314,6 +303,7 @@ export function SpotifyClientProvider({ children }) {
     isLoading,
     setSelectedSong,
     selectedSong,
+    generationHistory,
   };
 
   const context = {
