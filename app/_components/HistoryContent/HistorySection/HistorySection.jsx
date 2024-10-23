@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import SongCard from "../../SongCard/SongCard";
+import { ChevronUp, ChevronDown } from "lucide-react";
+import styles from "../History.module.scss";
 
 export default function HistorySection({ date, songs }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -28,10 +30,14 @@ export default function HistorySection({ date, songs }) {
 
   return (
     <li>
-      <h2>{date}</h2>
-      <button onClick={toggleSection}>Toggle</button>
+      <div className={styles[`section-header`]}>
+        <h2>{date}</h2>
+        <button className={styles[`header-btn`]} onClick={toggleSection}>
+          {isOpen ? <ChevronUp /> : <ChevronDown />}
+        </button>
+      </div>
       {isOpen && (
-        <ul>
+        <ul className={styles["list-group"]}>
           {/* newest song first */}
           {songs.reverse().map((song, index) => (
             <SongCard
@@ -39,6 +45,7 @@ export default function HistorySection({ date, songs }) {
               index={index}
               scrollTo={scrollTo}
               songIsActive={songIsActive}
+              key={`history ` + `${song.track_name}`}
             />
           ))}
         </ul>

@@ -1,0 +1,42 @@
+.section-header {
+    display: flex;
+    padding-bottom: 16px;
+}
+
+.list-group{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: 12px;
+    padding-bottom: 52px;
+    list-style-type: none;
+  }
+
+  .list-group-item{
+    min-width: 200px;
+  }
+
+
+.header-btn {
+    background-color: transparent;
+    color: var(--white-100);
+    border: none;
+}
+
+.btn-filter {
+    background-color: var(--gray-600);
+    padding: 8px;
+    border-radius: 12px;
+    border: none;
+}
+
+.btn-filter__active {
+    background-color: var(--white-100);
+}
+
+#filter-btns-container {
+    display: flex;
+    gap: 8px;
+
+}
