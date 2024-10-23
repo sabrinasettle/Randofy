@@ -5,6 +5,7 @@ import { useSpotifyContext } from "../../context/spotify-context";
 import BackLink from "../BackLink";
 import HistorySection from "./HistorySection/HistorySection";
 import HistoryFilters from "./HistoryFilters/HistoryFilters";
+import SongDrawer from "./SongDrawer/SongDrawer";
 import {
   getThisWeek,
   getThisMonth,
@@ -16,13 +17,16 @@ export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
   const [historyFilter, setHistoryFilter] = useState("All");
   const [sortFilter, setSortFilter] = useState("newest");
+  const [selectedSong, setSelectedSong] = useState({});
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   let history = spotifyClient.generationHistory;
+  const sortOptions = ["newest to oldest", "oldest to newest"];
 
   //see if content has loaded as well
   // To Do
-  // Create Filters for the history (All, Today, This Week, This Month, Past 6 Months)
-  //
+  // Create Drawer and Song content in drawer
+  // Ability to close drawer
 
   function filteredSongHistory() {
     const today = new Date();
@@ -48,19 +52,15 @@ export default function HistoryContent() {
   }
 
   function filterObjectByDateRange(obj, startDate, endDate) {
-    // move to array after lookup?
-    // look at the state when ordering it?
-    console.log(startDate, endDate);
+    // console.log(startDate, endDate);
     const filteredObj = {};
 
     console.log(historyFilter);
     Object.keys(obj).map((key) => {
-      //split the key to vars
-      // parseInt()?
       var [month, day, year] = key.split("/");
       let date = new Date(year, month - 1, day, 0, 0, 0, 0);
-      console.log("start", startDate, "end", endDate);
-      console.log(date, year, month - 1, day);
+      // console.log("start", startDate, "end", endDate);
+      // console.log(date, year, month - 1, day);
 
       const startDateString = startDate.toLocaleDateString();
       const endDateString = endDate.toLocaleDateString();
@@ -82,7 +82,17 @@ export default function HistoryContent() {
     setHistoryFilter(filterString);
   }
 
+  function openSongDetails(song) {
+    setSelectedSong(song);
+    setIsDrawerOpen(true);
+  }
+
+  function closeDrawer() {
+    setIsDrawerOpen(false);
+  }
+
   const filteredHistory = filteredSongHistory();
+  console.log(filteredHistory);
 
   return (
     <div className={styles["history-content"]}>
@@ -99,16 +109,33 @@ export default function HistoryContent() {
         {!history ? (
           <div>No History Yet!</div>
         ) : (
-          <div>
-            <ul>
-              {Object.keys(filteredHistory).map((key, index) => (
+          <div id={styles["columns-container"]}>
+            <ul id={styles["history-section-list"]}>
+              {Object.keys(filteredHistory)
+                .reverse()
+                .map((key, index) => (
+                  <HistorySection
+                    key={`history ` + `${index}` + `${key}`}
+                    date={key}
+                    songs={history[key]}
+                    openSongDetails={openSongDetails}
+                  />
+                ))}
+              {/* {filteredHistory.map((day, index) => (
                 <HistorySection
                   key={`history ` + `${key}`}
                   date={key}
                   songs={history[key]}
                 />
-              ))}
+              ))} */}
             </ul>
+            {selectedSong && (
+              <SongDrawer
+                song={selectedSong}
+                isOpen={isDrawerOpen}
+                closeDrawer={closeDrawer}
+              />
+            )}
           </div>
         )}
       </section>

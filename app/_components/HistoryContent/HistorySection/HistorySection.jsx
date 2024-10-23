@@ -4,7 +4,7 @@ import SongCard from "../../SongCard/SongCard";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import styles from "../History.module.scss";
 
-export default function HistorySection({ date, songs }) {
+export default function HistorySection({ date, songs, openSongDetails }) {
   const [isOpen, setIsOpen] = useState(true);
   //  {history?.[key]?.map((song, songIndex) => (
   // //     <>{song?.track_name}</>
@@ -23,12 +23,17 @@ export default function HistorySection({ date, songs }) {
     setIsOpen(!isOpen);
   }
 
+  function setSong(song) {
+    openSongDetails(song);
+  }
+
   // To Do
   // Animate the date getting bigger as the user scrolls
   //  // add listener to scroll
   // animate the close and open of the section
   // Fix Ordering of the list
   // Change the string of today's date to today
+  //
 
   return (
     <li className={styles["history-list-item"]}>
@@ -42,13 +47,15 @@ export default function HistorySection({ date, songs }) {
         <ul className={styles["list-group"]}>
           {/* newest song first */}
           {songs.reverse().map((song, index) => (
-            <SongCard
-              song={song}
-              index={index}
-              scrollTo={scrollTo}
-              songIsActive={songIsActive}
-              key={`history ` + `${song.track_name}`}
-            />
+            <div onClick={() => setSong(song)}>
+              <SongCard
+                song={song}
+                index={index}
+                scrollTo={scrollTo}
+                songIsActive={songIsActive}
+                key={`song ` + `${song.track_name}`}
+              />
+            </div>
           ))}
         </ul>
       )}

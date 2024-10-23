@@ -9,8 +9,18 @@
     padding: 1%;
 }
 
+#columns-container {
+    display: flex;
+    flex-direction: row;
+}
+
+#history-section-list {
+    overflow-y: scroll;
+    max-height: 800px;
+}
+
 #history-list-section {
-    padding:  calc(125px + 1%) calc(1% + 16px);
+    padding:  calc(125px + 1%) calc(1% + 16px) 0;
 }
 
 .history-list-item {
@@ -67,4 +77,20 @@
     display: flex;
     gap: 8px;
     padding: 0 16px;
+}
+
+
+.song-drawer {
+    position: fixed;
+}
+
+#song-drawer__active {
+    height: 100%;
+    width: 20%;
+    background-color: red;
+}
+
+#song-drawer__inactive{
+    display: none;
+    width: 0;
 }
