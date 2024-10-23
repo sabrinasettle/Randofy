@@ -1,7 +1,8 @@
 "use client";
-import Link from "next/link";
+// import Link from "next/link";
 import { useState } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
+import BackLink from "../BackLink";
 import HistorySection from "./HistorySection/HistorySection";
 import HistoryFilters from "./HistoryFilters/HistoryFilters";
 import {
@@ -9,6 +10,7 @@ import {
   getThisMonth,
   getPast6Months,
 } from "../../utils/getDates.js";
+import styles from "./History.module.scss";
 
 export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
@@ -69,17 +71,6 @@ export default function HistoryContent() {
         filteredObj[key] = obj[key];
         return filteredObj;
       }
-
-      // if not we are here
-      // console.log(
-      //   startDate,
-      //   endDate,
-      //   date,
-      //   "is more or eq",
-      //   date >= startDate,
-      //   "is less or eq",
-      //   date <= endDate,
-      // );
       if (date >= startDate && date <= endDate) {
         filteredObj[key] = obj[key];
       }
@@ -91,22 +82,26 @@ export default function HistoryContent() {
     setHistoryFilter(filterString);
   }
 
-  const fhistory = filteredSongHistory();
+  const filteredHistory = filteredSongHistory();
 
   return (
-    <main>
-      <Link href={"/"}>Back</Link>
-      {!history ? (
-        <div>No History Yet!</div>
-      ) : (
-        <div>
+    <div className={styles["history-content"]}>
+      <div id={styles["history-header"]}>
+        <BackLink />
+        {history && (
           <HistoryFilters
             updateFilter={updateFilter}
             historyFilter={historyFilter}
           />
+        )}
+      </div>
+      <section id={styles["history-list-section"]}>
+        {!history ? (
+          <div>No History Yet!</div>
+        ) : (
           <div>
             <ul>
-              {Object.keys(fhistory).map((key, index) => (
+              {Object.keys(filteredHistory).map((key, index) => (
                 <HistorySection
                   key={`history ` + `${key}`}
                   date={key}
@@ -115,8 +110,8 @@ export default function HistoryContent() {
               ))}
             </ul>
           </div>
-        </div>
-      )}
-    </main>
+        )}
+      </section>
+    </div>
   );
 }

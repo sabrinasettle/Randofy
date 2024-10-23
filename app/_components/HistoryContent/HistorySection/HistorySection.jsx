@@ -25,12 +25,14 @@ export default function HistorySection({ date, songs }) {
 
   // To Do
   // Animate the date getting bigger as the user scrolls
+  //  // add listener to scroll
   // animate the close and open of the section
-  // Align the list of songs card to be horiziontal
+  // Fix Ordering of the list
+  // Change the string of today's date to today
 
   return (
-    <li>
-      <div className={styles[`section-header`]}>
+    <li className={styles["history-list-item"]}>
+      <div className={styles["section-header"]}>
         <h2>{date}</h2>
         <button className={styles[`header-btn`]} onClick={toggleSection}>
           {isOpen ? <ChevronUp /> : <ChevronDown />}

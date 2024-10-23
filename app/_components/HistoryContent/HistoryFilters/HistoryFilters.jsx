@@ -7,7 +7,7 @@ const FilterButton = ({ handleActivation, string, activeFilter }) => {
       className={
         activeFilter === string
           ? `${styles["btn-filter"]} ${styles["btn-filter__active"]}`
-          : styles["btn-filter"]
+          : `${styles["btn-filter"]}`
       }
       onClick={handleActivation}
     >
