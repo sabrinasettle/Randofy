@@ -122,11 +122,16 @@ li {
 
 main {
     height: 100vh;
+    overflow: none;
 }
 
 .link {
     color: var(--content-color-primary);
     font-family: var(--font-hanken_grotesk);
+}
+
+.btn-action {
+    cursor: pointer;
 }
 
 .btn {

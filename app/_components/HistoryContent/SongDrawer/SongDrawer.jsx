@@ -3,13 +3,11 @@ import { createArtists } from "../../../utils/createArtists.js";
 import Image from "next/image";
 
 export default function SongDrawer({ song, isOpen, closeDrawer }) {
-  console.log(song);
-  // const [track_name, album_image] = song;
-  //
-
-  if (!song) {
+  if (!song.track_name) {
     return <div id={styles["song-drawer__inactive"]}></div>;
   }
+
+  let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
 
   return (
     <div
@@ -18,26 +16,28 @@ export default function SongDrawer({ song, isOpen, closeDrawer }) {
         isOpen ? styles["song-drawer__active"] : styles["song-drawer__inactive"]
       }
     >
-      {song && (
-        <>
-          <div>
-            <button onClick={closeDrawer}>Close</button>
-          </div>
-          <div className="album-image-container">
-            {/* <Image
-          className="album-image"
-          src={song.album_image.url}
-          height={298}
-          width={298}
-          alt={alt}
-        /> */}
-          </div>
-          <div>
-            <p className="song-title semi-bold text-md">{song.track_name}</p>
-            <p className="song-artist reg text-md">{createArtists(song)}</p>
-          </div>
-        </>
-      )}
+      <div style={{ padding: "12px" }}>
+        {song.track_name && (
+          <>
+            <div>
+              <button onClick={closeDrawer}>Close</button>
+            </div>
+            <div className="album-image-container">
+              <Image
+                className="album-image"
+                src={song.album_image.url}
+                height={384}
+                width={384}
+                alt={alt}
+              />
+            </div>
+            <div>
+              <p className="song-title semi-bold text-md">{song.track_name}</p>
+              <p className="song-artist reg text-md">{createArtists(song)}</p>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

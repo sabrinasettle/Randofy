@@ -47,6 +47,7 @@ export default function HistorySection({ date, songs, openSongDetails }) {
         <ul className={styles["list-group"]}>
           {/* newest song first */}
           {songs.reverse().map((song, index) => (
+            // set size to 168
             <div onClick={() => setSong(song)}>
               <SongCard
                 song={song}

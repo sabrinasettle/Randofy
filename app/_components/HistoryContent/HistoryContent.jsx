@@ -98,43 +98,47 @@ export default function HistoryContent() {
     <div className={styles["history-content"]}>
       <div id={styles["history-header"]}>
         <BackLink />
-        {history && (
-          <HistoryFilters
-            updateFilter={updateFilter}
-            historyFilter={historyFilter}
-          />
-        )}
       </div>
       <section id={styles["history-list-section"]}>
         {!history ? (
           <div>No History Yet!</div>
         ) : (
           <div id={styles["columns-container"]}>
-            <ul id={styles["history-section-list"]}>
-              {Object.keys(filteredHistory)
-                .reverse()
-                .map((key, index) => (
-                  <HistorySection
-                    key={`history ` + `${index}` + `${key}`}
-                    date={key}
-                    songs={history[key]}
-                    openSongDetails={openSongDetails}
-                  />
-                ))}
-              {/* {filteredHistory.map((day, index) => (
+            <div id={styles["history-column"]}>
+              {history && (
+                <HistoryFilters
+                  updateFilter={updateFilter}
+                  historyFilter={historyFilter}
+                />
+              )}
+              <ul id={styles["history-section-list"]}>
+                {Object.keys(filteredHistory)
+                  .reverse()
+                  .map((key, index) => (
+                    <HistorySection
+                      key={`history ` + `${index}` + `${key}`}
+                      date={key}
+                      songs={history[key]}
+                      openSongDetails={openSongDetails}
+                    />
+                  ))}
+                {/* {filteredHistory.map((day, index) => (
                 <HistorySection
                   key={`history ` + `${key}`}
                   date={key}
                   songs={history[key]}
                 />
               ))} */}
-            </ul>
+              </ul>
+            </div>
             {selectedSong && (
-              <SongDrawer
-                song={selectedSong}
-                isOpen={isDrawerOpen}
-                closeDrawer={closeDrawer}
-              />
+              <div id={styles["drawer-column"]}>
+                <SongDrawer
+                  song={selectedSong}
+                  isOpen={isDrawerOpen}
+                  closeDrawer={closeDrawer}
+                />
+              </div>
             )}
           </div>
         )}

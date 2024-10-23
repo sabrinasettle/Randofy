@@ -57,7 +57,7 @@ export default function SongCard({
   }
 
   function listItemClassname() {
-    let string = "card songcard";
+    let string = "card songcard btn-action";
 
     if (isHover && isActive()) {
       string += " " + "songcard__active" + " " + "songcard__hover";

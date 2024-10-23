@@ -1,26 +1,27 @@
 .history-content {
+    height: 100%;
 }
 
 #history-header {
     background-color: var(--gray-900);
-    position: fixed;
     z-index: 3;
     width: 100%;
-    padding: 1%;
+    padding: 8px 1% ;
 }
 
 #columns-container {
     display: flex;
     flex-direction: row;
+
 }
 
 #history-section-list {
     overflow-y: scroll;
-    max-height: 800px;
+    max-height: 600px;
 }
 
 #history-list-section {
-    padding:  calc(125px + 1%) calc(1% + 16px) 0;
+    padding:  8px calc(1% + 16px) 0;
 }
 
 .history-list-item {
@@ -76,18 +77,28 @@
 #filter-btns-container {
     display: flex;
     gap: 8px;
-    padding: 0 16px;
+    padding-bottom: 12px;
+}
+
+#history-column {
+    width: 100%;
+}
+
+#drawer-column {
+    margin-left: 12px;
 }
 
 
 .song-drawer {
     position: fixed;
+    border-radius: 8px;
 }
 
 #song-drawer__active {
-    height: 100%;
-    width: 20%;
-    background-color: red;
+    width: min-content;
+    background-color: var(--gray-700);
+    max-height: 600px;
+    border-radius: 8px;
 }
 
 #song-drawer__inactive{
