@@ -272,12 +272,10 @@ export function SpotifyClientProvider({ children }) {
       const data = await res.json();
       let song = data.recommendedTracks[0];
       setCurrentSongs(data.recommendedTracks);
-      setIsLoading(false);
       setSelectedSong({ index: 0, song });
 
       updateSongHistory(data.recommendedTracks);
-      //current display
-
+      setIsLoading(false);
       return data;
     }
   };

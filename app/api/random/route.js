@@ -44,6 +44,7 @@ const getData = async (req, max) => {
 
     let recommendedTracks = [];
     tracks?.map((item) => {
+      // console.log(item, item.artists);
       recommendedTracks.push({
         track_name: item.name,
         track_artists: item.artists,
@@ -53,6 +54,9 @@ const getData = async (req, max) => {
         track_id: item.id,
         //could be null
         preview_url: item.preview_url,
+        release_year: item.album?.release_date,
+        genres: [],
+        song_length: item.duration_ms,
       });
     });
     let returnData = {

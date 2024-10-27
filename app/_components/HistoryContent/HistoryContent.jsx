@@ -6,6 +6,7 @@ import BackLink from "../BackLink";
 import HistorySection from "./HistorySection/HistorySection";
 import HistoryFilters from "./HistoryFilters/HistoryFilters";
 import SongDrawer from "./SongDrawer/SongDrawer";
+import CardLayoutOptions from "../ChangeLayout/CardLayoutOptions";
 import {
   getThisWeek,
   getThisMonth,
@@ -19,6 +20,7 @@ export default function HistoryContent() {
   const [sortFilter, setSortFilter] = useState("newest");
   const [selectedSong, setSelectedSong] = useState({});
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [layoutChoice, setLayoutChoice] = useState("grid");
 
   let history = spotifyClient.generationHistory;
   const sortOptions = ["newest to oldest", "oldest to newest"];
@@ -91,6 +93,10 @@ export default function HistoryContent() {
     setIsDrawerOpen(false);
   }
 
+  function changeView(choice) {
+    setLayoutChoice(choice);
+  }
+
   const filteredHistory = filteredSongHistory();
   console.log(filteredHistory);
 
@@ -99,7 +105,7 @@ export default function HistoryContent() {
       <div id={styles["history-header"]}>
         <BackLink />
       </div>
-      <section id={styles["history-list-section"]}>
+      <section id={styles["history-section"]}>
         {!history ? (
           <div>No History Yet!</div>
         ) : (
@@ -111,6 +117,7 @@ export default function HistoryContent() {
                   historyFilter={historyFilter}
                 />
               )}
+              {history && <CardLayoutOptions changeView={changeView} />}
               <ul id={styles["history-section-list"]}>
                 {Object.keys(filteredHistory)
                   .reverse()

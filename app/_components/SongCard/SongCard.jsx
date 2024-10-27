@@ -4,12 +4,18 @@ import Image from "next/image";
 import { useColor } from "color-thief-react";
 import { useSpotifyContext } from "../../context/spotify-context";
 
+// list card
+// oblong card
+// grid card
+
 export default function SongCard({
   song,
   index,
   activeCard = -1,
   songIsActive,
   scrollTo,
+  size,
+  type,
 }) {
   const [isHover, setIsHover] = useState(false);
   const { spotifyClient } = useSpotifyContext();
@@ -71,8 +77,18 @@ export default function SongCard({
 
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
 
-  const smImage = "240";
-  const lgImage = "298";
+  function handleImageSize() {
+    if (!size && !isActive()) {
+      return "240";
+    } else if (!size && isActive()) {
+      return "298";
+    }
+
+    if (!size) return "189";
+    return size.toString();
+  }
+
+  let imageSize = handleImageSize();
 
   // console.log(data);
   //
@@ -85,7 +101,11 @@ export default function SongCard({
       onClick={moveOrNot}
       onMouseEnter={hoverOver}
       onMouseLeave={hoverOver}
-      style={{ backgroundColor: data }}
+      style={{
+        backgroundColor: data,
+        height: `${imageSize}`,
+        width: `${imageSize}`,
+      }}
     >
       <div className="content">
         <div className={isActive() ? `overlay overlay__active` : `overlay`}>
@@ -93,8 +113,8 @@ export default function SongCard({
             <Image
               className="album-image"
               src={song.album_image.url}
-              height={isActive() ? lgImage : smImage}
-              width={isActive() ? lgImage : smImage}
+              height={imageSize}
+              width={imageSize}
               alt={alt}
             />
           </div>

@@ -125,6 +125,10 @@ main {
     overflow: none;
 }
 
+button {
+    border: none;
+}
+
 .link {
     color: var(--content-color-primary);
     font-family: var(--font-hanken_grotesk);
@@ -167,18 +171,19 @@ main {
 
 .card {
     border-radius: 12px;
-    padding: 4px;
-    /* background-color: white; */
+    padding: 2px;
+    display: flex;
+    justify-content: center;
 }
 
 .songcard {
-    width: 240px;
-    height: 240px;
+    /* width: 240px;
+    height: 240px; */
 }
 
 .songcard__active {
-    width: 298px;
-    height: 298px;
+    /* width: 298px;
+    height: 298px; */
 }
 
 .overlay__active {
@@ -331,4 +336,36 @@ input[type="range"] {
     display: flex;
     vertical-align: middle;
     gap: 4px;
+}
+
+.song-details-container {
+    padding: 8px 0;
+}
+
+.progress-bar-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.progress-bar {
+    width: 100%;
+    margin: auto;
+    padding: 0 8px;
+}
+
+.progress-bar-fill {
+    background-color: var(--white-100);
+    height: 4px;
+    position: absolute;
+    z-index: 2;
+    border-radius: 12px;
+}
+
+.progress-bar-background {
+    width: 100%;
+    background-color: var(--gray-400);
+    height: 4px;
+    border-radius: 12px;
+    /* position:; */
 }

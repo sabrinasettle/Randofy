@@ -55,6 +55,7 @@ export default function HistorySection({ date, songs, openSongDetails }) {
                 scrollTo={scrollTo}
                 songIsActive={songIsActive}
                 key={`song ` + `${song.track_name}`}
+                size={189}
               />
             </div>
           ))}
