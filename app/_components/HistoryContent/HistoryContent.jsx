@@ -66,7 +66,7 @@ export default function HistoryContent() {
 
     console.log(historyFilter, startDate, endDate);
 
-    const temp = Object.keys(obj)
+    Object.keys(obj)
       .filter((tDate) => {
         const date = new Date(tDate);
         console.log(date);
