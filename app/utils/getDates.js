@@ -2,16 +2,17 @@ export function getThisWeek(today) {
   const currentDay = today.getDay(); // 0 for Sunday, 1 for Monday, and so on
 
   // Calculate the start of the week (Sunday)
-  const startOfWeek = new Date(today);
-  startOfWeek.setDate(today.getDate() - currentDay);
+  // const startOfWeek = new Date(today);
+  // startOfWeek.setDate(today.getDate() - 7);
+  // startOfWeek.setHours(0, 0, 0, 1);
 
   // Calculate the end of the week (Saturday)
   const endOfWeek = new Date(today);
-  endOfWeek.setDate(today.getDate() + (6 - currentDay));
-
+  endOfWeek.setDate(today.getDate() - 7);
+  endOfWeek.setHours(0, 0, 0, 1);
   return {
-    start: startOfWeek,
-    end: endOfWeek,
+    start: endOfWeek,
+    end: new Date(),
   };
 }
 

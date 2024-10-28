@@ -292,6 +292,21 @@ button {
     /* list-style-type: none; */
 }
 
+.song-list__oblong-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    /* gap: 12px; */
+    /* list-style-type: none; */
+}
+
+.song-list__list-grid {
+    flex-direction: column;
+    max-width: 100%;
+    /* gap: 12px; */
+    /* list-style-type: none; */
+}
+
 .song-list__history {
     padding-bottom: 52px;
 }

@@ -21,13 +21,11 @@ export default function HistoryContent() {
 
   const [historyFilter, setHistoryFilter] = useState("All");
   const [sortFilter, setSortFilter] = useState("newest");
-  // const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   let history = spotifyClient.generationHistory;
   let selectedSong = spotifyClient.selectedSong.song;
   const isDrawerOpen = layoutContext.isDrawerOpen;
 
-  console.log(selectedSong);
   const sortOptions = ["newest to oldest", "oldest to newest"];
 
   //see if content has loaded as well
@@ -36,11 +34,15 @@ export default function HistoryContent() {
   // Ability to close drawer
 
   function filteredSongHistory() {
+    const now = new Date();
     const today = new Date();
+    const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(now.setHours(23, 59, 59, 59));
+
     let dateString = today.toLocaleDateString();
     console.log("today", dateString, historyFilter);
     if (historyFilter === "Today") {
-      return filterObjectByDateRange(history, today, today);
+      return filterObjectByDateRange(history, startOfDay, endOfDay);
     } else if (historyFilter === "This Week") {
       let thisWeek = getThisWeek(today);
       return filterObjectByDateRange(history, thisWeek.start, thisWeek.end);
@@ -62,26 +64,42 @@ export default function HistoryContent() {
     // console.log(startDate, endDate);
     const filteredObj = {};
 
-    console.log(historyFilter);
-    Object.keys(obj).map((key) => {
-      var [month, day, year] = key.split("/");
-      let date = new Date(year, month - 1, day, 0, 0, 0, 0);
-      // console.log("start", startDate, "end", endDate);
-      // console.log(date, year, month - 1, day);
+    console.log(historyFilter, startDate, endDate);
 
-      const startDateString = startDate.toLocaleDateString();
-      const endDateString = endDate.toLocaleDateString();
-      // 4/22/2024 which is werid
+    const temp = Object.keys(obj)
+      .filter((tDate) => {
+        const date = new Date(tDate);
+        console.log(date);
+        if (date >= startDate && date <= endDate) {
+          return true;
+        }
+        return false;
+      })
+      .map((key) => {
+        filteredObj[key] = obj[key];
+      });
 
-      // if the start and the end are the same, its today
-      if (startDateString === key && endDateString === key) {
-        filteredObj[key] = obj[key];
-        return filteredObj;
-      }
-      if (date >= startDate && date <= endDate) {
-        filteredObj[key] = obj[key];
-      }
-    });
+    // Object.keys(obj).map((key) => {
+    //   var [month, day, year] = key.split("/");
+    //   // this can be new Date(key) as key is a locale date string (defaults to start of day)
+    //   let date = new Date(year, month - 1, day, 0, 0, 0, 0);
+    //   // console.log("start", startDate, "end", endDate);
+    //   // console.log(date, year, month - 1, day);
+
+    //   const startDateString = startDate.toLocaleDateString();
+    //   const endDateString = endDate.toLocaleDateString();
+
+    //   // 4/22/2024 which is werid
+
+    //   // if the start and the end are the same, its today
+    //   if (startDateString === key && endDateString === key) {
+    //     filteredObj[key] = obj[key];
+    //     return filteredObj;
+    //   }
+    //   if (date >= startDate && date <= endDate) {
+    //     filteredObj[key] = obj[key];
+    //   }
+    // });
     return filteredObj;
   }
 
@@ -89,21 +107,8 @@ export default function HistoryContent() {
     setHistoryFilter(filterString);
   }
 
-  // function openSongDetails(song) {
-  //   // setSelectedSong(song);
-  //   setIsDrawerOpen(true);
-  // }
-
-  // function closeDrawer() {
-  //   setIsDrawerOpen(false);
-  // }
-
-  function changeView(choice) {
-    setLayoutChoice(choice);
-  }
-
   const filteredHistory = filteredSongHistory();
-  console.log(filteredHistory);
+  // console.log(filteredHistory);
 
   return (
     <div className={styles["history-content"]}>

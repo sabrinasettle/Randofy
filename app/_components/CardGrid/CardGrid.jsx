@@ -10,10 +10,18 @@ export default function CardGrid({ songs }) {
   function updateClassName() {
     // oblong-grid, square-grid, list
     if (layout === "square-grid") {
+      imageSize = 170;
       return "song-list song-list__grid song-list__history";
-      imageSize = 189;
     }
-    return "song-grid";
+    if (layout === "oblong-grid") {
+      imageSize = 298;
+      return "song-list song-list__oblong-grid song-list__history";
+    }
+    if (layout === "list") {
+      imageSize = 100;
+      return "song-list song-list__list-grid song-list__history";
+    }
+    return "song-list";
   }
 
   let layoutClass = updateClassName();

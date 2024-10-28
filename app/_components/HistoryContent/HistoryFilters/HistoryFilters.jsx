@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import styles from "../History.module.scss";
 
 const FilterButton = ({ handleActivation, string, activeFilter }) => {
