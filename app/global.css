@@ -274,11 +274,30 @@ button {
     left: 10px;
 }
 
+/* song-list song-list__grid */
+
 .song-list {
     display: flex;
     gap: 12px;
     list-style-type: none;
-    padding-top: 12px;
+}
+
+/* song-list song-list__grid */
+
+.song-list__grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    /* gap: 12px; */
+    /* list-style-type: none; */
+}
+
+.song-list__history {
+    padding-bottom: 52px;
+}
+
+.list-group-item {
+    min-width: 200px;
 }
 
 .content-container {

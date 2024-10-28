@@ -2,10 +2,11 @@
 // import Link from "next/link";
 import { useState } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
+import { useGridContext } from "../../context/card-layout-context";
 import BackLink from "../BackLink";
 import HistorySection from "./HistorySection/HistorySection";
 import HistoryFilters from "./HistoryFilters/HistoryFilters";
-import SongDrawer from "./SongDrawer/SongDrawer";
+import SongDrawer from "../SongDrawer/SongDrawer";
 import CardLayoutOptions from "../ChangeLayout/CardLayoutOptions";
 import {
   getThisWeek,
@@ -16,13 +17,17 @@ import styles from "./History.module.scss";
 
 export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
+  const { layoutContext } = useGridContext();
+
   const [historyFilter, setHistoryFilter] = useState("All");
   const [sortFilter, setSortFilter] = useState("newest");
-  const [selectedSong, setSelectedSong] = useState({});
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [layoutChoice, setLayoutChoice] = useState("grid");
+  // const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   let history = spotifyClient.generationHistory;
+  let selectedSong = spotifyClient.selectedSong.song;
+  const isDrawerOpen = layoutContext.isDrawerOpen;
+
+  console.log(selectedSong);
   const sortOptions = ["newest to oldest", "oldest to newest"];
 
   //see if content has loaded as well
@@ -84,14 +89,14 @@ export default function HistoryContent() {
     setHistoryFilter(filterString);
   }
 
-  function openSongDetails(song) {
-    setSelectedSong(song);
-    setIsDrawerOpen(true);
-  }
+  // function openSongDetails(song) {
+  //   // setSelectedSong(song);
+  //   setIsDrawerOpen(true);
+  // }
 
-  function closeDrawer() {
-    setIsDrawerOpen(false);
-  }
+  // function closeDrawer() {
+  //   setIsDrawerOpen(false);
+  // }
 
   function changeView(choice) {
     setLayoutChoice(choice);
@@ -117,7 +122,7 @@ export default function HistoryContent() {
                   historyFilter={historyFilter}
                 />
               )}
-              {history && <CardLayoutOptions changeView={changeView} />}
+              {history && <CardLayoutOptions />}
               <ul id={styles["history-section-list"]}>
                 {Object.keys(filteredHistory)
                   .reverse()
@@ -126,25 +131,13 @@ export default function HistoryContent() {
                       key={`history ` + `${index}` + `${key}`}
                       date={key}
                       songs={history[key]}
-                      openSongDetails={openSongDetails}
                     />
                   ))}
-                {/* {filteredHistory.map((day, index) => (
-                <HistorySection
-                  key={`history ` + `${key}`}
-                  date={key}
-                  songs={history[key]}
-                />
-              ))} */}
               </ul>
             </div>
             {selectedSong && (
               <div id={styles["drawer-column"]}>
-                <SongDrawer
-                  song={selectedSong}
-                  isOpen={isDrawerOpen}
-                  closeDrawer={closeDrawer}
-                />
+                <SongDrawer song={selectedSong} isOpen={isDrawerOpen} />
               </div>
             )}
           </div>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useColor } from "color-thief-react";
 import { useSpotifyContext } from "../../context/spotify-context";
+import { useGridContext } from "../../context/card-layout-context";
 
 // list card
 // oblong card
@@ -14,7 +15,7 @@ export default function SongCard({
   activeCard = -1,
   songIsActive,
   scrollTo,
-  size,
+  imageSize,
   type,
 }) {
   const [isHover, setIsHover] = useState(false);
@@ -22,6 +23,7 @@ export default function SongCard({
   const { data, loading, error } = useColor(song.album_image.url, "rgbString", {
     crossOrigin: "Anonymous",
   });
+  const { layoutContext } = useGridContext();
 
   // console.log(data);
 
@@ -56,9 +58,11 @@ export default function SongCard({
     if (isActive()) {
       spotifyClient.setSelectedSong({ index: index, song: { song } });
       songIsActive(index);
+      layoutContext.openSongDetails();
     } else {
       spotifyClient.setSelectedSong({ index: index, song });
-      scrollTo(index);
+      layoutContext.openSongDetails();
+      // scrollTo(index);
     }
   }
 
@@ -78,17 +82,17 @@ export default function SongCard({
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
 
   function handleImageSize() {
-    if (!size && !isActive()) {
+    if (!imageSize && !isActive()) {
       return "240";
-    } else if (!size && isActive()) {
+    } else if (!imageSize && isActive()) {
       return "298";
     }
 
-    if (!size) return "189";
-    return size.toString();
+    if (!imageSize) return "189";
+    return imageSize.toString();
   }
 
-  let imageSize = handleImageSize();
+  let squareImage = handleImageSize();
 
   // console.log(data);
   //
@@ -103,8 +107,8 @@ export default function SongCard({
       onMouseLeave={hoverOver}
       style={{
         backgroundColor: data,
-        height: `${imageSize}`,
-        width: `${imageSize}`,
+        height: `${squareImage}`,
+        width: `${squareImage}`,
       }}
     >
       <div className="content">
@@ -113,8 +117,8 @@ export default function SongCard({
             <Image
               className="album-image"
               src={song.album_image.url}
-              height={imageSize}
-              width={imageSize}
+              height={squareImage}
+              width={squareImage}
               alt={alt}
             />
           </div>

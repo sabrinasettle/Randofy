@@ -3,9 +3,13 @@ import { useState } from "react";
 import SongCard from "../../SongCard/SongCard";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import styles from "../History.module.scss";
+import CardGrid from "../../CardGrid/CardGrid";
+// import { useGridContext } from "../../../context/card-layout-context";
 
-export default function HistorySection({ date, songs, openSongDetails }) {
+export default function HistorySection({ date, songs }) {
   const [isOpen, setIsOpen] = useState(true);
+  // const { CardLayout } = useGridContext();
+
   //  {history?.[key]?.map((song, songIndex) => (
   // //     <>{song?.track_name}</>
   // //   ))}
@@ -44,22 +48,23 @@ export default function HistorySection({ date, songs, openSongDetails }) {
         </button>
       </div>
       {isOpen && (
-        <ul className={styles["list-group"]}>
-          {/* newest song first */}
-          {songs.reverse().map((song, index) => (
-            // set size to 168
-            <div onClick={() => setSong(song)}>
-              <SongCard
-                song={song}
-                index={index}
-                scrollTo={scrollTo}
-                songIsActive={songIsActive}
-                key={`song ` + `${song.track_name}`}
-                size={189}
-              />
-            </div>
-          ))}
-        </ul>
+        // <ul className={styles["list-group"]}>
+        //   {/* newest song first */}
+        //   {songs.reverse().map((song, index) => (
+        //     // set size to 168
+        //     <div onClick={() => setSong(song)}>
+        //       <SongCard
+        //         song={song}
+        //         index={index}
+        //         scrollTo={scrollTo}
+        //         songIsActive={songIsActive}
+        //         key={`song ` + `${song.track_name}`}
+        //         size={189}
+        //       />
+        //     </div>
+        //   ))}
+        // </ul>
+        <CardGrid songs={songs} />
       )}
     </li>
   );

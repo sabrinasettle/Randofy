@@ -1,10 +1,13 @@
-import styles from "../History.module.scss";
-import { createArtists } from "../../../utils/createArtists.js";
+import styles from "../HistoryContent/History.module.scss";
+import { createArtists } from "../../utils/createArtists.js";
 import Image from "next/image";
-import AudioPlayer from "../../AudioPlayer/AudioPlayer";
+import AudioPlayer from "../AudioPlayer/AudioPlayer";
+import { useGridContext } from "../../context/card-layout-context";
 import { X } from "lucide-react";
 
-export default function SongDrawer({ song, isOpen, closeDrawer }) {
+export default function SongDrawer({ song, isOpen }) {
+  const { layoutContext } = useGridContext();
+
   if (!song.track_name) {
     return <div id={styles["song-drawer__inactive"]}></div>;
   }
@@ -22,7 +25,10 @@ export default function SongDrawer({ song, isOpen, closeDrawer }) {
         {song.track_name && (
           <>
             <div style={{ padding: "4px 0px 20px" }}>
-              <button className={styles["close-drawer"]} onClick={closeDrawer}>
+              <button
+                className={styles["close-drawer"]}
+                onClick={layoutContext.closeDrawer}
+              >
                 <X />
               </button>
             </div>
