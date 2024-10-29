@@ -33,17 +33,14 @@ const OblongGrid = () => {
 export default function CardLayoutOptions() {
   const { layoutContext } = useGridContext();
   const [activeLayout, setActiveLayout] = useState(layoutContext.layoutType);
-  // console.log(layoutContext.layoutType);
-  let isActive;
 
   // To Do
-  // add is Active Styling
-  //
+  // add animation to click change
 
   function handleOnClick(e) {
     let element = e.currentTarget;
 
-    console.log(element.id);
+    // console.log(element.id);
     layoutContext.changeLayout(element);
     setActiveLayout(element.id);
   }
@@ -54,12 +51,7 @@ export default function CardLayoutOptions() {
 
   return (
     <div className="grid-layout-options">
-      <button
-        className="layout-btn"
-        id="oblong-grid"
-        onClick={handleOnClick}
-        // ariaLabel="oblong-grid"
-      >
+      <button className="layout-btn" id="oblong-grid" onClick={handleOnClick}>
         <OblongGrid id="oblong-grid" />
 
         <div className="indictor-container">
@@ -72,12 +64,7 @@ export default function CardLayoutOptions() {
           />
         </div>
       </button>
-      <button
-        className="layout-btn"
-        id="square-grid"
-        onClick={handleOnClick}
-        // ariaLabel="square-grid"
-      >
+      <button className="layout-btn" id="square-grid" onClick={handleOnClick}>
         <LayoutGrid />
         <div className="indictor-container">
           <div
@@ -89,12 +76,7 @@ export default function CardLayoutOptions() {
           />
         </div>
       </button>
-      <button
-        className="layout-btn"
-        id="list-grid"
-        onClick={handleOnClick}
-        // ariaLabel="list-grid"
-      >
+      <button className="layout-btn" id="list-grid" onClick={handleOnClick}>
         <LayoutList />
         <div className="indictor-container">
           <div
