@@ -2,7 +2,7 @@ import styles from "../History.module.scss";
 
 const FilterButton = ({ handleActivation, string, activeFilter }) => {
   return (
-    <button
+    <div
       className={
         activeFilter === string
           ? `${styles["btn-filter"]} ${styles["btn-filter__active"]} btn-action `
@@ -11,7 +11,7 @@ const FilterButton = ({ handleActivation, string, activeFilter }) => {
       onClick={handleActivation}
     >
       {string}
-    </button>
+    </div>
   );
 };
 

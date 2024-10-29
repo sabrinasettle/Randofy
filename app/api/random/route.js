@@ -29,6 +29,18 @@ const getData = async (req, max) => {
     return await retry();
   }
   // retry makes the attempt to get data
+  //
+  async function getGenres(artists) {
+    let genres = [];
+    console.log(artists);
+    artists.map(async (artist) => {
+      const request = await spotifyApi.getArtist(artist.id);
+      const artistData = await request.json();
+      console.log(artistData);
+      genres = artistData.genres;
+    });
+    return genres;
+  }
 
   // new regex(/^:+[a-zA-Z]*:)
   async function retry() {
@@ -43,8 +55,9 @@ const getData = async (req, max) => {
     const tracks = data.tracks;
 
     let recommendedTracks = [];
-    tracks?.map((item) => {
-      // console.log(item, item.artists);
+    tracks?.map(async (item) => {
+      console.log(item, item.artists);
+      let genres = await getGenres(item.artists);
       recommendedTracks.push({
         track_name: item.name,
         track_artists: item.artists,
@@ -57,6 +70,7 @@ const getData = async (req, max) => {
         release_year: item.album?.release_date,
         genres: [],
         song_length: item.duration_ms,
+        genres: genres,
       });
     });
     let returnData = {

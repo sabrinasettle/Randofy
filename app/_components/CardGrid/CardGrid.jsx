@@ -17,7 +17,7 @@ export default function CardGrid({ songs }) {
       imageSize = 298;
       return "song-list song-list__oblong-grid song-list__history";
     }
-    if (layout === "list") {
+    if (layout === "list-grid") {
       imageSize = 100;
       return "song-list song-list__list-grid song-list__history";
     }

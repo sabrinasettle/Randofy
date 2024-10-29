@@ -121,13 +121,15 @@ export default function HistoryContent() {
         ) : (
           <div id={styles["columns-container"]}>
             <div id={styles["history-column"]}>
-              {history && (
-                <HistoryFilters
-                  updateFilter={updateFilter}
-                  historyFilter={historyFilter}
-                />
-              )}
-              {history && <CardLayoutOptions />}
+              <div className="content-controls">
+                {history && (
+                  <HistoryFilters
+                    updateFilter={updateFilter}
+                    historyFilter={historyFilter}
+                  />
+                )}
+                {history && <CardLayoutOptions />}
+              </div>
               <ul id={styles["history-section-list"]}>
                 {Object.keys(filteredHistory)
                   .reverse()
