@@ -1,10 +1,13 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { createArtists } from "../../utils/createArtists.js";
+import Controls from "./Controls/Controls";
 import ProgressBar from "./ProgressBar";
+import { Share2, Plus } from "lucide-react";
 
 export default function AudioPlayer({ song }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [openInformation, setOpenInformation] = useState(false);
   const audioRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
 
@@ -31,6 +34,11 @@ export default function AudioPlayer({ song }) {
   // }, [duration]);
 
   // const progressPercent = (currentTime / duration) * 100;
+  //
+
+  function handleOpenInformation() {
+    setOpenInformation(!openInformation);
+  }
 
   const playAudio = () => {
     if (audioRef.current && !isPlaying) {
@@ -48,12 +56,32 @@ export default function AudioPlayer({ song }) {
   return (
     <div>
       <div className="song-details-container">
-        <div style={{ paddingBottom: "8px" }}>
-          <p className="song-title semi-bold text-md">{song.track_name}</p>
-          <p className="song-artist reg text-md">{createArtists(song)}</p>
-
-          <button>Share</button>
-          <button>Add</button>
+        <div
+          style={{
+            paddingBottom: "8px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <p className="song-title semi-bold text-md">{song.track_name}</p>
+            <p className="song-artist reg text-md">{createArtists(song)}</p>
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <button
+              id="add-song"
+              className="song-action-btn icon-btn"
+              disabled={true}
+            >
+              <Plus width={20} height={20} />
+            </button>
+            <button id="share-song" className="song-action-btn icon-btn">
+              <Share2 width={16} height={16} />
+            </button>
+            {/* If Logged in have the button available */}
+            {/* toast suggesting to be logged in iif not? */}
+          </div>
         </div>
         {preview ? (
           <div>
@@ -62,20 +90,41 @@ export default function AudioPlayer({ song }) {
               <audio ref={audioRef} src={preview} />
             </div>
             {/* Controls Component */}
-            <div>
+            <Controls isPlaying={isPlaying} playAudio={playAudio} />
+            {/* <div>
               <button onClick={playAudio}>
-                {isPlaying ? "Pause" : "Play"}
+                {isPlaying ? <Pause fill="#1c1c1c" /> : <Play fill="#1c1c1c" />}
               </button>
-            </div>
+            </div> */}
           </div>
         ) : (
           <div>No Preview Available</div>
         )}
-        <div>
-          <p>{song.song_length}</p>
-          <p>{song.release_year}</p>
-          <p>{song.isExplicit ? "Explicit" : "Clean"}</p>
-        </div>
+        <div onClick={handleOpenInformation}>More information</div>
+        {openInformation && (
+          <div className="information-container">
+            <div className="information-details-container">
+              <div>
+                <>Full Song Length </>
+                <p id="song-length">{song.song_length}</p>
+              </div>
+              <div>
+                <>Year</>
+                <p id="release_year">{song.release_year}</p>
+              </div>
+              <div>
+                <>Explicit</>
+                <p id="explicit-tag">
+                  {song.isExplicit ? "Explicit" : "Clean"}
+                </p>
+              </div>
+            </div>
+            <div id="genre-information">
+              <div>Genres</div>
+              <div>List of genres</div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

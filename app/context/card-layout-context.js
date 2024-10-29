@@ -8,8 +8,6 @@ export function CardLayoutProvider({ children }) {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   function changeLayout(element) {
-    // let element = e.target;
-    // console.log(element.getAttribute("aria-label"));
     if (element.id == "" || element.id === layoutType) return;
     setLayoutType(element.id);
   }

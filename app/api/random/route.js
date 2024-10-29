@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import getRandomSearch from "../../../lib/js/helpers/randomLib.mjs";
 import { spotifyApi } from "../../../lib/js/spotify-api/SpotifyClient.mjs";
+// import { getColor } from "color-thief-react";
+import { getColor } from "colorthief";
 
 const getData = async (req, max) => {
   let search = getRandomSearch();
@@ -28,18 +30,29 @@ const getData = async (req, max) => {
     }
     return await retry();
   }
+
   // retry makes the attempt to get data
   //
   async function getGenres(artists) {
     let genres = [];
-    console.log(artists);
+    // console.log(artists);
     artists.map(async (artist) => {
       const request = await spotifyApi.getArtist(artist.id);
       const artistData = await request.json();
-      console.log(artistData);
+      // console.log(artistData);
       genres = artistData.genres;
     });
     return genres;
+  }
+
+  async function getBkgrdColor(image) {
+    console.log("get color", image);
+    const response = await fetch(image.url);
+    const buf = await response.arrayBuffer();
+
+    const dominantColor = await getColor(buf);
+    console.log(dominantColor);
+    return dominantColor;
   }
 
   // new regex(/^:+[a-zA-Z]*:)
@@ -55,9 +68,12 @@ const getData = async (req, max) => {
     const tracks = data.tracks;
 
     let recommendedTracks = [];
-    tracks?.map(async (item) => {
-      console.log(item, item.artists);
+
+    for (const item of tracks) {
       let genres = await getGenres(item.artists);
+      let color = await getBkgrdColor(item.album.images[0]);
+      //url was an object
+
       recommendedTracks.push({
         track_name: item.name,
         track_artists: item.artists,
@@ -71,8 +87,10 @@ const getData = async (req, max) => {
         genres: [],
         song_length: item.duration_ms,
         genres: genres,
+        color: color,
       });
-    });
+    }
+    console.log("text aaaaaaaaaaaaa", recommendedTracks);
     let returnData = {
       recommendedTracks,
     };

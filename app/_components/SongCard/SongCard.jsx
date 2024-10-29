@@ -8,6 +8,15 @@ import { useGridContext } from "../../context/card-layout-context";
 // list card
 // oblong card
 // grid card
+//
+
+// const Background = ({ title }) => {
+//   if (title) {
+//     useTitle(title);
+//   }
+//   return null; // Renderless component
+// };
+//
 
 export default function SongCard({
   song,
@@ -20,9 +29,9 @@ export default function SongCard({
 }) {
   const [isHover, setIsHover] = useState(false);
   const { spotifyClient } = useSpotifyContext();
-  const { data, loading, error } = useColor(song.album_image.url, "rgbString", {
-    crossOrigin: "Anonymous",
-  });
+  // const { data, loading, error } = useColor(song.album_image.url, "rgbString", {
+  //   crossOrigin: "Anonymous",
+  // });
   const { layoutContext } = useGridContext();
 
   // console.log(data);
@@ -98,6 +107,26 @@ export default function SongCard({
   //
   let keyString = `${song.track_name}` + `${song.track_id}`;
 
+  // function handleBackgrdColor() {
+  //   // if (song.color || song.color !== "") return song.color;
+
+  //   const { data, loading, error } = useColor(
+  //     song.album_image.url,
+  //     "rgbString",
+  //     {
+  //       crossOrigin: "Anonymous",
+  //     },
+  //   );
+  //   if (!song.color || song.color === "") {
+  //     song["color"] = data;
+  //   }
+  //   return song.color;
+  // }
+
+  // let color = handleBackgrdColor();
+  //
+  console.log("song color", song.color);
+
   return (
     <li
       className={listItemClassname()}
@@ -106,7 +135,7 @@ export default function SongCard({
       onMouseEnter={hoverOver}
       onMouseLeave={hoverOver}
       style={{
-        backgroundColor: data,
+        // backgroundColor: color,
         height: `${squareImage}`,
         width: `${squareImage}`,
       }}

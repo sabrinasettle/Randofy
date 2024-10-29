@@ -407,6 +407,9 @@ input[type="range"] {
 
 .content-controls {
     display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding-top: 12px;
 }
 
 .grid-layout-options {
@@ -429,8 +432,41 @@ input[type="range"] {
     background-color: var(--white-100);
     height: 1px;
     width: 16px;
+    cursor: pointer;
 }
 
 .hidden {
     background-color: transparent;
+}
+
+.information-container {
+    display: flex;
+    /* justify-content: space-between; */
+    flex-direction: column;
+}
+
+.information-details-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#genre-information {
+    width: 100%;
+}
+.icon-btn {
+    display: flex;
+    justify-content: center;
+}
+
+.song-action-btn {
+    border-radius: 200px;
+}
+
+#add-song {
+    padding: 10px;
+}
+
+#share-song {
+    padding: 12px;
 }

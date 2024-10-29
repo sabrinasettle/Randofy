@@ -17,6 +17,7 @@
 		"@mui/material": "^5.14.14",
 		"axios": "^0.21.4",
 		"color-thief-react": "^2.1.0",
+		"colorthief": "^2.6.0",
 		"dotenv": "^16.3.1",
 		"image-to-base64": "^2.2.0",
 		"lucide-react": "^0.453.0",
