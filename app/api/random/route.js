@@ -46,13 +46,27 @@ const getData = async (req, max) => {
   }
 
   async function getBkgrdColor(image) {
-    console.log("get color", image);
+    // console.log("get color", image);
     const response = await fetch(image.url);
     const buf = await response.arrayBuffer();
 
     const dominantColor = await getColor(buf);
+
     console.log(dominantColor);
-    return dominantColor;
+    function rgbToHex(rgbArray) {
+      return (
+        "#" +
+        rgbArray
+          .map((value) => {
+            let hex = value.toString(16);
+            return hex.length === 1 ? "0" + hex : hex; // Ensure 2-digit hex values
+          })
+          .join("")
+      );
+    }
+    console.log(rgbToHex(dominantColor));
+    // return dominantColor;
+    return rgbToHex(dominantColor);
   }
 
   // new regex(/^:+[a-zA-Z]*:)
@@ -90,7 +104,7 @@ const getData = async (req, max) => {
         color: color,
       });
     }
-    console.log("text aaaaaaaaaaaaa", recommendedTracks);
+    // console.log("text aaaaaaaaaaaaa", recommendedTracks);
     let returnData = {
       recommendedTracks,
     };

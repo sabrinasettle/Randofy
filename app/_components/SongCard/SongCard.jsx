@@ -135,7 +135,7 @@ export default function SongCard({
       onMouseEnter={hoverOver}
       onMouseLeave={hoverOver}
       style={{
-        // backgroundColor: color,
+        backgroundColor: song.color,
         height: `${squareImage}`,
         width: `${squareImage}`,
       }}
