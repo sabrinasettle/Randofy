@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { createArtists } from "../../utils/createArtists.js";
+import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
 import Controls from "./Controls/Controls";
 import ProgressBar from "./ProgressBar";
 import { Share2, Plus } from "lucide-react";
@@ -106,7 +107,9 @@ export default function AudioPlayer({ song }) {
             <div className="information-details-container">
               <div>
                 <>Full Song Length </>
-                <p id="song-length">{song.song_length}</p>
+                <p id="song-length">
+                  {millisToMinutesAndSeconds(song.song_length)}
+                </p>
               </div>
               <div>
                 <>Year</>

@@ -1,67 +1,38 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { useColor } from "color-thief-react";
 import { useSpotifyContext } from "../../context/spotify-context";
 import { useGridContext } from "../../context/card-layout-context";
-
-// list card
-// oblong card
-// grid card
-//
-
-// const Background = ({ title }) => {
-//   if (title) {
-//     useTitle(title);
-//   }
-//   return null; // Renderless component
-// };
-//
+import { createArtists } from "../../utils/createArtists";
+import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
+import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
 
 export default function SongCard({
   song,
   index,
   activeCard = -1,
   songIsActive,
-  scrollTo,
   imageSize,
-  type,
 }) {
   const [isHover, setIsHover] = useState(false);
   const { spotifyClient } = useSpotifyContext();
-  // const { data, loading, error } = useColor(song.album_image.url, "rgbString", {
-  //   crossOrigin: "Anonymous",
-  // });
-  const { layoutContext } = useGridContext();
 
-  // console.log(data);
+  const { layoutContext } = useGridContext();
+  const layout = layoutContext.layoutType;
 
   function hoverOver() {
     setIsHover(!isHover);
   }
 
   function isActive() {
-    return index === activeCard;
+    console.log(
+      spotifyClient.setSelectedSong,
+      spotifyClient.setSelectedSong.track_name,
+    );
+    return song.track_name === spotifyClient.setSelectedSong.track_name;
   }
 
-  function createArtists() {
-    let artistArray = [];
-    let len = song.track_artists.length;
-    song.track_artists.map((item) => {
-      artistArray.push(item.name);
-    });
-
-    let artistString = "";
-    for (let i = 0; i < len; i++) {
-      if ((i === 0 && i == len - 1) || i == len - 1) {
-        artistString += artistArray[i];
-      } else if (i !== len - 1) {
-        artistString += artistArray[i] + ", ";
-      }
-    }
-
-    return artistString;
-  }
+  isActive();
 
   function moveOrNot() {
     if (isActive()) {
@@ -76,19 +47,48 @@ export default function SongCard({
   }
 
   function listItemClassname() {
-    let string = "card songcard btn-action";
+    let string = "card btn-action";
 
-    if (isHover && isActive()) {
-      string += " " + "songcard__active" + " " + "songcard__hover";
-    } else if (isActive() && !isHover) {
-      string += " " + "songcard__active";
-    } else if (!isActive() && isHover) {
-      string += " " + "songcard__hover";
+    // if layout === list
+    // if (isHover && isActive()) {
+    //   string += " " + "songcard__active" + " " + "songcard__hover";
+    // } else if (isActive() && !isHover) {
+    //   string += " " + "songcard__active";
+    // } else if (!isActive() && isHover) {
+    //   string += " " + "songcard__hover";
+    // }
+    //
+    if (layout === "list-grid") {
+      string += " " + "list-card";
+    } else if (layout === "square-grid") {
+      string += " " + "grid-card";
+    } else if (layout === "oblong-grid") {
+      string += " " + "oblong-grid";
     }
     return string;
   }
 
-  let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
+  function contentClassname() {
+    let string = "content";
+
+    // if layout === list
+    // if (isHover && isActive()) {
+    //   string += " " + "songcard__active" + " " + "songcard__hover";
+    // } else if (isActive() && !isHover) {
+    //   string += " " + "songcard__active";
+    // } else if (!isActive() && isHover) {
+    //   string += " " + "songcard__hover";
+    // }
+    //
+    if (layout === "list-grid") {
+      string += " " + "list-layout";
+    } else if (layout === "square-grid") {
+      string += " " + "grid-layout";
+    } else if (layout === "oblong-grid") {
+      string += " " + "oblong-layout";
+    }
+    return string;
+  }
 
   function handleImageSize() {
     if (!imageSize && !isActive()) {
@@ -97,35 +97,59 @@ export default function SongCard({
       return "298";
     }
 
-    if (!imageSize) return "189";
+    if (isActive() && layout === "list-grid") {
+      return "64";
+    } else if (layout === "list-grid") {
+      return "56";
+    }
+
+    // if (!imageSize) return "189";
     return imageSize.toString();
   }
 
+  // Include changes on hover and selection
+  function handleShowDetails() {
+    if (layout === "list-grid") {
+      return (
+        <div className={"song-details" + " " + "list-details"}>
+          <div className="name-artist-container">
+            <p className="song-title semi-bold text-md">{song.track_name}</p>
+            <span>
+              {song.isExplicit && <div className="explict-flag">E</div>}
+              <p className="song-artist reg text-sm">{artists}</p>
+            </span>
+          </div>
+
+          <p className="song-ablum reg text-sm">{song.album_name}</p>
+
+          <p className="song-length reg text-sm">
+            {millisToMinutesAndSeconds(song.song_length)}
+          </p>
+        </div>
+      );
+    } else if (layout === "oblong-grid") {
+      return (
+        <div className={"song-details" + " " + "square-details"}>
+          {/* <p className="song-title semi-bold text-md">{song.track_name}</p>
+          <p className="song-artist reg text-md">{artists}</p> */}
+          <div className="name-artist-container">
+            <p className="song-title semi-bold text-sm">{song.track_name}</p>
+            <span>
+              {song.isExplicit && <div className="explict-flag">E</div>}
+              <p className="song-artist reg text-sm">{artists}</p>
+            </span>
+            {song.isExplicit}
+          </div>
+        </div>
+      );
+    }
+    return;
+  }
+
   let squareImage = handleImageSize();
-
-  // console.log(data);
-  //
+  let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
   let keyString = `${song.track_name}` + `${song.track_id}`;
-
-  // function handleBackgrdColor() {
-  //   // if (song.color || song.color !== "") return song.color;
-
-  //   const { data, loading, error } = useColor(
-  //     song.album_image.url,
-  //     "rgbString",
-  //     {
-  //       crossOrigin: "Anonymous",
-  //     },
-  //   );
-  //   if (!song.color || song.color === "") {
-  //     song["color"] = data;
-  //   }
-  //   return song.color;
-  // }
-
-  // let color = handleBackgrdColor();
-  //
-  console.log("song color", song.color);
+  const artists = createArtists(song);
 
   return (
     <li
@@ -135,29 +159,27 @@ export default function SongCard({
       onMouseEnter={hoverOver}
       onMouseLeave={hoverOver}
       style={{
-        backgroundColor: song.color,
-        height: `${squareImage}`,
-        width: `${squareImage}`,
+        backgroundColor: hexToRGBA(song.color, 0.1),
       }}
     >
-      <div className="content">
-        <div className={isActive() ? `overlay overlay__active` : `overlay`}>
-          <div className="album-image-container">
-            <Image
-              className="album-image"
-              src={song.album_image.url}
-              height={squareImage}
-              width={squareImage}
-              alt={alt}
-            />
-          </div>
+      <div className={contentClassname()}>
+        <div>{index + 1}</div>
+        <div
+          className="album-image-container"
+          style={{
+            height: `${squareImage}px`,
+            width: `${squareImage}px`,
+          }}
+        >
+          <Image
+            className="album-image"
+            src={song.album_image.url}
+            height={squareImage}
+            width={squareImage}
+            alt={alt}
+          />
         </div>
-        {isActive() && (
-          <div className="song-details">
-            <p className="song-title semi-bold text-md">{song.track_name}</p>
-            <p className="song-artist reg text-md">{createArtists()}</p>
-          </div>
-        )}
+        {handleShowDetails()}
       </div>
     </li>
   );

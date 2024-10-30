@@ -1,5 +1,6 @@
 import styles from "../HistoryContent/History.module.scss";
 import { createArtists } from "../../utils/createArtists.js";
+import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
 import Image from "next/image";
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
 import { useGridContext } from "../../context/card-layout-context";
@@ -20,6 +21,9 @@ export default function SongDrawer({ song, isOpen }) {
       id={
         isOpen ? styles["song-drawer__active"] : styles["song-drawer__inactive"]
       }
+      style={{
+        backgroundColor: hexToRGBA(song.color, 0.1),
+      }}
     >
       <div style={{ padding: "12px" }}>
         {song.track_name && (

@@ -171,15 +171,25 @@ button {
 }
 
 .card {
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 2px;
     display: flex;
     justify-content: center;
 }
 
-.songcard {
-    /* width: 240px;
-    height: 240px; */
+.list-card {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.grid-card {
+    flex-direction: row;
+    justify-content: center;
+}
+
+.oblong-card {
+    flex-direction: row;
+    justify-content: center;
 }
 
 .songcard__active {
@@ -210,51 +220,94 @@ button {
     ); */
 }
 
-.songcard__hover {
-}
-
 .content {
-    position: relative;
-    display: inline-block;
-    width: 100%;
+    display: flex;
+    gap: 12px;
+    /* width: 100%; */
     height: 100%;
 }
 
+.list-layout {
+    flex-direction: row;
+    align-items: center;
+    padding: 0 12px;
+}
+
+.grid-layout {
+    flex-direction: row;
+}
+
+.oblong-layout {
+    flex-direction: column;
+}
+
 .song-details {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    z-index: 52;
+    display: flex;
+    width: 100%;
+}
+
+.square-details {
+    flex-direction: column;
+}
+
+.list-details {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    /* p {
+        width: 25%;
+    } */
+}
+
+.name-artist-container {
+    width: 40%;
+    flex-direction: column;
+    display: flex;
 }
 
 .song-title .song-artist {
     display: inline-block;
 }
 
-.song-deatils::before {
+.song-artist {
+    color: var(--gray-300);
+}
+
+.song-length {
+    color: var(--gray-300);
+    width: 10%;
+}
+
+.song-ablum {
+    color: var(--gray-300);
+    width: 40%;
+}
+
+/* .song-details::before {
     content: "";
     display: inline-block;
     height: 100%;
     vertical-align: left;
-}
+} */
 
 .album-image-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .album-image {
-    border-radius: 8.22px;
-    min-width: 100%;
-    min-height: 100%;
+    border-radius: 6px;
+    /* min-width: 100%;
+    min-height: 100%; */
 }
 
 .album-image-sm {
-    border-radius: 4px;
-    min-width: 100%;
-    min-height: 100%;
+    /* border-radius: 4px; */
+    /* min-width: 100%;
+    min-height: 100%; */
 }
 
 #generate {
