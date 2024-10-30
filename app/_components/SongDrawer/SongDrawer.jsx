@@ -22,7 +22,8 @@ export default function SongDrawer({ song, isOpen }) {
         isOpen ? styles["song-drawer__active"] : styles["song-drawer__inactive"]
       }
       style={{
-        backgroundColor: hexToRGBA(song.color, 0.1),
+        backgroundColor: hexToRGBA(song.color, 0.2),
+        border: `${hexToRGBA(song.color, 0.1)}, 1px, solid`,
       }}
     >
       <div style={{ padding: "12px" }}>

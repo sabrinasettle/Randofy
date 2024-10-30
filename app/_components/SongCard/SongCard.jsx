@@ -25,10 +25,10 @@ export default function SongCard({
   }
 
   function isActive() {
-    console.log(
-      spotifyClient.setSelectedSong,
-      spotifyClient.setSelectedSong.track_name,
-    );
+    // console.log(
+    //   spotifyClient.setSelectedSong,
+    //   spotifyClient.setSelectedSong.track_name,
+    // );
     return song.track_name === spotifyClient.setSelectedSong.track_name;
   }
 
@@ -37,7 +37,7 @@ export default function SongCard({
   function moveOrNot() {
     if (isActive()) {
       spotifyClient.setSelectedSong({ index: index, song: { song } });
-      songIsActive(index);
+      songIsActive(song);
       layoutContext.openSongDetails();
     } else {
       spotifyClient.setSelectedSong({ index: index, song });
@@ -63,7 +63,7 @@ export default function SongCard({
     } else if (layout === "square-grid") {
       string += " " + "grid-card";
     } else if (layout === "oblong-grid") {
-      string += " " + "oblong-grid";
+      string += " " + "oblong-card";
     }
     return string;
   }
@@ -107,15 +107,17 @@ export default function SongCard({
     return imageSize.toString();
   }
 
+  console.log(song.track_name, song.is_explicit);
+
   // Include changes on hover and selection
   function handleShowDetails() {
     if (layout === "list-grid") {
       return (
         <div className={"song-details" + " " + "list-details"}>
-          <div className="name-artist-container">
+          <div className="name-artist-container__list">
             <p className="song-title semi-bold text-md">{song.track_name}</p>
-            <span>
-              {song.isExplicit && <div className="explict-flag">E</div>}
+            <span className="flag-artists-container">
+              {song.is_explicit && <div className="explicit-flag">E</div>}
               <p className="song-artist reg text-sm">{artists}</p>
             </span>
           </div>
@@ -133,12 +135,11 @@ export default function SongCard({
           {/* <p className="song-title semi-bold text-md">{song.track_name}</p>
           <p className="song-artist reg text-md">{artists}</p> */}
           <div className="name-artist-container">
-            <p className="song-title semi-bold text-sm">{song.track_name}</p>
-            <span>
-              {song.isExplicit && <div className="explict-flag">E</div>}
+            <p className="song-title semi-bold text-md">{song.track_name}</p>
+            <span className="flag-artists-container">
+              {song.is_explicit && <div className="explicit-flag">E</div>}
               <p className="song-artist reg text-sm">{artists}</p>
             </span>
-            {song.isExplicit}
           </div>
         </div>
       );
@@ -154,6 +155,7 @@ export default function SongCard({
   return (
     <li
       className={listItemClassname()}
+      id={`${song.track_name}-${song.album_name}`}
       key={keyString}
       onClick={moveOrNot}
       onMouseEnter={hoverOver}
@@ -163,7 +165,9 @@ export default function SongCard({
       }}
     >
       <div className={contentClassname()}>
-        <div>{index + 1}</div>
+        {layout === "list-grid" && (
+          <div className="song-index">{index + 1}</div>
+        )}
         <div
           className="album-image-container"
           style={{

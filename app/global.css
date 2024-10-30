@@ -172,22 +172,24 @@ button {
 
 .card {
     border-radius: 8px;
-    padding: 2px;
     display: flex;
     justify-content: center;
 }
 
 .list-card {
+    padding: 4px 0;
     flex-direction: column;
     justify-content: center;
 }
 
 .grid-card {
+    padding: 2px;
     flex-direction: row;
     justify-content: center;
 }
 
 .oblong-card {
+    padding: 8px;
     flex-direction: row;
     justify-content: center;
 }
@@ -248,6 +250,7 @@ button {
 
 .square-details {
     flex-direction: column;
+    width: 100%;
 }
 
 .list-details {
@@ -261,9 +264,34 @@ button {
 }
 
 .name-artist-container {
-    width: 40%;
+    width: 100%;
     flex-direction: column;
     display: flex;
+}
+
+.name-artist-container__list {
+    width: 30%;
+    flex-direction: column;
+    display: flex;
+}
+
+.flag-artists-container {
+    display: flex;
+    align-items: center;
+}
+
+.explicit-flag {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    background-color: var(--gray-300);
+    color: var(--gray-900);
+    font-size: 10px;
+    font-weight: bold;
+    margin-right: 4px;
 }
 
 .song-title .song-artist {
@@ -284,12 +312,13 @@ button {
     width: 40%;
 }
 
-/* .song-details::before {
-    content: "";
-    display: inline-block;
-    height: 100%;
-    vertical-align: left;
-} */
+.song-index {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3%;
+    color: var(--gray-300);
+}
 
 .album-image-container {
     display: flex;
@@ -462,7 +491,7 @@ input[type="range"] {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding-top: 12px;
+    padding: 12px 0;
 }
 
 .grid-layout-options {

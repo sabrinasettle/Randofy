@@ -53,6 +53,7 @@ export default function AudioPlayer({ song }) {
 
   //If the audio file is hosted on a different domain than your React app, you may need to configure Cross-Origin Resource Sharing (CORS) on the server serving the audio file.
   const preview = song.preview_url;
+  const artists = createArtists(song);
 
   return (
     <div>
@@ -65,23 +66,12 @@ export default function AudioPlayer({ song }) {
             alignItems: "center",
           }}
         >
-          <div>
+          <div className="name-artist-container">
             <p className="song-title semi-bold text-md">{song.track_name}</p>
-            <p className="song-artist reg text-md">{createArtists(song)}</p>
-          </div>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button
-              id="add-song"
-              className="song-action-btn icon-btn"
-              disabled={true}
-            >
-              <Plus width={20} height={20} />
-            </button>
-            <button id="share-song" className="song-action-btn icon-btn">
-              <Share2 width={16} height={16} />
-            </button>
-            {/* If Logged in have the button available */}
-            {/* toast suggesting to be logged in iif not? */}
+            <span className="flag-artists-container">
+              {song.is_explicit && <div className="explicit-flag">E</div>}
+              <p className="song-artist reg text-sm">{artists}</p>
+            </span>
           </div>
         </div>
         {preview ? (
@@ -92,6 +82,20 @@ export default function AudioPlayer({ song }) {
             </div>
             {/* Controls Component */}
             <Controls isPlaying={isPlaying} playAudio={playAudio} />
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button
+                id="add-song"
+                className="song-action-btn icon-btn"
+                disabled={true}
+              >
+                <Plus width={20} height={20} />
+              </button>
+              <button id="share-song" className="song-action-btn icon-btn">
+                <Share2 width={16} height={16} />
+              </button>
+              {/* If Logged in have the button available */}
+              {/* toast suggesting to be logged in iif not? */}
+            </div>
             {/* <div>
               <button onClick={playAudio}>
                 {isPlaying ? <Pause fill="#1c1c1c" /> : <Play fill="#1c1c1c" />}
@@ -115,12 +119,12 @@ export default function AudioPlayer({ song }) {
                 <>Year</>
                 <p id="release_year">{song.release_year}</p>
               </div>
-              <div>
+              {/* <div>
                 <>Explicit</>
                 <p id="explicit-tag">
                   {song.isExplicit ? "Explicit" : "Clean"}
                 </p>
-              </div>
+              </div> */}
             </div>
             <div id="genre-information">
               <div>Genres</div>
