@@ -60,26 +60,25 @@ export default function SongCard({
     //
     if (layout === "list-grid") {
       string += " " + "list-card";
+      if (isHover) {
+        string += " " + "card__hover";
+      }
     } else if (layout === "square-grid") {
       string += " " + "grid-card";
+      if (isHover) {
+        string += " " + "card__hover";
+      }
     } else if (layout === "oblong-grid") {
       string += " " + "oblong-card";
+      if (isHover) {
+        string += " " + "card__hover";
+      }
     }
     return string;
   }
 
   function contentClassname() {
     let string = "content";
-
-    // if layout === list
-    // if (isHover && isActive()) {
-    //   string += " " + "songcard__active" + " " + "songcard__hover";
-    // } else if (isActive() && !isHover) {
-    //   string += " " + "songcard__active";
-    // } else if (!isActive() && isHover) {
-    //   string += " " + "songcard__hover";
-    // }
-    //
     if (layout === "list-grid") {
       string += " " + "list-layout";
     } else if (layout === "square-grid") {
@@ -107,7 +106,7 @@ export default function SongCard({
     return imageSize.toString();
   }
 
-  console.log(song.track_name, song.is_explicit);
+  // console.log(song.track_name, song.is_explicit);
 
   // Include changes on hover and selection
   function handleShowDetails() {
@@ -151,6 +150,13 @@ export default function SongCard({
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
   let keyString = `${song.track_name}` + `${song.track_id}`;
   const artists = createArtists(song);
+  const domColor = hexToRGBA(song.color, 0.1);
+
+  function handleColor(name) {
+    // console.log(isHover, name);
+    if (isHover) return `rgba(251, 254, 247, 16%)`;
+    return hexToRGBA(song.color, 0.2);
+  }
 
   return (
     <li
@@ -161,7 +167,7 @@ export default function SongCard({
       onMouseEnter={hoverOver}
       onMouseLeave={hoverOver}
       style={{
-        backgroundColor: hexToRGBA(song.color, 0.1),
+        backgroundColor: handleColor(song.track_name),
       }}
     >
       <div className={contentClassname()}>

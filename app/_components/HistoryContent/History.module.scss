@@ -73,7 +73,7 @@ $header-height: 56px;
     border-radius: 8px;
     border: none;
     font-size: 16px;
-    color: var(content-color-secondary);
+    color: var(--content-color-secondary);
     background-color: transparent;
 }
 
@@ -122,7 +122,6 @@ $header-height: 56px;
 .close-drawer {
     border-radius: 200px;
     color: var(--white-100);
-    background-color: hsl(255, 255, 255, 10%);
     padding: 6px 6px;
     border: none;
     display: flex;
@@ -133,4 +132,15 @@ $header-height: 56px;
         width: 24px;
         height: 24px;
     }
+}
+
+.close-drawer__hover {
+    background-color: hsl(255, 255, 255, 10%);
+}
+
+
+.drawer-header {
+    padding: 4px 0px 20px;
+    display: flex;
+    justify-content: flex-end;
 }

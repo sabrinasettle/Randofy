@@ -51,13 +51,12 @@ export default function CardLayoutOptions() {
 
   return (
     <div className="grid-layout-options">
-      <button className="layout-btn" id="oblong-grid" onClick={handleOnClick}>
-        <OblongGrid id="oblong-grid" />
-
+      <button className="layout-btn" id="list-grid" onClick={handleOnClick}>
+        <LayoutList />
         <div className="indictor-container">
           <div
             className={
-              activeLayout === "oblong-grid"
+              activeLayout === "list-grid"
                 ? `active__indictor`
                 : `active__indictor hidden`
             }
@@ -76,12 +75,13 @@ export default function CardLayoutOptions() {
           />
         </div>
       </button>
-      <button className="layout-btn" id="list-grid" onClick={handleOnClick}>
-        <LayoutList />
+      <button className="layout-btn" id="oblong-grid" onClick={handleOnClick}>
+        <OblongGrid id="oblong-grid" />
+
         <div className="indictor-container">
           <div
             className={
-              activeLayout === "list-grid"
+              activeLayout === "oblong-grid"
                 ? `active__indictor`
                 : `active__indictor hidden`
             }

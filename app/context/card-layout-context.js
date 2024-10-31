@@ -4,7 +4,7 @@ const CardLayout = React.createContext(null);
 export default CardLayout;
 
 export function CardLayoutProvider({ children }) {
-  const [layoutType, setLayoutType] = React.useState("square-grid");
+  const [layoutType, setLayoutType] = React.useState("list-grid");
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   function changeLayout(element) {

@@ -27,6 +27,7 @@ export default function HistorySection({ date, songs }) {
         <button className={styles[`header-btn`]} onClick={toggleSection}>
           {isOpen ? <ChevronUp /> : <ChevronDown />}
         </button>
+        <p> {songs.length} songs</p>
       </div>
       {isOpen && <CardGrid songs={songs} />}
     </li>

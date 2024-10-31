@@ -25,12 +25,21 @@ export default function CardGrid({ songs }) {
   }
 
   let layoutClass = updateClassName();
+  // let arrayReversed = songs.reverse();
+
+  function reverseArr(input) {
+    var ret = new Array();
+    for (var i = input.length - 1; i >= 0; i--) {
+      ret.push(input[i]);
+    }
+    return ret;
+  }
+
+  let reversedSongs = reverseArr(songs);
 
   return (
     <ul className={`${layoutClass}`}>
-      {songs.map((song, index) => (
-        // set size to 168
-        // <div onClick={() => setSong(song)}>
+      {reversedSongs.map((song, index) => (
         <SongCard
           song={song}
           index={index}

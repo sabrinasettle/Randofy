@@ -1,10 +1,11 @@
 import styles from "../HistoryContent/History.module.scss";
-import { createArtists } from "../../utils/createArtists.js";
-import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
 import Image from "next/image";
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
+import CloseButton from "./CloseButton";
 import { useGridContext } from "../../context/card-layout-context";
-import { X } from "lucide-react";
+import { createArtists } from "../../utils/createArtists.js";
+import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
+import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
 
 export default function SongDrawer({ song, isOpen }) {
   const { layoutContext } = useGridContext();
@@ -14,6 +15,15 @@ export default function SongDrawer({ song, isOpen }) {
   }
 
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
+
+  function formatYear() {
+    //format can be 1986 or 2007-09-18
+    const yearRegex = /^\d{4}/;
+    const match = song.release_year.match(yearRegex);
+    return match ? match[0] : null;
+  }
+
+  console.log(song);
 
   return (
     <div
@@ -29,13 +39,14 @@ export default function SongDrawer({ song, isOpen }) {
       <div style={{ padding: "12px" }}>
         {song.track_name && (
           <>
-            <div style={{ padding: "4px 0px 20px" }}>
-              <button
+            <div className={styles["drawer-header"]}>
+              {/* <button
                 className={styles["close-drawer"]}
                 onClick={layoutContext.closeDrawer}
               >
                 <X />
-              </button>
+              </button> */}
+              <CloseButton closeFunction={layoutContext.closeDrawer} />
             </div>
             <div className="album-image-container">
               <Image
@@ -47,6 +58,32 @@ export default function SongDrawer({ song, isOpen }) {
               />
             </div>
             <AudioPlayer song={song} />
+            <div className="information-container">
+              <div className="information-details-container">
+                {/* <div>
+                  <>Album </>
+                  <p id="song-album text-sm">{song.album_name}</p>
+                </div> */}
+                {/* <div>
+                  <>Full Song Length </>
+                  <p id="song-length text-sm">
+                    {millisToMinutesAndSeconds(song.song_length)}
+                  </p>
+                </div> */}
+                <div id="genre-information">
+                  <div>Genres</div>
+                  <div>{song.genres}</div>
+                </div>
+                <div>
+                  <>Release Year</>
+                  <p id="release_year text-sm">{formatYear()}</p>
+                </div>
+              </div>
+              <div id="genre-information">
+                <div>Genres</div>
+                <div>{song.genres}</div>
+              </div>
+            </div>
           </>
         )}
       </div>

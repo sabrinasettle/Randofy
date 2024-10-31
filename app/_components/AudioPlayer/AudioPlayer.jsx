@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { createArtists } from "../../utils/createArtists.js";
-import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
+// import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
 import Controls from "./Controls/Controls";
 import ProgressBar from "./ProgressBar";
 import { Share2, Plus } from "lucide-react";
@@ -80,58 +80,33 @@ export default function AudioPlayer({ song }) {
               <ProgressBar />
               <audio ref={audioRef} src={preview} />
             </div>
-            {/* Controls Component */}
-            <Controls isPlaying={isPlaying} playAudio={playAudio} />
-            <div style={{ display: "flex", gap: "8px" }}>
-              <button
-                id="add-song"
-                className="song-action-btn icon-btn"
-                disabled={true}
+            <div className="song-actions">
+              {/* Controls Component */}
+              <Controls isPlaying={isPlaying} playAudio={playAudio} />
+              <div
+                style={{ display: "flex", gap: "8px", height: "min-content" }}
               >
-                <Plus width={20} height={20} />
-              </button>
-              <button id="share-song" className="song-action-btn icon-btn">
-                <Share2 width={16} height={16} />
-              </button>
-              {/* If Logged in have the button available */}
-              {/* toast suggesting to be logged in iif not? */}
+                {/* If Logged in have the button available */}
+                {/* toast suggesting to be logged in iif not? */}
+                <button
+                  id="add-song"
+                  className="song-action-btn icon-btn"
+                  disabled={true}
+                >
+                  <Plus width={20} height={20} />
+                </button>
+                <button id="share-song" className="song-action-btn icon-btn">
+                  <Share2 width={16} height={16} />
+                </button>
+              </div>
             </div>
-            {/* <div>
-              <button onClick={playAudio}>
-                {isPlaying ? <Pause fill="#1c1c1c" /> : <Play fill="#1c1c1c" />}
-              </button>
-            </div> */}
           </div>
         ) : (
           <div>No Preview Available</div>
         )}
-        <div onClick={handleOpenInformation}>More information</div>
-        {openInformation && (
-          <div className="information-container">
-            <div className="information-details-container">
-              <div>
-                <>Full Song Length </>
-                <p id="song-length">
-                  {millisToMinutesAndSeconds(song.song_length)}
-                </p>
-              </div>
-              <div>
-                <>Year</>
-                <p id="release_year">{song.release_year}</p>
-              </div>
-              {/* <div>
-                <>Explicit</>
-                <p id="explicit-tag">
-                  {song.isExplicit ? "Explicit" : "Clean"}
-                </p>
-              </div> */}
-            </div>
-            <div id="genre-information">
-              <div>Genres</div>
-              <div>List of genres</div>
-            </div>
-          </div>
-        )}
+        {/* <div onClick={handleOpenInformation}>More information</div> */}
+
+        {/* // )} */}
       </div>
     </div>
   );
