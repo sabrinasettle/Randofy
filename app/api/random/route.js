@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import getRandomSearch from "../../../lib/js/helpers/randomLib.mjs";
 import { spotifyApi } from "../../../lib/js/spotify-api/SpotifyClient.mjs";
-// import { getColor } from "color-thief-react";
 import { getColor } from "colorthief";
 
 const getData = async (req, max) => {
@@ -36,12 +35,15 @@ const getData = async (req, max) => {
   async function getGenres(artists) {
     let genres = [];
     // console.log(artists);
-    artists.map(async (artist) => {
-      const request = await spotifyApi.getArtist(artist.id);
-      const artistData = await request.json();
-      // console.log(artistData);
-      genres = artistData.genres;
-    });
+    await Promise.all(
+      artists.map(async (artist) => {
+        const request = await spotifyApi.getArtist(artist.id);
+        const artistData = await request.json();
+        artistData.genres.forEach((genre) => {
+          genres.push(genre);
+        });
+      }),
+    );
     return genres;
   }
 
@@ -52,7 +54,7 @@ const getData = async (req, max) => {
 
     const dominantColor = await getColor(buf);
 
-    console.log(dominantColor);
+    // console.log(dominantColor);
     function rgbToHex(rgbArray) {
       return (
         "#" +
@@ -64,7 +66,7 @@ const getData = async (req, max) => {
           .join("")
       );
     }
-    console.log(rgbToHex(dominantColor));
+    // console.log(rgbToHex(dominantColor));
     // return dominantColor;
     return rgbToHex(dominantColor);
   }
@@ -98,10 +100,11 @@ const getData = async (req, max) => {
         //could be null
         preview_url: item.preview_url,
         release_year: item.album?.release_date,
-        genres: [],
+        genres: genres,
         song_length: item.duration_ms,
         genres: genres,
         color: color,
+        // generated_at: new Date()
       });
     }
     // console.log("text aaaaaaaaaaaaa", recommendedTracks);

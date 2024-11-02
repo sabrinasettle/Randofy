@@ -23,11 +23,13 @@ export default function HistorySection({ date, songs }) {
   return (
     <li className={styles["history-list-item"]}>
       <div className={styles["section-header"]}>
-        <h2>{date}</h2>
-        <button className={styles[`header-btn`]} onClick={toggleSection}>
-          {isOpen ? <ChevronUp /> : <ChevronDown />}
-        </button>
-        <p> {songs.length} songs</p>
+        <div className={styles["date-selection-selector"]}>
+          <h2>{date}</h2>
+          <button className={styles[`header-btn`]} onClick={toggleSection}>
+            {isOpen ? <ChevronUp /> : <ChevronDown />}
+          </button>
+        </div>
+        <p className={styles["list-item-song-amount"]}>{songs.length} songs</p>
       </div>
       {isOpen && <CardGrid songs={songs} />}
     </li>

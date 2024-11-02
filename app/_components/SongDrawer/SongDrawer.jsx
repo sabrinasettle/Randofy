@@ -23,7 +23,7 @@ export default function SongDrawer({ song, isOpen }) {
     return match ? match[0] : null;
   }
 
-  console.log(song);
+  console.log(song.track_name, song.genres);
 
   return (
     <div
@@ -70,19 +70,35 @@ export default function SongDrawer({ song, isOpen }) {
                     {millisToMinutesAndSeconds(song.song_length)}
                   </p>
                 </div> */}
-                <div id="genre-information">
-                  <div>Genres</div>
+                {/* <div id="genre-information">
+                  <div>Sub Genres</div>
                   <div>{song.genres}</div>
+                </div> */}
+                <div id="genre-information">
+                  <div className="information-label">Sub Genres</div>
+                  <ul className="genre-list">
+                    {song.genres.map((genre) => (
+                      <li className="genre-tag text-xs">
+                        <p>{genre}</p>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <div>
-                  <>Release Year</>
+                {/* <div>
+                  <div className="information-label">Release Year</div>
                   <p id="release_year text-sm">{formatYear()}</p>
-                </div>
+                </div> */}
               </div>
-              <div id="genre-information">
-                <div>Genres</div>
-                <div>{song.genres}</div>
-              </div>
+              {/* <div id="genre-information">
+                <div>Sub Genres</div>
+                <ul>
+                  {song.genres.map((genre) => (
+                    <li>
+                      <p>{genre}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div> */}
             </div>
           </>
         )}

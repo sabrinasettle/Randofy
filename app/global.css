@@ -25,6 +25,7 @@
     --content-color-primary: var(--white-100);
     --content-color-secondary: var(--gray-300);
     --content-color-ter: var(--gray-100);
+    --content-color-contrast: var(--gray-900);
 
     --button-surface-primary: var(--gray-700);
     --button-surface-secondary: var(--white-100);
@@ -292,7 +293,7 @@ button {
     align-items: center;
     border-radius: 4px;
     background-color: var(--gray-300);
-    color: var(--gray-900);
+    color: var(--content-color-contrast);
     font-size: 10px;
     font-weight: bold;
     margin-right: 4px;
@@ -580,5 +581,26 @@ input[type="range"] {
 
 .song-actions {
     display: flex;
-    padding: 2px 0 24px;
+    padding: 2px 0 12px;
+}
+
+.information-label {
+    padding-bottom: 8px;
+}
+
+.genre-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style: none;
+    gap: 4px;
+}
+
+.genre-tag {
+    color: var(--content-color-contrast);
+    border-radius: 4px;
+    background-color: var(--gray-400);
+    width: max-content;
+    height: min-content;
+    padding: 4px;
 }

@@ -39,6 +39,8 @@ $header-height: 56px;
     padding-bottom: 16px;
    font-size: 18px;
     line-height: 28px;
+    align-content: center;
+    justify-content: space-between;
 }
 
 .section-header__active {
@@ -140,7 +142,20 @@ $header-height: 56px;
 
 
 .drawer-header {
-    padding: 4px 0px 20px;
+    padding: 0px 0px 8px;
     display: flex;
     justify-content: flex-end;
+}
+
+.date-selection-selector {
+    display: flex;
+}
+
+.list-item-song-amount {
+    color: var(--content-color-secondary);
+    margin: auto 0;
+    padding-right: 6px;
+   font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
 }
