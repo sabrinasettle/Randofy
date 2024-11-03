@@ -177,6 +177,7 @@ button {
     display: flex;
     justify-content: center;
     color: var(--content-color-secondary);
+    width: 100%;
 }
 
 .card__hover {
@@ -187,21 +188,45 @@ button {
 }
 
 .list-card {
-    padding: 4px 0;
     flex-direction: column;
     justify-content: center;
+    .album-image-container {
+        width: 64px;
+        height: 64px;
+    }
+    .content {
+        padding: 4px 0;
+    }
 }
 
 .grid-card {
-    padding: 2px;
     flex-direction: row;
     justify-content: center;
+    /* max-width: 156px; */
+    /* width: 100%; */
+    .album-image-container {
+        width: inherit;
+        height: inherit;
+
+        /* width: 100%;
+        height: 100%; */
+    }
+    .content {
+        padding: 2px;
+    }
 }
 
 .oblong-card {
-    padding: 8px;
     flex-direction: row;
     justify-content: center;
+    /* width: 100%; */
+    .album-image-container {
+        width: 100%;
+        height: 100%;
+    }
+    .content {
+        padding: 8px;
+    }
 }
 
 .overlay__active {
@@ -229,9 +254,10 @@ button {
 
 .content {
     display: flex;
-    gap: 12px;
-    /* width: 100%; */
+    /* gap: 12px; */
+    width: 100%;
     height: 100%;
+    flex-grow: 1;
 }
 
 .list-layout {
@@ -272,6 +298,7 @@ button {
     width: 100%;
     flex-direction: column;
     display: flex;
+    padding: 12px 0 20px;
 }
 
 .name-artist-container__list {
@@ -336,18 +363,16 @@ button {
 .album-image-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
+    align-items: stretch;
+    position: relative;
+    background-color: var(--transparent-background-white);
     /* overflow: hidden; */
 }
 
 .album-image {
     border-radius: 6px;
-}
-
-.album-image-sm {
-    /* border-radius: 4px; */
-    /* min-width: 100%;
-    min-height: 100%; */
+    aspect-ratio: 1 / 1;
 }
 
 #generate {
@@ -370,13 +395,11 @@ button {
 
 /* song-list song-list__grid */
 
-.song-list {
+/* .song-list {
     display: flex;
     gap: 8px;
     list-style-type: none;
 }
-
-/* song-list song-list__grid */
 
 .song-list__grid {
     flex-direction: row;
@@ -392,6 +415,83 @@ button {
 
 .song-list__list-grid {
     flex-direction: column;
+    max-width: 100%;
+} */
+
+.song-list {
+    display: grid;
+    grid-gap: 8px;
+    list-style-type: none;
+    grid-auto-flow: dense;
+}
+
+.song-list__grid {
+    max-width: 100%;
+
+    --grid-layout-gap: 8px;
+    --grid-column-count: 5;
+    --grid-item--min-width: 164px;
+
+    --gap-count: calc(var(--grid-column-count) - 1);
+    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+    --grid-item--max-width: calc(
+        (100% - var(--total-gap-width)) / var(--grid-column-count)
+    );
+    --gap-count: calc(var(--grid-column-count) - 1);
+    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+    --grid-item--max-width: calc(
+        (100% - var(--total-gap-width)) / var(--grid-column-count)
+    );
+
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(
+            max(var(--grid-item--min-width), var(--grid-item--max-width)),
+            1fr
+        )
+    );
+
+    grid-auto-rows: 1fr;
+}
+
+.song-list__grid > * {
+    aspect-ratio: 1 / 1; /* Ensures items are square, height equals width */
+}
+
+.song-list__oblong-grid {
+    max-width: 100%;
+
+    --grid-layout-gap: 8px;
+    --grid-column-count: 3;
+    --grid-item--min-width: 244px;
+
+    --gap-count: calc(var(--grid-column-count) - 1);
+    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+    --grid-item--max-width: calc(
+        (100% - var(--total-gap-width)) / var(--grid-column-count)
+    );
+
+    --gap-count: calc(var(--grid-column-count) - 1);
+    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+    --grid-item--max-width: calc(
+        (100% - var(--total-gap-width)) / var(--grid-column-count)
+    );
+
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(
+            max(var(--grid-item--min-width), var(--grid-item--max-width)),
+            1fr
+        )
+    );
+    grid-auto-rows: 1fr;
+}
+
+.song-list__oblong-grid > * {
+}
+
+.song-list__list-grid {
+    /* flex-direction: column; */
     max-width: 100%;
 }
 

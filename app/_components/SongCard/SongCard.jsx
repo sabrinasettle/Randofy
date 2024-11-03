@@ -21,7 +21,11 @@ export default function SongCard({
   const layout = layoutContext.layoutType;
 
   function hoverOver() {
-    setIsHover(!isHover);
+    setIsHover(true);
+  }
+
+  function mouseLeave() {
+    setIsHover(false);
   }
 
   function isActive() {
@@ -165,7 +169,7 @@ export default function SongCard({
       key={keyString}
       onClick={moveOrNot}
       onMouseEnter={hoverOver}
-      onMouseLeave={hoverOver}
+      onMouseLeave={mouseLeave}
       style={{
         backgroundColor: handleColor(song.track_name),
       }}
@@ -174,19 +178,14 @@ export default function SongCard({
         {layout === "list-grid" && (
           <div className="song-index">{index + 1}</div>
         )}
-        <div
-          className="album-image-container"
-          style={{
-            height: `${squareImage}px`,
-            width: `${squareImage}px`,
-          }}
-        >
+        <div className="album-image-container">
           <Image
             className="album-image"
             src={song.album_image.url}
-            height={squareImage}
-            width={squareImage}
+            fill={true}
+            objectFit="cover"
             alt={alt}
+            // sizes="(max-width: 768px) 100vw, 33vw"
           />
         </div>
         {handleShowDetails()}
