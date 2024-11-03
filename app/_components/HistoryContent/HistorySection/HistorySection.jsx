@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import styles from "../History.module.scss";
 import CardGrid from "../../CardGrid/CardGrid";
@@ -11,6 +11,8 @@ export default function HistorySection({ date, songs }) {
   function toggleSection() {
     setIsOpen(!isOpen);
   }
+
+  useEffect(() => console.log("mounted"), []);
 
   // To Do
   // Animate the date getting bigger as the user scrolls
