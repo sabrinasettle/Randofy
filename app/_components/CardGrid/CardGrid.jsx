@@ -5,20 +5,16 @@ export default function CardGrid({ songs }) {
   const { layoutContext } = useGridContext();
 
   const layout = layoutContext.layoutType;
-  let imageSize = 189;
 
   function updateClassName() {
     // oblong-grid, square-grid, list
     if (layout === "square-grid") {
-      imageSize = 170;
       return "song-list song-list__grid song-list__history";
     }
     if (layout === "oblong-grid") {
-      imageSize = 298;
       return "song-list song-list__oblong-grid song-list__history";
     }
     if (layout === "list-grid") {
-      imageSize = 100;
       return "song-list song-list__list-grid song-list__history";
     }
     return "song-list";
@@ -46,9 +42,7 @@ export default function CardGrid({ songs }) {
           scrollTo
           songIsActive
           key={`song ` + `${song.track_name}`}
-          imageSize={imageSize}
         />
-        // </div>
       ))}
     </ul>
   );

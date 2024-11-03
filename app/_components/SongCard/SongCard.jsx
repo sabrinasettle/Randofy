@@ -12,7 +12,6 @@ export default function SongCard({
   index,
   activeCard = -1,
   songIsActive,
-  imageSize,
 }) {
   const [isHover, setIsHover] = useState(false);
   const { spotifyClient } = useSpotifyContext();
@@ -53,15 +52,6 @@ export default function SongCard({
   function listItemClassname() {
     let string = "card btn-action";
 
-    // if layout === list
-    // if (isHover && isActive()) {
-    //   string += " " + "songcard__active" + " " + "songcard__hover";
-    // } else if (isActive() && !isHover) {
-    //   string += " " + "songcard__active";
-    // } else if (!isActive() && isHover) {
-    //   string += " " + "songcard__hover";
-    // }
-    //
     if (layout === "list-grid") {
       string += " " + "list-card";
       if (isHover) {
@@ -93,22 +83,22 @@ export default function SongCard({
     return string;
   }
 
-  function handleImageSize() {
-    if (!imageSize && !isActive()) {
-      return "240";
-    } else if (!imageSize && isActive()) {
-      return "298";
-    }
+  // function handleImageSize() {
+  //   if (!imageSize && !isActive()) {
+  //     return "240";
+  //   } else if (!imageSize && isActive()) {
+  //     return "298";
+  //   }
 
-    if (isActive() && layout === "list-grid") {
-      return "64";
-    } else if (layout === "list-grid") {
-      return "56";
-    }
+  //   if (isActive() && layout === "list-grid") {
+  //     return "64";
+  //   } else if (layout === "list-grid") {
+  //     return "56";
+  //   }
 
-    // if (!imageSize) return "189";
-    return imageSize.toString();
-  }
+  //   // if (!imageSize) return "189";
+  //   return imageSize.toString();
+  // }
 
   // console.log(song.track_name, song.is_explicit);
 
@@ -135,13 +125,11 @@ export default function SongCard({
     } else if (layout === "oblong-grid") {
       return (
         <div className={"song-details" + " " + "square-details"}>
-          {/* <p className="song-title semi-bold text-md">{song.track_name}</p>
-          <p className="song-artist reg text-md">{artists}</p> */}
           <div className="name-artist-container">
-            <p className="song-title semi-bold text-md">{song.track_name}</p>
+            <p className="song-title semi-bold text-lg">{song.track_name}</p>
             <span className="flag-artists-container">
               {song.is_explicit && <div className="explicit-flag">E</div>}
-              <p className="song-artist reg text-sm">{artists}</p>
+              <p className="song-artist reg text-md">{artists}</p>
             </span>
           </div>
         </div>
@@ -150,13 +138,13 @@ export default function SongCard({
     return;
   }
 
-  let squareImage = handleImageSize();
+  // let squareImage = handleImageSize();
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
   let keyString = `${song.track_name}` + `${song.track_id}`;
   const artists = createArtists(song);
-  const domColor = hexToRGBA(song.color, 0.1);
+  // const domColor = hexToRGBA(song.color, 0.1);
 
-  function handleColor(name) {
+  function handleColor() {
     // console.log(isHover, name);
     if (isHover) return `rgba(251, 254, 247, 16%)`;
     return hexToRGBA(song.color, 0.2);
@@ -179,11 +167,22 @@ export default function SongCard({
           <div className="song-index">{index + 1}</div>
         )}
         <div className="album-image-container">
+          {!isHover && (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0, 0, 0, 38%)",
+                zIndex: "3",
+                position: "absolute",
+                top: "0",
+              }}
+            />
+          )}
           <Image
             className="album-image"
             src={song.album_image.url}
             fill={true}
-            objectFit="cover"
             alt={alt}
             // sizes="(max-width: 768px) 100vw, 33vw"
           />
