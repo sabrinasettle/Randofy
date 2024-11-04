@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { createArtists } from "../../utils/createArtists.js";
-// import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
 import Controls from "./Controls/Controls";
 import ProgressBar from "./ProgressBar";
 import { Share2, Plus } from "lucide-react";
@@ -12,36 +11,22 @@ export default function AudioPlayer({ song }) {
   const audioRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
 
-  const [songInfo, setSongInfo] = useState({
-    currentTime: 0,
-    duration: 0,
-    animationPercentage: 0,
-  });
+  // const [songInfo, setSongInfo] = useState({
+  //   currentTime: 0,
+  //   duration: 0,
+  //   animationPercentage: 0,
+  // });
 
-  // const duration = 30;
+  useEffect(() => {
+    setCurrentTime(0);
+  }, []);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setCurrentTime((prevTime) => {
-  //       if (prevTime >= duration) {
-  //         clearInterval(intervalId);
-  //         return duration;
-  //       }
-  //       return prevTime + 1;
-  //     });
-  //   }, 1000);
-
-  //   return () => clearInterval(intervalId);
-  // }, [duration]);
-
-  // const progressPercent = (currentTime / duration) * 100;
-  //
-
-  function handleOpenInformation() {
-    setOpenInformation(!openInformation);
+  function onSongEnd() {
+    setCurrentTime(0);
+    setIsPlaying(false);
   }
 
-  const playAudio = () => {
+  function playAudio() {
     if (audioRef.current && !isPlaying) {
       setIsPlaying(true);
       audioRef.current.play();
@@ -49,7 +34,7 @@ export default function AudioPlayer({ song }) {
       setIsPlaying(false);
       audioRef.current.pause();
     }
-  };
+  }
 
   //If the audio file is hosted on a different domain than your React app, you may need to configure Cross-Origin Resource Sharing (CORS) on the server serving the audio file.
   const preview = song.preview_url;
@@ -77,7 +62,12 @@ export default function AudioPlayer({ song }) {
         {preview ? (
           <div>
             <div>
-              <ProgressBar />
+              <ProgressBar
+                isPlaying={isPlaying}
+                onSongEnd={onSongEnd}
+                currentTime={currentTime}
+                setCurrentTime={setCurrentTime}
+              />
               <audio ref={audioRef} src={preview} />
             </div>
             <div className="song-actions">

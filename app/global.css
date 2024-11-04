@@ -571,12 +571,23 @@ input[type="range"] {
     width: 100%;
     display: flex;
     justify-content: center;
+    span {
+        display: block;
+    }
+    span:first-child {
+        padding-right: 8px;
+    }
+
+    span:last-child {
+        padding-left: 8px;
+    }
 }
 
 .progress-bar {
-    width: 100%;
+    flex-grow: 1;
     margin: auto;
-    padding: 0 8px;
+    /* padding: 0 8px; */
+    position: relative;
 }
 
 .progress-bar-fill {
@@ -585,6 +596,9 @@ input[type="range"] {
     position: absolute;
     z-index: 2;
     border-radius: 12px;
+    width: 0; /* Initial width is 0; controlled by JavaScript */
+    top: 0;
+    left: 0;
 }
 
 .progress-bar-background {
@@ -592,7 +606,6 @@ input[type="range"] {
     background-color: var(--gray-400);
     height: 4px;
     border-radius: 12px;
-    /* position:; */
 }
 
 .content-controls {

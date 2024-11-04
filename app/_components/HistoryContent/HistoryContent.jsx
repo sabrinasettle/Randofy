@@ -39,8 +39,8 @@ export default function HistoryContent() {
     const startOfDay = new Date(now.setHours(0, 0, 0, 0));
     const endOfDay = new Date(now.setHours(23, 59, 59, 59));
 
-    let dateString = today.toLocaleDateString();
-    console.log("today", dateString, historyFilter);
+    // let dateString = today.toLocaleDateString();
+    // console.log("today", dateString, historyFilter);
     if (historyFilter === "Today") {
       return filterObjectByDateRange(history, startOfDay, endOfDay);
     } else if (historyFilter === "This Week") {
@@ -61,15 +61,13 @@ export default function HistoryContent() {
   }
 
   function filterObjectByDateRange(obj, startDate, endDate) {
-    // console.log(startDate, endDate);
     const filteredObj = {};
-
-    console.log(historyFilter, startDate, endDate);
+    // console.log(historyFilter, startDate, endDate);
 
     Object.keys(obj)
       .filter((tDate) => {
         const date = new Date(tDate);
-        console.log(date);
+        // console.log(date);
         if (date >= startDate && date <= endDate) {
           return true;
         }

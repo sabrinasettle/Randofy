@@ -1,27 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-export default function ProgressBar({}) {
-  const [currentTime, setCurrentTime] = useState(0);
+export default function ProgressBar({
+  isPlaying,
+  currentTime,
+  setCurrentTime,
+  onSongEnd,
+}) {
+  // const [previewTime, setPreviewTime] = useState(0);
 
-  const duration = 30;
+  const duration = 29;
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentTime((prevTime) => {
-        if (prevTime >= duration) {
-          clearInterval(intervalId);
-          return duration;
-        }
-        return prevTime + 1;
-      });
-    }, 1000);
+    // Only run the interval if `isPlaying` is true
+    if (isPlaying) {
+      const intervalId = setInterval(() => {
+        setCurrentTime((prevTime) => {
+          if (prevTime >= duration) {
+            clearInterval(intervalId);
+            onSongEnd();
+            return duration;
+          }
+          return prevTime + 1;
+        });
+      }, 1000);
 
-    return () => clearInterval(intervalId);
-  }, [duration]);
+      // Clear the interval when `isPlaying` changes or component unmounts
+      return () => clearInterval(intervalId);
+    }
+  }, [isPlaying, duration]);
 
   const progressPercent = (currentTime / duration) * 100;
   return (
     <div className="progress-bar-container">
-      <span className="text-xs">00:00</span>
+      <span className="text-xs">0:{String(currentTime).padStart(2, "0")}</span>
       <div className="progress-bar">
         <div
           className="progress-bar-fill"
@@ -29,7 +39,7 @@ export default function ProgressBar({}) {
         />
         <div className="progress-bar-background" />
       </div>
-      <span className="text-xs">00:00</span>
+      <span className="text-xs">0:30</span>
     </div>
   );
 }

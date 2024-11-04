@@ -14,19 +14,25 @@ export default function HistorySection({ date, songs }) {
 
   useEffect(() => console.log("mounted"), []);
 
+  function isToday() {
+    const today = new Date();
+    let dateString = today.toLocaleDateString();
+    return date === dateString;
+  }
+
   // To Do
   // Animate the date getting bigger as the user scrolls
   //  // add listener to scroll
   // animate the close and open of the section
-  // Fix Ordering of the list
+  // Add loader to view so that the user gets something
+
   // Change the string of today's date to today
-  //
 
   return (
     <li className={styles["history-list-item"]}>
       <div className={styles["section-header"]}>
         <div className={styles["date-selection-selector"]}>
-          <h2>{date}</h2>
+          <h2>{isToday() ? "Today" : `${date}`}</h2>
           <button className={styles[`header-btn`]} onClick={toggleSection}>
             {isOpen ? <ChevronUp /> : <ChevronDown />}
           </button>
