@@ -5,8 +5,9 @@ import styles from "../History.module.scss";
 import CardGrid from "../../CardGrid/CardGrid";
 // import { useGridContext } from "../../../context/card-layout-context";
 
-export default function HistorySection({ date, songs }) {
+export default function HistorySection({ date, songs, idIndex, isActive }) {
   const [isOpen, setIsOpen] = useState(true);
+  console.log("isActive", isActive);
 
   function toggleSection() {
     setIsOpen(!isOpen);
@@ -29,7 +30,7 @@ export default function HistorySection({ date, songs }) {
   // Change the string of today's date to today
 
   return (
-    <li className={styles["history-list-item"]}>
+    <li id={idIndex} className={styles["history-list-item"]}>
       <div className={styles["section-header"]}>
         <div className={styles["date-selection-selector"]}>
           <h2>{isToday() ? "Today" : `${date}`}</h2>

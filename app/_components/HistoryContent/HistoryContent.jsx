@@ -1,6 +1,5 @@
 "use client";
-// import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
 import { useGridContext } from "../../context/card-layout-context";
 import BackLink from "../BackLink";
@@ -18,15 +17,22 @@ import styles from "./History.module.scss";
 export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
   const { layoutContext } = useGridContext();
+  const scrollContainerRef = useRef(null);
 
   const [historyFilter, setHistoryFilter] = useState("All");
   const [sortFilter, setSortFilter] = useState("newest");
+  const [activeSection, setActiveSection] = useState(0);
 
   let history = spotifyClient.generationHistory;
   let selectedSong = spotifyClient.selectedSong.song;
   const isDrawerOpen = layoutContext.isDrawerOpen;
 
   const sortOptions = ["newest to oldest", "oldest to newest"];
+
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    // history-songlist-container
+  }, []);
 
   function filteredSongHistory() {
     const now = new Date();
@@ -123,17 +129,25 @@ export default function HistoryContent() {
                 )}
                 {history && <CardLayoutOptions />}
               </div>
-              <ul id={styles["history-section-list"]}>
-                {Object.keys(filteredHistory)
-                  .reverse()
-                  .map((key, index) => (
-                    <HistorySection
-                      key={`history ` + `${index}` + `${key}`}
-                      date={key}
-                      songs={history[key]}
-                    />
-                  ))}
-              </ul>
+              <div
+                id="history-songlist-container"
+                className={styles["history-section-list"]}
+                ref={scrollContainerRef}
+              >
+                <ul>
+                  {Object.keys(filteredHistory)
+                    .reverse()
+                    .map((key, index) => (
+                      <HistorySection
+                        key={`history ` + `${index}` + `${key}`}
+                        date={key}
+                        songs={history[key]}
+                        idIndex={`section-${index}`}
+                        isActive={activeSection === index}
+                      />
+                    ))}
+                </ul>
+              </div>
             </div>
             {selectedSong && (
               <div id={styles["drawer-column"]}>

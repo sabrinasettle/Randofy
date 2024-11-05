@@ -635,6 +635,7 @@ input[type="range"] {
     justify-content: space-between;
     width: 100%;
     padding: 12px 0;
+    background-color: var(--gray-900);
 }
 
 .grid-layout-options {
