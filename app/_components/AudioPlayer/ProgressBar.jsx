@@ -6,8 +6,6 @@ export default function ProgressBar({
   setCurrentTime,
   onSongEnd,
 }) {
-  // const [previewTime, setPreviewTime] = useState(0);
-
   const duration = 29;
   useEffect(() => {
     // Only run the interval if `isPlaying` is true

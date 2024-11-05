@@ -16,6 +16,26 @@ export default function AudioPlayer({ song }) {
   //   duration: 0,
   //   animationPercentage: 0,
   // });
+  //
+  // const duration = 29;
+  // useEffect(() => {
+  //   // Only run the interval if `isPlaying` is true
+  //   if (isPlaying) {
+  //     const intervalId = setInterval(() => {
+  //       setCurrentTime((prevTime) => {
+  //         if (prevTime >= duration) {
+  //           clearInterval(intervalId);
+  //           onSongEnd();
+  //           return duration;
+  //         }
+  //         return prevTime + 1;
+  //       });
+  //     }, 1000);
+
+  //     // Clear the interval when `isPlaying` changes or component unmounts
+  //     return () => clearInterval(intervalId);
+  //   }
+  // }, [isPlaying, duration]);
 
   useEffect(() => {
     setCurrentTime(0);
@@ -42,62 +62,42 @@ export default function AudioPlayer({ song }) {
 
   return (
     <div>
-      <div className="song-details-container">
-        <div
-          style={{
-            paddingBottom: "8px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div className="name-artist-container">
-            <p className="song-title semi-bold text-md">{song.track_name}</p>
-            <span className="flag-artists-container">
-              {song.is_explicit && <div className="explicit-flag">E</div>}
-              <p className="song-artist reg text-sm">{artists}</p>
-            </span>
+      {preview ? (
+        <div>
+          <div>
+            <ProgressBar
+              isPlaying={isPlaying}
+              onSongEnd={onSongEnd}
+              currentTime={currentTime}
+              setCurrentTime={setCurrentTime}
+            />
+            <audio ref={audioRef} src={preview} />
+          </div>
+          <div className="song-actions">
+            {/* Controls Component */}
+            <Controls isPlaying={isPlaying} playAudio={playAudio} />
+            <div style={{ display: "flex", gap: "8px", height: "min-content" }}>
+              {/* If Logged in have the button available */}
+              {/* toast suggesting to be logged in iif not? */}
+              <button
+                id="add-song"
+                className="song-action-btn icon-btn"
+                disabled={true}
+              >
+                <Plus width={20} height={20} />
+              </button>
+              <button id="share-song" className="song-action-btn icon-btn">
+                <Share2 width={16} height={16} />
+              </button>
+            </div>
           </div>
         </div>
-        {preview ? (
-          <div>
-            <div>
-              <ProgressBar
-                isPlaying={isPlaying}
-                onSongEnd={onSongEnd}
-                currentTime={currentTime}
-                setCurrentTime={setCurrentTime}
-              />
-              <audio ref={audioRef} src={preview} />
-            </div>
-            <div className="song-actions">
-              {/* Controls Component */}
-              <Controls isPlaying={isPlaying} playAudio={playAudio} />
-              <div
-                style={{ display: "flex", gap: "8px", height: "min-content" }}
-              >
-                {/* If Logged in have the button available */}
-                {/* toast suggesting to be logged in iif not? */}
-                <button
-                  id="add-song"
-                  className="song-action-btn icon-btn"
-                  disabled={true}
-                >
-                  <Plus width={20} height={20} />
-                </button>
-                <button id="share-song" className="song-action-btn icon-btn">
-                  <Share2 width={16} height={16} />
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div>No Preview Available</div>
-        )}
-        {/* <div onClick={handleOpenInformation}>More information</div> */}
+      ) : (
+        <div>No Preview Available</div>
+      )}
+      {/* <div onClick={handleOpenInformation}>More information</div> */}
 
-        {/* // )} */}
-      </div>
+      {/* // )} */}
     </div>
   );
 }

@@ -5,7 +5,6 @@ import CloseButton from "./CloseButton";
 import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists.js";
 import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
-import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
 
 export default function SongDrawer({ song, isOpen }) {
   const { layoutContext } = useGridContext();
@@ -23,7 +22,9 @@ export default function SongDrawer({ song, isOpen }) {
     return match ? match[0] : null;
   }
 
-  console.log(song.track_name, song.genres);
+  // console.log(song.track_name, song.genres);
+  //
+  const artists = createArtists(song);
 
   return (
     <div
@@ -40,65 +41,73 @@ export default function SongDrawer({ song, isOpen }) {
         {song.track_name && (
           <>
             <div className={styles["drawer-header"]}>
-              {/* <button
-                className={styles["close-drawer"]}
-                onClick={layoutContext.closeDrawer}
-              >
-                <X />
-              </button> */}
               <CloseButton closeFunction={layoutContext.closeDrawer} />
             </div>
+
+            {/* <div className="album-image__overlay-container"> */}
             <div className="album-image-container">
               <Image
                 className="album-image"
                 src={song.album_image.url}
-                height={384}
-                width={384}
+                height={364}
+                width={364}
                 alt={alt}
               />
+              {/* <div className="overlay">
+                <div className="song-details-container">
+                <div className="name-artist__overlay-container">
+                  <p className="song-title semi-bold text-md">
+                    {song.track_name}
+                  </p>
+                  <div className="flag-artists-container">
+                    {song.is_explicit && <div className="explicit-flag">E</div>}
+                    <p className="song-artist reg text-sm">{artists}</p>
+                  </div>
+                </div>
+                <div className="overlay-background" />
+                </div>
+              </div> */}
+            </div>
+            <div className="song-details-container">
+              <div className="name-artist-container">
+                <p className="song-title semi-bold text-lg">
+                  {song.track_name}
+                </p>
+                <div className="flag-artists-container">
+                  {song.is_explicit && <div className="explicit-flag">E</div>}
+                  <p className="song-artist reg text-sm">{artists}</p>
+                </div>
+              </div>
             </div>
             <AudioPlayer song={song} />
             <div className="information-container">
               <div className="information-details-container">
-                {/* <div>
-                  <>Album </>
-                  <p id="song-album text-sm">{song.album_name}</p>
-                </div> */}
-                {/* <div>
-                  <>Full Song Length </>
-                  <p id="song-length text-sm">
-                    {millisToMinutesAndSeconds(song.song_length)}
+                <div>
+                  <div className="information-label">Album</div>
+                  <p className="song-info text-sm" id="song-album">
+                    {song.album_name}
                   </p>
-                </div> */}
-                {/* <div id="genre-information">
-                  <div>Sub Genres</div>
-                  <div>{song.genres}</div>
-                </div> */}
-                <div id="genre-information">
-                  <div className="information-label">Sub Genres</div>
-                  <ul className="genre-list">
-                    {song.genres.map((genre) => (
-                      <li className="genre-tag text-xs">
-                        <p>{genre}</p>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
-                {/* <div>
+                <div>
                   <div className="information-label">Release Year</div>
-                  <p id="release_year text-sm">{formatYear()}</p>
-                </div> */}
+                  <p className="song-info text-sm" id="release_year">
+                    {formatYear()}
+                  </p>
+                </div>
               </div>
-              {/* <div id="genre-information">
-                <div>Sub Genres</div>
-                <ul>
+              <div id="genre-information">
+                <div className="information-label">
+                  Sub Genres{" "}
+                  <span className="text-sm">({song.genres.length})</span>
+                </div>
+                <ul className="genre-list">
                   {song.genres.map((genre) => (
-                    <li>
+                    <li className="genre-tag text-xs">
                       <p>{genre}</p>
                     </li>
                   ))}
                 </ul>
-              </div> */}
+              </div>
             </div>
           </>
         )}
