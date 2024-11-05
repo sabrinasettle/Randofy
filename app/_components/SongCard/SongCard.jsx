@@ -184,7 +184,7 @@ export default function SongCard({
             src={song.album_image.url}
             fill={true}
             alt={alt}
-            // sizes="(max-width: 768px) 100vw, 33vw"
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
         </div>
         {handleShowDetails()}

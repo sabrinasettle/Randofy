@@ -28,11 +28,6 @@ export default function HistoryContent() {
 
   const sortOptions = ["newest to oldest", "oldest to newest"];
 
-  //see if content has loaded as well
-  // To Do
-  // Create Drawer and Song content in drawer
-  // Ability to close drawer
-
   function filteredSongHistory() {
     const now = new Date();
     const today = new Date();
