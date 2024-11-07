@@ -30,8 +30,112 @@ export default function HistoryContent() {
   const sortOptions = ["newest to oldest", "oldest to newest"];
 
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
     // history-songlist-container
+
+    // get the ul element
+    const ulElement = document.getElementById("history-songlist");
+    //get the list items in the ul
+    const liElements = ulElement.getElementsByClassName("history-list-item");
+    // console.log(ulElement, liElements);
+
+    const handleScroll = () => {
+      if (!scrollContainerRef.current) return;
+      let containerTop = scrollContainer.scrollTop;
+      console.log("Scrolling...");
+      console.log("top", containerTop);
+
+      if (containerTop === 0) {
+        if (activeSection != 0) {
+          setActiveSection(0);
+        }
+      }
+
+      // const closestToTop = liElements
+      //   .map((el) => {
+      //     return {
+      //       height: el.getBoundingClientRect().bottom - containerTop,
+      //       id: el.id,
+      //     };
+      //   })
+      //   .filter((e) => e.height > 0)[0];
+
+      const elArray = [];
+      let index = 0;
+      for (const el of liElements) {
+        elArray.push({
+          height: el.getBoundingClientRect().bottom - containerTop,
+          id: el.id,
+          index: index,
+        });
+        index++;
+      }
+
+      const closestToTop = elArray.filter((e) => e.height > 0)[0];
+
+      console.log(
+        "Closest to top is",
+        closestToTop.height,
+        closestToTop.id,
+        closestToTop.index,
+      );
+
+      if (activeSection !== closestToTop.index) {
+        setActiveSection(closestToTop.index);
+      }
+
+      for (const el of liElements) {
+        let stickyElem = document.getElementById(`${el.id}`);
+        const currStickyPos =
+          stickyElem.getBoundingClientRect().bottom - containerTop;
+
+        // const currStickyPos =
+        //   stickyElem.getBoundingClientRect().top + containerTop;
+        // console.log(scrollContainer.scrollTop, el.offsetTop, el.id);
+        console.log(
+          "top bounding",
+          stickyElem.getBoundingClientRect().top,
+          "sticky pos",
+          currStickyPos,
+          el.id,
+        );
+
+        const itemHeader = document.getElementById(`${el.id}-header`);
+
+        console.log(containerTop >= currStickyPos, containerTop, currStickyPos);
+
+        // if (containerTop >= currStickyPos) {
+        //   if (scrollContainer.scrollTop >= el.offsetTop) {
+        //   console.log(
+        //     "meets check",
+        //     window.scrollY,
+        //     el.offsetTop,
+        //     el.id,
+        //     "Pos",
+        //     currStickyPos,
+        //   );
+        //   itemHeader.setHTMLUnsafe();
+        //   document.getElementById(`${el.id}-header`).style.position = "fixed";
+        //   itemHeader.style.top = `${scrollContainer.scrollTop}`;
+        //   itemHeader.style.zIndex = 20;
+        //   itemHeader.style.backgroundColor = "red";
+        // } else {
+        //   itemHeader.style.position = "relative";
+        //   itemHeader.style.top = "initial";
+        //   document.getElementById(`${el.id}-header`).style.zIndex = 0;
+        //   document.getElementById(`${el.id}-header`).style.backgroundColor =
+        //     "transparent";
+        // }
+      }
+    };
+
+    const scrollContainer = scrollContainerRef.current;
+    scrollContainer.addEventListener("scroll", handleScroll);
+
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.removeEventListener("scroll", handleScroll);
+      }
+    };
   }, []);
 
   function filteredSongHistory() {
@@ -134,7 +238,7 @@ export default function HistoryContent() {
                 className={styles["history-section-list"]}
                 ref={scrollContainerRef}
               >
-                <ul>
+                <ul id="history-songlist">
                   {Object.keys(filteredHistory)
                     .reverse()
                     .map((key, index) => (

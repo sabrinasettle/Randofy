@@ -748,3 +748,22 @@ input[type="range"] {
     height: min-content;
     padding: 2px 4px;
 }
+
+.history-list-item {
+    list-style-type: none;
+}
+
+.section-header {
+    display: flex;
+    padding-bottom: 16px;
+    font-size: 18px;
+    line-height: 28px;
+    align-content: center;
+    justify-content: space-between;
+}
+
+.section-header__active {
+    font-size: 36px;
+    line-height: 44px;
+    letter-spacing: -2%;
+}

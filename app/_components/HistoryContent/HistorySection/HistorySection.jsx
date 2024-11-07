@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import styles from "../History.module.scss";
 import CardGrid from "../../CardGrid/CardGrid";
@@ -21,6 +21,14 @@ export default function HistorySection({ date, songs, idIndex, isActive }) {
     return date === dateString;
   }
 
+  const styled = useMemo(() => {
+    if (isActive) {
+      return "section-header__active";
+    } else {
+      return "section-header";
+    }
+  }, [isActive]);
+
   // To Do
   // Animate the date getting bigger as the user scrolls
   //  // add listener to scroll
@@ -30,8 +38,8 @@ export default function HistorySection({ date, songs, idIndex, isActive }) {
   // Change the string of today's date to today
 
   return (
-    <li id={idIndex} className={styles["history-list-item"]}>
-      <div className={styles["section-header"]}>
+    <li id={idIndex} className="history-list-item">
+      <div id={`${idIndex}-header`} className={styled}>
         <div className={styles["date-selection-selector"]}>
           <h2>{isToday() ? "Today" : `${date}`}</h2>
           <button className={styles[`header-btn`]} onClick={toggleSection}>
