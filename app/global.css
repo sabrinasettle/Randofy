@@ -760,10 +760,35 @@ input[type="range"] {
     line-height: 28px;
     align-content: center;
     justify-content: space-between;
+    width: 100%;
+    transition:
+        font-size 0.3s ease,
+        line-height 0.3s ease;
 }
 
 .section-header__active {
-    font-size: 36px;
-    line-height: 44px;
-    letter-spacing: -2%;
+    transition:
+        /* background-color 0.3s ease, */
+        /* opacity 0.3s ease, */
+        font-size 0.3s ease,
+        line-height 0.3s ease;
+
+    /* font-size: 32px; */
+    /* line-height: 24px; */
+    /* line-height: 44px; */
+    justify-content: space-between;
+    display: flex;
+    padding-bottom: 16px;
+    align-content: center;
+    z-index: 15;
+    /* position: absolute; */
+    position: sticky;
+    background-color: var(--gray-900);
+    width: 100%;
+    top: 0px;
+
+    /* letter-spacing: -2%; */
+    /* position: sticky; */
+    /* position: fixed; */
+    /* top: 133px; */
 }

@@ -7,13 +7,12 @@ import CardGrid from "../../CardGrid/CardGrid";
 
 export default function HistorySection({ date, songs, idIndex, isActive }) {
   const [isOpen, setIsOpen] = useState(true);
-  console.log("isActive", isActive);
 
   function toggleSection() {
     setIsOpen(!isOpen);
   }
 
-  useEffect(() => console.log("mounted"), []);
+  // useEffect(() => console.log("mounted"), []);
 
   function isToday() {
     const today = new Date();

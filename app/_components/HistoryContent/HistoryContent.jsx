@@ -40,91 +40,64 @@ export default function HistoryContent() {
 
     const handleScroll = () => {
       if (!scrollContainerRef.current) return;
-      let containerTop = scrollContainer.scrollTop;
-      console.log("Scrolling...");
-      console.log("top", containerTop);
 
-      if (containerTop === 0) {
-        if (activeSection != 0) {
-          setActiveSection(0);
+      const containerTop =
+        scrollContainerRef.current.getBoundingClientRect().top;
+      const containerBottom =
+        scrollContainerRef.current.getBoundingClientRect().bottom;
+      const maxDistance = containerBottom - containerTop; // Max scrollable distance
+
+      let closestSectionIndex = null;
+
+      Array.from(liElements).forEach((el, index) => {
+        // const rect = el.getBoundingClientRect();
+        // const distanceFromTop = Math.abs(rect.top - containerTop);
+        const headerElement = el.querySelector(`#section-${index}-header`); // Select the child div
+
+        // Adjust the scaling factor based on proximity to the top
+        // Example scaling range: 1.0 for closest to top, down to 0.8
+        // const fontSize =
+        //   18 + (1 - Math.min(1, distanceFromTop / maxDistance)) * 14;
+
+        // // Apply dynamic font size and line height to the child header element
+        // headerElement.style.fontSize = `${fontSize}px`;
+        // headerElement.style.lineHeight = `${fontSize * 1.5}px`; // Adjust line height proportionally
+
+        if (headerElement) {
+          const rect = el.getBoundingClientRect();
+          const distanceFromTop = Math.abs(rect.top - containerTop);
+
+          // Scale font size based on proximity, ranging from 18px to 32px
+          const fontSize =
+            18 + (1 - Math.min(1, distanceFromTop / maxDistance)) * 14;
+
+          // Apply dynamic font size and line height to the child header element
+          headerElement.style.fontSize = `${fontSize}px`;
+          headerElement.style.lineHeight = `${fontSize * 1.5}px`; // Adjust line height proportionally
+
+          // Determine which section is closest to the top of the container
+          if (
+            distanceFromTop < maxDistance / 2 &&
+            closestSectionIndex === null
+          ) {
+            closestSectionIndex = index;
+          }
         }
-      }
 
-      // const closestToTop = liElements
-      //   .map((el) => {
-      //     return {
-      //       height: el.getBoundingClientRect().bottom - containerTop,
-      //       id: el.id,
-      //     };
-      //   })
-      //   .filter((e) => e.height > 0)[0];
-
-      const elArray = [];
-      let index = 0;
-      for (const el of liElements) {
-        elArray.push({
-          height: el.getBoundingClientRect().bottom - containerTop,
-          id: el.id,
-          index: index,
-        });
-        index++;
-      }
-
-      const closestToTop = elArray.filter((e) => e.height > 0)[0];
-
-      console.log(
-        "Closest to top is",
-        closestToTop.height,
-        closestToTop.id,
-        closestToTop.index,
-      );
-
-      if (activeSection !== closestToTop.index) {
-        setActiveSection(closestToTop.index);
-      }
-
-      for (const el of liElements) {
-        let stickyElem = document.getElementById(`${el.id}`);
-        const currStickyPos =
-          stickyElem.getBoundingClientRect().bottom - containerTop;
-
-        // const currStickyPos =
-        //   stickyElem.getBoundingClientRect().top + containerTop;
-        // console.log(scrollContainer.scrollTop, el.offsetTop, el.id);
-        console.log(
-          "top bounding",
-          stickyElem.getBoundingClientRect().top,
-          "sticky pos",
-          currStickyPos,
-          el.id,
-        );
-
-        const itemHeader = document.getElementById(`${el.id}-header`);
-
-        console.log(containerTop >= currStickyPos, containerTop, currStickyPos);
-
-        // if (containerTop >= currStickyPos) {
-        //   if (scrollContainer.scrollTop >= el.offsetTop) {
-        //   console.log(
-        //     "meets check",
-        //     window.scrollY,
-        //     el.offsetTop,
-        //     el.id,
-        //     "Pos",
-        //     currStickyPos,
-        //   );
-        //   itemHeader.setHTMLUnsafe();
-        //   document.getElementById(`${el.id}-header`).style.position = "fixed";
-        //   itemHeader.style.top = `${scrollContainer.scrollTop}`;
-        //   itemHeader.style.zIndex = 20;
-        //   itemHeader.style.backgroundColor = "red";
+        // if (index === activeSection) {
+        //   headerElement.classList.remove("section-header");
+        //   headerElement.classList.add("section-header__active");
         // } else {
-        //   itemHeader.style.position = "relative";
-        //   itemHeader.style.top = "initial";
-        //   document.getElementById(`${el.id}-header`).style.zIndex = 0;
-        //   document.getElementById(`${el.id}-header`).style.backgroundColor =
-        //     "transparent";
+        //   headerElement.classList.remove("section-header__active");
+        //   headerElement.classList.add("section-header");
         // }
+      });
+
+      if (
+        closestSectionIndex !== null &&
+        closestSectionIndex !== activeSection
+      ) {
+        setActiveSection(closestSectionIndex);
       }
     };
 
@@ -136,7 +109,7 @@ export default function HistoryContent() {
         scrollContainer.removeEventListener("scroll", handleScroll);
       }
     };
-  }, []);
+  }, [activeSection, scrollContainerRef]);
 
   function filteredSongHistory() {
     const now = new Date();
