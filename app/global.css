@@ -279,6 +279,22 @@ button {
     padding: 8px 0 8px;
 }
 
+.name-artist-container__square {
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    padding: 8px 0 8px;
+    p {
+        display: inline-block;
+        white-space: nowrap;
+        max-width: 200px;
+        min-width: 90%;
+        overflow: hidden; /* "overflow" value must be different from  visible"*/
+        -o-text-overflow: ellipsis; /* Opera < 11  */
+        text-overflow: ellipsis;
+    }
+}
+
 .name-artist-container__list {
     width: 30%;
     flex-direction: column;
@@ -309,10 +325,15 @@ button {
 
 .song-title {
     color: var(--white-100);
+
+    /* width: 100%; /* IE6 needs any width */
+    /* overflow: hidden; /* "overflow" value must be different from  visible"*/
+    /* -o-text-overflow: ellipsis; /* Opera < 11*/
+    /* text-overflow: ellipsis; */
 }
 
-.song-title .song-artist {
-    display: inline-block;
+.song-artist {
+    text-overflow: ellipsis;
 }
 
 .song-length {

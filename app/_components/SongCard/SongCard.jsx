@@ -125,7 +125,7 @@ export default function SongCard({
     } else if (layout === "oblong-grid") {
       return (
         <div className={"song-details" + " " + "square-details"}>
-          <div className="name-artist-container">
+          <div className="name-artist-container__square">
             <p className="song-title semi-bold text-lg">{song.track_name}</p>
             <span className="flag-artists-container">
               {song.is_explicit && <div className="explicit-flag">E</div>}
