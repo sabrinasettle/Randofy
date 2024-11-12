@@ -10,9 +10,9 @@ export default function Controls({ isPlaying, playAudio }) {
         onClick={playAudio}
       >
         {isPlaying ? (
-          <Pause fill="#1c1c1c" width={28} height={28} />
+          <Pause fill="#1c1c1c" width={24} height={24} />
         ) : (
-          <Play fill="#1c1c1c" width={28} height={28} />
+          <Play fill="#1c1c1c" width={24} height={24} />
         )}
       </button>
     </div>
