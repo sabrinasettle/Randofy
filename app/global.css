@@ -107,6 +107,7 @@ body {
     font-family: var(--font-hanken_grotesk);
     background-color: var(--gray-900);
     color: var(--white-100);
+    /* scrollbar-color: var(--transparent-background-white); */
 }
 
 p {
@@ -124,7 +125,8 @@ li {
 
 main {
     height: 100vh;
-    overflow: none;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 button {
@@ -630,12 +632,31 @@ input[type="range"] {
     border-radius: 12px;
 }
 
+#history-column {
+    width: 100%;
+    /* Move the scroll to this parent item  probably?*/
+    overflow-y: scroll;
+}
+
 .content-controls {
     display: flex;
     justify-content: space-between;
     width: 100%;
     padding: 12px 0;
     background-color: var(--gray-900);
+    position: sticky;
+    top: 0px;
+    z-index: 100;
+}
+
+.right_controls {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+#history-songlist {
+    /* margin-right: 16px; */
 }
 
 .grid-layout-options {
@@ -644,8 +665,21 @@ input[type="range"] {
 
 .layout-btn {
     background-color: transparent;
-    color: var(--content-color-primary);
     display: inline-block;
+}
+
+.layout-btn__active {
+    color: var(--content-color-primary);
+    #oblong-icon {
+        stroke: var(--content-color-primary);
+    }
+}
+
+.layout-btn__inactive {
+    color: var(--content-color-secondary);
+    #oblong-icon {
+        stroke: var(--content-color-secondary);
+    }
 }
 
 .indictor-container {
@@ -755,7 +789,8 @@ input[type="range"] {
 
 .section-header {
     display: flex;
-    padding-bottom: 16px;
+    color: var(--content-color-secondary);
+
     font-size: 18px;
     line-height: 28px;
     align-content: center;
@@ -768,27 +803,26 @@ input[type="range"] {
 
 .section-header__active {
     transition:
-        /* background-color 0.3s ease, */
-        /* opacity 0.3s ease, */
         font-size 0.3s ease,
         line-height 0.3s ease;
 
-    /* font-size: 32px; */
-    /* line-height: 24px; */
-    /* line-height: 44px; */
+    font-size: 20px;
     justify-content: space-between;
     display: flex;
-    padding-bottom: 16px;
+
     align-content: center;
     z-index: 15;
-    /* position: absolute; */
     position: sticky;
     background-color: var(--gray-900);
     width: 100%;
-    top: 0px;
+}
 
-    /* letter-spacing: -2%; */
-    /* position: sticky; */
-    /* position: fixed; */
-    /* top: 133px; */
+.back-to-top__history {
+    display: flex;
+    padding: 4px 8px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 16px;
+    height: 32px;
 }

@@ -22,6 +22,7 @@ export default function HistoryContent() {
   const [historyFilter, setHistoryFilter] = useState("All");
   const [sortFilter, setSortFilter] = useState("newest");
   const [activeSection, setActiveSection] = useState(0);
+  const [isAtTop, setIsAtTop] = useState(true);
 
   let history = spotifyClient.generationHistory;
   let selectedSong = spotifyClient.selectedSong.song;
@@ -37,6 +38,13 @@ export default function HistoryContent() {
     //get the list items in the ul
     const liElements = ulElement.getElementsByClassName("history-list-item");
     // console.log(ulElement, liElements);
+    //
+    const controlSection = document.querySelector(`.content-controls`);
+    const controlsHeight =
+      controlSection.getBoundingClientRect().bottom -
+      controlSection.getBoundingClientRect().top -
+      1;
+    // console.log(controlsHeight);
 
     const handleScroll = () => {
       if (!scrollContainerRef.current) return;
@@ -46,6 +54,8 @@ export default function HistoryContent() {
       const containerBottom =
         scrollContainerRef.current.getBoundingClientRect().bottom;
       const maxDistance = containerBottom - containerTop; // Max scrollable distance
+      // console.log(scrollContainerRef.current.scrollTop === 0);
+      setIsAtTop(scrollContainerRef.current.scrollTop === 0);
 
       let closestSectionIndex = null;
 
@@ -74,6 +84,7 @@ export default function HistoryContent() {
           // Apply dynamic font size and line height to the child header element
           headerElement.style.fontSize = `${fontSize}px`;
           headerElement.style.lineHeight = `${fontSize * 1.5}px`; // Adjust line height proportionally
+          headerElement.style.top = `${controlsHeight}px`;
 
           // Determine which section is closest to the top of the container
           if (
@@ -183,6 +194,17 @@ export default function HistoryContent() {
     setHistoryFilter(filterString);
   }
 
+  function handleBackToTop() {
+    console.log("to top clicked", scrollContainerRef.current);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo(0, 0, { behavior: "smooth" });
+      // scrollContainerRef.current.scrollIntoView({
+      //   behavior: "smooth",
+      //   block: "start",
+      // });
+    }
+  }
+
   const filteredHistory = filteredSongHistory();
   // console.log(filteredHistory);
 
@@ -196,7 +218,7 @@ export default function HistoryContent() {
           <div>No History Yet!</div>
         ) : (
           <div id={styles["columns-container"]}>
-            <div id={styles["history-column"]}>
+            <div id="history-column" ref={scrollContainerRef}>
               <div className="content-controls">
                 {history && (
                   <HistoryFilters
@@ -204,12 +226,22 @@ export default function HistoryContent() {
                     historyFilter={historyFilter}
                   />
                 )}
-                {history && <CardLayoutOptions />}
+                <div className="right_controls">
+                  {!isAtTop && (
+                    <button
+                      className="btn btn__cta back-to-top__history"
+                      onClick={handleBackToTop}
+                    >
+                      Back to Top
+                    </button>
+                  )}
+                  {history && <CardLayoutOptions />}
+                </div>
               </div>
               <div
                 id="history-songlist-container"
                 className={styles["history-section-list"]}
-                ref={scrollContainerRef}
+                // ref={scrollContainerRef}
               >
                 <ul id="history-songlist">
                   {Object.keys(filteredHistory)
@@ -226,6 +258,7 @@ export default function HistoryContent() {
                 </ul>
               </div>
             </div>
+            {/* <button className="btn btn__overlay back-to-top">To Top</button> */}
             {selectedSong && (
               <div id={styles["drawer-column"]}>
                 <SongDrawer song={selectedSong} isOpen={isDrawerOpen} />

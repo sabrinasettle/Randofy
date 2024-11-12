@@ -2,6 +2,7 @@ $header-height: 56px;
 
 .history-content {
     height: 100%;
+
 }
 
 #history-header {
@@ -23,7 +24,7 @@ $header-height: 56px;
 }
 
 .history-section-list {
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     max-height: calc(100vh - $header-height - 56px);
 }
 
@@ -76,6 +77,8 @@ $header-height: 56px;
 
 #history-column {
     width: 100%;
+    /* Move the scroll to this parent item  probably?*/
+    overflow-y: scroll
 }
 
 #drawer-column {
