@@ -166,28 +166,33 @@ export default function SongCard({
         {layout === "list-grid" && (
           <div className="song-index">{index + 1}</div>
         )}
-        <div className="album-image-container">
-          {!isHover && (
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0, 0, 0, 38%)",
-                zIndex: "3",
-                position: "absolute",
-                top: "0",
-              }}
+        <div>
+          <div className="album-image-container">
+            {!isHover && (
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "rgba(0, 0, 0, 38%)",
+                  zIndex: "3",
+                  position: "absolute",
+                  top: "0",
+                }}
+              />
+            )}
+            <Image
+              className="album-image"
+              src={song.album_image.url}
+              fill={true}
+              alt={alt}
+              sizes="(max-width: 768px) 100vw, 33vw"
             />
-          )}
-          <Image
-            className="album-image"
-            src={song.album_image.url}
-            fill={true}
-            alt={alt}
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
+          </div>
         </div>
-        {handleShowDetails()}
+        <div style={{ paddingLeft: "16px", flexGrow: 1 }}>
+          {handleShowDetails()}
+        </div>
+        {/* {handleShowDetails()} */}
       </div>
     </li>
   );

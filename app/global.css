@@ -358,7 +358,8 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 3%;
+    /* width: 3%; */
+    padding: 0 16px;
     color: var(--gray-300);
 }
 
