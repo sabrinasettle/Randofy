@@ -37,13 +37,15 @@ export default function SongDrawer({ song, isOpen }) {
         border: `${hexToRGBA(song.color, 0.1)}, 1px, solid`,
       }}
     >
-      <div style={{ padding: "12px", height: "100%" }}>
+      {/* <div style={{ padding: "12px", height: "100%" }}> */}
+      <div style={{ height: "100%" }}>
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             height: "100%",
             boxSizing: "border-box",
+            padding: "12px",
           }}
         >
           {song.track_name && (
@@ -68,7 +70,7 @@ export default function SongDrawer({ song, isOpen }) {
                   flexDirection: "column",
                 }}
               >
-                <div style={{ alignItems: "flex-start" }}>
+                <div>
                   <div className="song-details-container">
                     <div className="name-artist-container">
                       <p className="song-title semi-bold text-lg">

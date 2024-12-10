@@ -35,7 +35,7 @@ export default function SongCard({
     return song.track_name === spotifyClient.setSelectedSong.track_name;
   }
 
-  isActive();
+  // isActive();
 
   function moveOrNot() {
     if (isActive()) {
@@ -83,26 +83,6 @@ export default function SongCard({
     return string;
   }
 
-  // function handleImageSize() {
-  //   if (!imageSize && !isActive()) {
-  //     return "240";
-  //   } else if (!imageSize && isActive()) {
-  //     return "298";
-  //   }
-
-  //   if (isActive() && layout === "list-grid") {
-  //     return "64";
-  //   } else if (layout === "list-grid") {
-  //     return "56";
-  //   }
-
-  //   // if (!imageSize) return "189";
-  //   return imageSize.toString();
-  // }
-
-  // console.log(song.track_name, song.is_explicit);
-
-  // Include changes on hover and selection
   function handleShowDetails() {
     if (layout === "list-grid") {
       return (
@@ -138,11 +118,9 @@ export default function SongCard({
     return;
   }
 
-  // let squareImage = handleImageSize();
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
   let keyString = `${song.track_name}` + `${song.track_id}`;
   const artists = createArtists(song);
-  // const domColor = hexToRGBA(song.color, 0.1);
 
   function handleColor() {
     // console.log(isHover, name);
@@ -216,7 +194,6 @@ export default function SongCard({
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
-
             {handleShowDetails()}
           </>
         )}
