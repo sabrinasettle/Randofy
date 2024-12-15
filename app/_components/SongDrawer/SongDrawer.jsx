@@ -1,7 +1,7 @@
 import styles from "../HistoryContent/History.module.scss";
 import Image from "next/image";
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
-import CloseButton from "./CloseButton";
+import CloseButton from "../Buttons/CloseButton";
 import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists.js";
 import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
@@ -37,7 +37,6 @@ export default function SongDrawer({ song, isOpen }) {
         border: `${hexToRGBA(song.color, 0.1)}, 1px, solid`,
       }}
     >
-      {/* <div style={{ padding: "12px", height: "100%" }}> */}
       <div style={{ height: "100%" }}>
         <div
           style={{

@@ -177,7 +177,7 @@ button {
 .card {
     border-radius: 8px;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     color: var(--content-color-secondary);
     width: 100%;
 }
@@ -499,11 +499,13 @@ button {
 
 .song-list__list-grid {
     max-width: 100%;
-    grid-gap: 8px;
+    grid-gap: 4px;
 }
 
 .song-list__history {
     padding-bottom: 52px;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .list-group-item {
@@ -847,4 +849,11 @@ input[type="range"] {
     border-radius: 8px;
     font-size: 16px;
     height: 32px;
+}
+
+#no-preview {
+    padding: 12px;
+    display: flex;
+    background: var(--transparent-background-white);
+    border-radius: 12px;
 }

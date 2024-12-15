@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
-import { XIcon } from "lucide-react";
+// import { XIcon } from "lucide-react";
 import FilterSlider from "../../Slider/FilterSlider";
+import CloseButton from "../../Buttons/CloseButton";
 import styles from "../Bottom.module.scss";
 // filter box is fixed, z-index 50,
 // button is absolute
@@ -30,9 +31,10 @@ export default function Filter() {
     <>
       {isOpen && (
         <div className={styles["filter-modal"]}>
-          <div className="close-modal" onClick={handleOpen}>
+          {/* <div className="close-modal" onClick={handleOpen}>
             <XIcon />
-          </div>
+          </div> */}
+          <CloseButton closeFunction={handleOpen} />
           <FilterSlider
             label="Number of Songs"
             min={5}

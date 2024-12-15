@@ -124,8 +124,14 @@ export default function SongCard({
 
   function handleColor() {
     // console.log(isHover, name);
-    if (isHover) return `rgba(251, 254, 247, 16%)`;
-    return hexToRGBA(song.color, 0.2);
+    if (isHover) return hexToRGBA(song.color, 0.3);
+    // `rgba(251, 254, 247, 16%)`;
+    return `rgba(251, 254, 247, 4%)`;
+  }
+
+  function handleBorder() {
+    if (isHover) return hexToRGBA(song.color, 0.3);
+    return `rgba(251, 254, 247, 8%)`;
   }
 
   return (
@@ -138,6 +144,7 @@ export default function SongCard({
       onMouseLeave={mouseLeave}
       style={{
         backgroundColor: handleColor(song.track_name),
+        border: `1px solid ${handleBorder(song.track_name)}`,
       }}
     >
       <div className={contentClassname()}>
