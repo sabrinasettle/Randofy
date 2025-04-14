@@ -6,6 +6,7 @@ import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists";
 import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
 import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
+import useWindowDimensions from "../../_hooks/useWindowDimensions";
 
 export default function SongCard({
   song,
@@ -18,6 +19,10 @@ export default function SongCard({
 
   const { layoutContext } = useGridContext();
   const layout = layoutContext.layoutType;
+
+  const { width, height } = useWindowDimensions();
+  const isSmallScreen = width <= 628;
+  const isMedScreen = width <= 1024;
 
   function hoverOver() {
     setIsHover(true);
@@ -94,12 +99,15 @@ export default function SongCard({
               <p className="song-artist reg text-sm">{artists}</p>
             </span>
           </div>
+          {!isMedScreen && (
+            <p className="song-ablum reg text-sm">{song.album_name}</p>
+          )}
 
-          <p className="song-ablum reg text-sm">{song.album_name}</p>
-
-          <p className="song-length reg text-sm">
-            {millisToMinutesAndSeconds(song.song_length)}
-          </p>
+          {!isMedScreen && (
+            <p className="song-length reg text-sm">
+              {millisToMinutesAndSeconds(song.song_length)}
+            </p>
+          )}
         </div>
       );
     } else if (layout === "oblong-grid") {
@@ -150,7 +158,9 @@ export default function SongCard({
       <div className={contentClassname()}>
         {layout === "list-grid" ? (
           <>
-            <div className="song-index">{index + 1}</div>
+            {(!isSmallScreen || !isMedScreen) && (
+              <div className="song-index">{index + 1}</div>
+            )}
             <div>
               <div className="album-image-container">
                 {!isHover && (

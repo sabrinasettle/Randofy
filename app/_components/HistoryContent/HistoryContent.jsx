@@ -12,6 +12,7 @@ import {
   getThisMonth,
   getPast6Months,
 } from "../../utils/getDates.js";
+import useWindowDimensions from "../../_hooks/useWindowDimensions";
 import styles from "./History.module.scss";
 
 export default function HistoryContent() {
@@ -29,6 +30,10 @@ export default function HistoryContent() {
   const isDrawerOpen = layoutContext.isDrawerOpen;
 
   const sortOptions = ["newest to oldest", "oldest to newest"];
+
+  const { width, height } = useWindowDimensions();
+  const isSmallScreen = width <= 628;
+  const isMedScreen = width <= 1024;
 
   useEffect(() => {
     // history-songlist-container
@@ -195,7 +200,7 @@ export default function HistoryContent() {
   }
 
   function handleBackToTop() {
-    console.log("to top clicked", scrollContainerRef.current);
+    // console.log("to top clicked", scrollContainerRef.current);
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo(0, 0, { behavior: "smooth" });
       // scrollContainerRef.current.scrollIntoView({
@@ -259,7 +264,7 @@ export default function HistoryContent() {
               </div>
             </div>
             {/* <button className="btn btn__overlay back-to-top">To Top</button> */}
-            {selectedSong && (
+            {selectedSong && !isMedScreen && (
               <div id={styles["drawer-column"]}>
                 <SongDrawer song={selectedSong} isOpen={isDrawerOpen} />
               </div>
