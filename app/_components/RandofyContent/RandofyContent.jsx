@@ -23,7 +23,7 @@ const FilterButton = ({ handleOpen }) => {
   return (
     <button
       className="bg-gray-100 px-4 py-3 rounded-sm text-gray-700 text-heading-5"
-      onClick={() => handleOpen}
+      onClick={handleOpen}
     >
       Filter Songs
     </button>

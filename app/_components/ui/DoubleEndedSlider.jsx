@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
  * @param {(value: number) => string} [props.formatValue]
  * @param {(range: { min: number, max: number }) => void} [props.onChange]
  */
+
 export default function DoubleEndedSlider({
   min,
   max,
