@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import SongList from "./SongList/SongList";
-import GhostList from "./GhostCard/GhostList";
+// import SongList from "./SongList/SongList";
+// import GhostList from "./GhostCard/GhostList";
 import { useSpotifyContext } from "../../context/spotify-context";
 import Loading from "../Loading/Loading";
 
@@ -25,12 +24,18 @@ export default function RandofyContent() {
   function showItem() {
     if (spotifyClient.isLoading) return <Loading />;
     else if (spotifyClient.currentSongs.length !== 0) return <SongList />;
-    return <GhostList />;
+    return (
+      <>
+        <h1>5 totally random songs from Spotify</h1>
+      </>
+    );
   }
   return (
     <>
       <GenerateButton spotifyClient={spotifyClient} />
       <div className="content-container">{showItem()}</div>
+      {/* <GenerateButton spotifyClient={spotifyClient} />
+      <div className="content-container">{showItem()}</div> */}
     </>
   );
 }

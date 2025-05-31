@@ -12,7 +12,7 @@ export default function Main() {
         <CardLayoutProvider>
           <Top />
           <RandofyContent />
-          <Bottom />
+          {/* <Bottom /> */}
         </CardLayoutProvider>
       </SpotifyClientProvider>
     </div>
