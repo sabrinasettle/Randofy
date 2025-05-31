@@ -4,6 +4,7 @@ import { useSpotifyContext } from "../../context/spotify-context";
 import Loading from "../Loading/Loading";
 // import DoubleEndedSlider from "../ui/DoubleEndedSlider";
 import FilterDrawer from "./FilterDrawer";
+import GetSongsButton from "./GetSongsButton";
 
 // Have a cancel button that abandons the search?? if isLoading
 const GenerateButton = ({ spotifyClient }) => {
@@ -18,14 +19,11 @@ const GenerateButton = ({ spotifyClient }) => {
   );
 };
 
-const FilterButton = () => {
-  const filterDrawer = () => {
-    console.log("open");
-  };
+const FilterButton = ({ handleOpen }) => {
   return (
     <button
       className="bg-gray-100 px-4 py-3 rounded-sm text-gray-700 text-heading-5"
-      onClick={filterDrawer()}
+      onClick={() => handleOpen}
     >
       Filter Songs
     </button>
@@ -164,15 +162,13 @@ export default function RandofyContent() {
     <>
       <div className="content-container">{showItem()}</div>
       <div className="flex flex-row gap-4">
-        <GenerateButton spotifyClient={spotifyClient} />
-        {/* <button className="bg-gray-100 px-4 py-3 rounded-sm text-gray-700 text-heading-5">
-          Filter Songs
-        </button> */}
-        <FilterButton />
+        <GetSongsButton isSmall={false} />
+        <FilterButton handleOpen={() => setFilterOpen(!filtersOpen)} />
       </div>
-      {filtersOpen && <FilterDrawer />}
-      {/* <GenerateButton spotifyClient={spotifyClient} />
-      <div className="content-container">{showItem()}</div> */}
+      <FilterDrawer
+        isOpen={filtersOpen}
+        onClose={() => setFilterOpen(!filtersOpen)}
+      />
     </>
   );
 }
