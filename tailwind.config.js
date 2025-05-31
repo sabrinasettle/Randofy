@@ -12,18 +12,35 @@ export default {
       fontFamily: {
         body: ["var(--font-inclusive_sans)"],
         display: ["var(--font-hanken_grotesk)"],
+        mono: ["var(--font-ibm_plex_mono)"],
       },
       fontSize: {
-        "heading-1": ["3rem", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
-        "heading-2": ["2.25rem", { lineHeight: "1.2" }],
-        "heading-3": ["1.75rem", { lineHeight: "1.3" }],
-        "heading-4": ["1.5rem", { lineHeight: "1.4" }],
-        "heading-5": ["1.25rem", { lineHeight: "1.4" }],
+        "display-1": [
+          "clamp(3rem, 8vw, 4rem)",
+          { lineHeight: "1.0", letterSpacing: "-0.03em" },
+        ],
+        "display-2": [
+          "clamp(2.5rem, 6vw, 3.5rem)",
+          { lineHeight: "1.05", letterSpacing: "-0.025em" },
+        ],
+        "heading-1": [
+          "clamp(2.25rem, 4vw, 3rem)",
+          { lineHeight: "1.1", letterSpacing: "-0.02em" },
+        ],
+        "heading-2": ["clamp(1.875rem, 3.5vw, 2.25rem)", { lineHeight: "1.2" }],
+        "heading-3": ["clamp(1.5rem, 3vw, 1.75rem)", { lineHeight: "1.3" }],
+        "heading-4": ["clamp(1.25rem, 2.5vw, 1.5rem)", { lineHeight: "1.4" }],
+        "heading-5": ["clamp(1.125rem, 2vw, 1.25rem)", { lineHeight: "1.4" }],
         "heading-6": ["1rem", { lineHeight: "1.4" }],
-        "body-lg": ["1.2rem", { lineHeight: "1.6" }],
-        "body-md": ["1.1rem", { lineHeight: "1.5" }],
-        "body-sm": ["1rem", { lineHeight: "1.6" }],
-        caption: ["0.8rem", { lineHeight: "1.4", letterSpacing: "0.02em" }],
+
+        // Body text - Responsive scaling
+        "body-lg": ["clamp(1.125rem, 1.5vw, 1.2rem)", { lineHeight: "1.6" }],
+        "body-md": ["clamp(1rem, 1.2vw, 1.1rem)", { lineHeight: "1.5" }],
+        "body-sm": ["clamp(0.875rem, 1vw, 1rem)", { lineHeight: "1.6" }],
+        caption: [
+          "clamp(0.75rem, 0.8vw, 0.8rem)",
+          { lineHeight: "1.4", letterSpacing: "0.02em" },
+        ],
       },
       colors: {
         "gray-700": "#E5E5E5",

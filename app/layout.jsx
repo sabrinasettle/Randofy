@@ -1,5 +1,10 @@
 import "./global.css";
-import { hanken_grotesk, inclusive_sans } from "./utils/fonts.js";
+import {
+  hanken_grotesk,
+  inclusive_sans,
+  ibm_plex_mono,
+} from "./utils/fonts.js";
+import Nav from "./_components/layout/header/Header";
 
 export const metadata = {
   title: "Randofy",
@@ -8,9 +13,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${hanken_grotesk} ${inclusive_sans}`}>
+    <html
+      lang="en"
+      className={`${hanken_grotesk} ${inclusive_sans} ${ibm_plex_mono}`}
+    >
       <body>
-        <main>{children}</main>
+        <div className="min-h-screen">
+          {/* AuthProvider */}
+          <Nav />
+          {children}
+        </div>
+        {/* Auth Provider */}
       </body>
     </html>
   );

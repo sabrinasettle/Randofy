@@ -1,0 +1,22 @@
+import Link from "next/link";
+import AuthButton from "./AuthButton/AuthButton";
+import Image from "next/image";
+
+export default function Nav() {
+  return (
+    <nav className="fixed top-0 left-0 w-full px-5 py-5 flex flex-row justify-between items-center bg-gray-000">
+      <Link href="/" className="px-1 py-1 rounded-sm bg-gray-100 text-gray-700">
+        <Image
+          src="/RandofyIcon - White 1.svg"
+          unoptimized
+          width={24}
+          height={24}
+        />
+      </Link>
+      <AuthButton />
+      <Link href="/history" className="text-gray-700">
+        History
+      </Link>
+    </nav>
+  );
+}
