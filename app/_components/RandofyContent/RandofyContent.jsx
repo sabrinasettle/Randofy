@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
 import Loading from "../Loading/Loading";
 // import DoubleEndedSlider from "../ui/DoubleEndedSlider";
-import FilterDrawer from "./FilterDrawer";
+import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import GetSongsButton from "./GetSongsButton";
 
 // Have a cancel button that abandons the search?? if isLoading

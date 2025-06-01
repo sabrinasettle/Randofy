@@ -3,7 +3,7 @@
 import React from "react";
 const SpotifyContext = React.createContext(null);
 export default SpotifyContext;
-import { useColor } from "color-thief-react";
+// import { useColor } from "color-thief-react";
 
 export function SpotifyClientProvider({ children }) {
   const [spotifyUser, setSpotifyUser] = React.useState(null);
