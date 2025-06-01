@@ -3,12 +3,12 @@ import {} from "react";
 import DoubleEndedSlider from "../../ui/DoubleEndedSlider";
 import { ArrowLeft } from "lucide-react";
 
-export default function GenresSection({
+export default function SongDetailsSection({
   navigateBack,
   songDetailsFilters,
   onFilterChange,
 }) {
-  const handleSongDetailsFilterChange = (filterName, range) => {
+  const handleSongDetailsFilterChange = (filterName: string, range) => {
     onFilterChange(filterName, range);
   };
 

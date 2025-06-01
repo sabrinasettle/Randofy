@@ -240,7 +240,7 @@ export default function GenresSection({
                               px-3 py-2 rounded-sm text-sm transition-all duration-200 text-left
                               ${
                                 selectedGenres.has(genre)
-                                  ? "font-semibold bg-gray-100 text-white shadow-md transform scale-101"
+                                  ? "font-semibold bg-gray-100 hover:bg-gray-200 text-white shadow-md transform scale-101"
                                   : "font-medium bg-gray-000 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:shadow-sm"
                               }
                             `}

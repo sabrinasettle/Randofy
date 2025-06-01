@@ -1,259 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
-import { ChevronRight, ArrowLeft, X } from "lucide-react";
-import DoubleEndedSlider from "../../ui/DoubleEndedSlider";
+import { ArrowRight, X } from "lucide-react";
 import GenresSection from "./GenresSection";
+import SongDetailsSection from "./SongDetsSection";
 import { useSpotifyContext } from "../../../context/spotify-context";
-
-// const Genres = ({ navigateBack, selectedGenres, setSelectedGenres }) => {
-//   const genres = [
-//     "acoustic",
-//     "afrobeat",
-//     "alt-rock",
-//     "alternative",
-//     "ambient",
-//     "anime",
-//     "black-metal",
-//     "bluegrass",
-//     "blues",
-//     "bossanova",
-//     "brazil",
-//     "breakbeat",
-//     "british",
-//     "cantopop",
-//     "chicago-house",
-//     "children",
-//     "chill",
-//     "classical",
-//     "club",
-//     "comedy",
-//     "country",
-//     "dance",
-//     "dancehall",
-//     "death-metal",
-//     "deep-house",
-//     "detroit-techno",
-//     "disco",
-//     "disney",
-//     "drum-and-bass",
-//     "dub",
-//     "dubstep",
-//     "edm",
-//     "electro",
-//     "electronic",
-//     "emo",
-//     "folk",
-//     "forro",
-//     "french",
-//     "funk",
-//     "garage",
-//     "german",
-//     "gospel",
-//     "goth",
-//     "grindcore",
-//     "groove",
-//     "grunge",
-//     "guitar",
-//     "happy",
-//     "hard-rock",
-//     "hardcore",
-//     "hardstyle",
-//     "heavy-metal",
-//     "hip-hop",
-//     "holidays",
-//     "honky-tonk",
-//     "house",
-//     "idm",
-//     "indian",
-//     "indie",
-//     "indie-pop",
-//     "industrial",
-//     "iranian",
-//     "j-dance",
-//     "j-idol",
-//     "j-pop",
-//     "j-rock",
-//     "jazz",
-//     "k-pop",
-//     "kids",
-//     "latin",
-//     "latino",
-//     "malay",
-//     "mandopop",
-//     "metal",
-//     "metal-misc",
-//     "metalcore",
-//     "minimal-techno",
-//     "movies",
-//     "mpb",
-//     "new-age",
-//     "new-release",
-//     "opera",
-//     "pagode",
-//     "party",
-//     "philippines-opm",
-//     "piano",
-//     "pop",
-//     "pop-film",
-//     "post-dubstep",
-//     "power-pop",
-//     "progressive-house",
-//     "psych-rock",
-//     "punk",
-//     "punk-rock",
-//     "r-n-b",
-//     "rainy-day",
-//     "reggae",
-//     "reggaeton",
-//     "road-trip",
-//     "rock",
-//     "rock-n-roll",
-//     "rockabilly",
-//     "romance",
-//     "sad",
-//     "salsa",
-//     "samba",
-//     "sertanejo",
-//     "show-tunes",
-//     "singer-songwriter",
-//     "ska",
-//     "sleep",
-//     "songwriter",
-//     "soul",
-//     "soundtracks",
-//     "spanish",
-//     "study",
-//     "summer",
-//     "swedish",
-//     "synth-pop",
-//     "tango",
-//     "techno",
-//     "trance",
-//     "trip-hop",
-//     "turkish",
-//     "work-out",
-//     "world-music",
-//   ];
-
-//   // Group genres by first letter - memoized since genres array is static
-//   const { groupedGenres, sortedLetters } = useMemo(() => {
-//     const grouped = genres.reduce((acc, genre) => {
-//       const firstLetter = genre[0].toUpperCase();
-//       if (!acc[firstLetter]) {
-//         acc[firstLetter] = [];
-//       }
-//       acc[firstLetter].push(genre);
-//       return acc;
-//     }, {});
-
-//     return {
-//       groupedGenres: grouped,
-//       sortedLetters: Object.keys(grouped).sort(),
-//     };
-//   }, []);
-
-//   const toggleGenre = (genre) => {
-//     const newSelected = new Set(selectedGenres);
-//     if (newSelected.has(genre)) {
-//       newSelected.delete(genre);
-//     } else {
-//       newSelected.add(genre);
-//     }
-//     setSelectedGenres(newSelected);
-//   };
-
-//   // Memoize the selected count calculations to avoid recalculating on each render
-//   const sectionSelectedCounts = useMemo(() => {
-//     const counts = {};
-//     sortedLetters.forEach((letter) => {
-//       counts[letter] = groupedGenres[letter].filter((genre) =>
-//         selectedGenres.has(genre),
-//       ).length;
-//     });
-//     return counts;
-//   }, [selectedGenres, groupedGenres, sortedLetters]);
-
-//   // Memoize the sorted selected genres array
-//   const sortedSelectedGenres = useMemo(() => {
-//     return Array.from(selectedGenres).sort();
-//   }, [selectedGenres]);
-
-//   const formatGenreName = useMemo(() => {
-//     const cache = {};
-//     return (genre) => {
-//       if (!cache[genre]) {
-//         cache[genre] = genre
-//           .split("-")
-//           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-//           .join(" ");
-//       }
-//       return cache[genre];
-//     };
-//   }, []);
-
-//   return (
-//     <>
-//       <div className="p-4 flex flex-row justify-between">
-//         <button
-//           onClick={navigateBack}
-//           className="flex items-center gap-4 text-gray-400 hover:text-white"
-//         >
-//           <ArrowLeft size={20} />
-//           <h1 className="text-white text-lg font-medium">Genres</h1>
-//         </button>
-//         {selectedGenres.size === 0 ? (
-//           <span className="font-semibold text-gray-600">
-//             [{selectedGenres.size}]
-//           </span>
-//         ) : (
-//           <span className="font-semibold text-blue-600">
-//             [{selectedGenres.size}]
-//           </span>
-//         )}
-//       </div>
-//       {/* Content */}
-//       <div className="flex-1 px-4">
-//         <p className="text-body-sm text-gray-500 text-balance">
-//           Disclaimer: *While Spotify identifies and works with thousands of
-//           subgenres these are the available genres to search against
-//         </p>
-//         {/* Alpha lists of the genres */}
-//         <div className="space-y-6">
-//           {sortedLetters.map((letter) => (
-//             <div key={letter} className="pt-4">
-//               <div className="flex items-center justify-between pb-1 mb-3 border-b border-gray-500">
-//                 <h2 className="text-body-sm font-normal text-gray-800 flex items-center pl-2">
-//                   {letter.toUpperCase()}
-//                 </h2>
-//                 <div className="text-gray-700 text-sm font-medium">
-//                   [{sectionSelectedCounts[letter]}]
-//                 </div>
-//               </div>
-
-//               <div className="flex flex-col gap-2">
-//                 {groupedGenres[letter].map((genre) => (
-//                   <button
-//                     key={genre}
-//                     onClick={() => toggleGenre(genre)}
-//                     className={`
-//                               px-3 py-2 rounded-sm text-sm transition-all duration-200 text-left
-//                               ${
-//                                 selectedGenres.has(genre)
-//                                   ? "font-semibold bg-gray-100 text-white shadow-md transform scale-101"
-//                                   : "font-medium bg-gray-000 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:shadow-sm"
-//                               }
-//                             `}
-//                   >
-//                     {formatGenreName(genre)}
-//                   </button>
-//                 ))}
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
 
 export default function FilterDrawer({ isOpen, onClose }) {
   const [activePanel, setActivePanel] = useState("main");
@@ -263,6 +12,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   // Filter states
   const [selectedGenres, setSelectedGenres] = useState(new Set());
+  const [genreArray, setGenreArray] = useState(new Array());
   const [songDetailsFilters, setSongDetailsFilters] = useState({
     popularity: { min: 0.0, max: 1.0 },
     acoustics: { min: 0.0, max: 1.0 },
@@ -271,6 +21,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
     danceability: { min: 0.0, max: 1.0 },
     mood: { min: 0.0, max: 1.0 },
   });
+  const [songDetArray, setSongDetArray] = useState(new Array());
 
   const { spotifyClient } = useSpotifyContext();
 
@@ -375,6 +126,10 @@ export default function FilterDrawer({ isOpen, onClose }) {
   // Views -------------------------------------------------------------------------------------------
   if (!isVisible) return null;
 
+  const jsxElements = Array.from(selectedGenres, (item, index) => (
+    <div key={index}>{item}</div>
+  ));
+
   const renderMainView = () => (
     <div className="h-full flex flex-col">
       {/* Header */}
@@ -451,21 +206,26 @@ export default function FilterDrawer({ isOpen, onClose }) {
                 <span>[{changedSongDetailsCount}]</span>
               )}
             </span>
-            <ChevronRight size={16} className="text-gray-500" />
+            <ArrowRight size={16} className="text-gray-500" />
           </button>
 
-          <button
-            onClick={() => navigateToPanel("genres")}
-            className="w-full h-12 border-t border-gray-200 flex items-center justify-between px-0 transition-colors"
-          >
-            <span className="text-gray-700">
-              Genres{" "}
-              {selectedGenres.size !== 0 && (
-                <span>[{selectedGenres.size}]</span>
-              )}
-            </span>
-            <ChevronRight size={16} className="text-gray-500" />
-          </button>
+          <div>
+            <button
+              onClick={() => navigateToPanel("genres")}
+              className="w-full h-12 border-t border-gray-200 flex items-center justify-between px-0 transition-colors"
+            >
+              <span className="text-gray-700">
+                Genres{" "}
+                {selectedGenres.size !== 0 && (
+                  <span>[{selectedGenres.size}]</span>
+                )}
+              </span>
+              <ArrowRight size={16} className="text-gray-500" />
+            </button>
+            {jsxElements.map((item) => (
+              <p>{item}</p>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -473,120 +233,11 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   const renderSongDetails = () => (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <button
-        onClick={navigateBack}
-        className="flex items-center gap-4 p-4 text-gray-400 hover:text-white"
-      >
-        <ArrowLeft size={20} />{" "}
-        <h1 className="text-white text-lg font-medium">Song Details</h1>
-      </button>
-      {/* </div> */}
-
-      {/* Content */}
-      <div className="flex-1 p-4 overflow-y-auto">
-        <DoubleEndedSlider
-          label="Popularity"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.popularity.min}
-          defaultMax={songDetailsFilters.popularity.max}
-          formatValue={(v) =>
-            v === 0.1
-              ? "Small dive bars"
-              : v === 0.9
-                ? "Massive concerts"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) =>
-            handleSongDetailsFilterChange("popularity", range)
-          }
-        />
-
-        <DoubleEndedSlider
-          label="Acoustics"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.acoustics.min}
-          defaultMax={songDetailsFilters.acoustics.max}
-          formatValue={(v) =>
-            v === 0.2
-              ? "Completely electronic"
-              : v === 0.8
-                ? "Totally acoustic"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) =>
-            handleSongDetailsFilterChange("acoustics", range)
-          }
-        />
-
-        <DoubleEndedSlider
-          label="Energy"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.energy.min}
-          defaultMax={songDetailsFilters.energy.max}
-          formatValue={(v) =>
-            v === 0.3
-              ? "Low and Moody"
-              : v === 0.7
-                ? "High and Joyful"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) => handleSongDetailsFilterChange("energy", range)}
-        />
-
-        <DoubleEndedSlider
-          label="Vocals"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.vocals.min}
-          defaultMax={songDetailsFilters.vocals.max}
-          formatValue={(v) =>
-            v === 0.1
-              ? "No vocals"
-              : v === 0.9
-                ? "Only vocals"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) => handleSongDetailsFilterChange("vocals", range)}
-        />
-
-        <DoubleEndedSlider
-          label="Danceability"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.danceability.min}
-          defaultMax={songDetailsFilters.danceability.max}
-          formatValue={(v) =>
-            v === 0.2
-              ? "No rhythm"
-              : v === 0.8
-                ? "Made for dancing"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) =>
-            handleSongDetailsFilterChange("danceability", range)
-          }
-        />
-
-        <DoubleEndedSlider
-          label="Mood"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.mood.min}
-          defaultMax={songDetailsFilters.mood.max}
-          formatValue={(v) =>
-            v === 0.3
-              ? "Low Energy"
-              : v === 0.7
-                ? "High Energy"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) => handleSongDetailsFilterChange("mood", range)}
-        />
-      </div>
+      <SongDetailsSection
+        navigateBack={navigateBack}
+        songDetailsFilters={songDetailsFilters}
+        onFilterChange={handleSongDetailsFilterChange}
+      />
     </div>
   );
 
@@ -607,7 +258,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
       {/* Drawer Container */}
       <div
-        className={`relative w-full lg:w-lg h-full bg-gray-000 shadow-xl transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)] ${
+        className={`relative w-full md:w-lg h-full bg-gray-000 shadow-xl transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)] ${
           animateIn ? "translate-x-0" : "translate-x-full"
         }`}
       >
