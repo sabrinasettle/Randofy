@@ -7,6 +7,7 @@ export default function SongDetailsSection({
   navigateBack,
   songDetailsFilters,
   onFilterChange,
+  changed,
 }) {
   const handleSongDetailsFilterChange = (filterName: string, range) => {
     onFilterChange(filterName, range);
@@ -22,116 +23,48 @@ export default function SongDetailsSection({
           <ArrowLeft size={20} />
           <h1 className="text-white text-lg font-medium">Song Details</h1>
         </button>
-        {/* {selectedGenres.size === 0 ? (
-          <span className="text-lg font-normal text-gray-600">[]</span>
+        {changed === 0 ? (
+          <span className="text-lg font-normal text-gray-600">[{changed}]</span>
         ) : (
-          <span className="font-semibold text-gray-700">[]</span>
-        )} */}
+          <span className="text-lg font-semibold text-gray-700">
+            [{changed}]
+          </span>
+        )}
       </div>
+
+      {/* <div className="p-4 flex flex-row justify-between">
+        <button
+          onClick={navigateBack}
+          className="flex items-center gap-4 text-gray-400 hover:text-white"
+        >
+          <ArrowLeft size={20} />
+          <h1 className="text-white text-lg font-medium">Genres</h1>
+        </button>
+        {selectedGenres.size === 0 ? (
+          <span className="text-lg font-normal text-gray-600">
+            [{selectedGenres.size}]
+          </span>
+        ) : (
+          <span className="font-semibold text-gray-700">
+            [{selectedGenres.size}]
+          </span>
+        )}
+      </div> */}
 
       {/* Content */}
       <div className="flex-1 p-4 overflow-y-auto">
-        <DoubleEndedSlider
-          label="Popularity"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.popularity.min}
-          defaultMax={songDetailsFilters.popularity.max}
-          formatValue={(v) =>
-            v === 0.1
-              ? "Small dive bars"
-              : v === 0.9
-                ? "Massive concerts"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) =>
-            handleSongDetailsFilterChange("popularity", range)
-          }
-        />
-
-        <DoubleEndedSlider
-          label="Acoustics"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.acoustics.min}
-          defaultMax={songDetailsFilters.acoustics.max}
-          formatValue={(v) =>
-            v === 0.2
-              ? "Completely electronic"
-              : v === 0.8
-                ? "Totally acoustic"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) =>
-            handleSongDetailsFilterChange("acoustics", range)
-          }
-        />
-
-        <DoubleEndedSlider
-          label="Energy"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.energy.min}
-          defaultMax={songDetailsFilters.energy.max}
-          formatValue={(v) =>
-            v === 0.3
-              ? "Low and Moody"
-              : v === 0.7
-                ? "High and Joyful"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) => handleSongDetailsFilterChange("energy", range)}
-        />
-
-        <DoubleEndedSlider
-          label="Vocals"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.vocals.min}
-          defaultMax={songDetailsFilters.vocals.max}
-          formatValue={(v) =>
-            v === 0.1
-              ? "No vocals"
-              : v === 0.9
-                ? "Only vocals"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) => handleSongDetailsFilterChange("vocals", range)}
-        />
-
-        <DoubleEndedSlider
-          label="Danceability"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.danceability.min}
-          defaultMax={songDetailsFilters.danceability.max}
-          formatValue={(v) =>
-            v === 0.2
-              ? "No rhythm"
-              : v === 0.8
-                ? "Made for dancing"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) =>
-            handleSongDetailsFilterChange("danceability", range)
-          }
-        />
-
-        <DoubleEndedSlider
-          label="Mood"
-          min={0}
-          max={1}
-          defaultMin={songDetailsFilters.mood.min}
-          defaultMax={songDetailsFilters.mood.max}
-          formatValue={(v) =>
-            v === 0.3
-              ? "Low Energy"
-              : v === 0.7
-                ? "High Energy"
-                : `${(v * 100).toFixed(0)}%`
-          }
-          onChange={(range) => handleSongDetailsFilterChange("mood", range)}
-        />
+        <div className="flex flex-col gap-6">
+          {Object.keys(songDetailsFilters).map((key) => (
+            <DoubleEndedSlider
+              key={key}
+              label={key.charAt(0).toUpperCase() + key.slice(1)} // Capitalizes the label
+              value={songDetailsFilters[key]} // Use the actual key
+              onChange={(newRange) =>
+                handleSongDetailsFilterChange(key, newRange)
+              } // Pass key to handler
+            />
+          ))}
+        </div>
       </div>
     </>
   );

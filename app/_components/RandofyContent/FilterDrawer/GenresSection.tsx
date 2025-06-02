@@ -207,7 +207,7 @@ export default function GenresSection({
             [{selectedGenres.size}]
           </span>
         ) : (
-          <span className="font-semibold text-gray-700">
+          <span className="text-lg font-semibold text-gray-700">
             [{selectedGenres.size}]
           </span>
         )}
