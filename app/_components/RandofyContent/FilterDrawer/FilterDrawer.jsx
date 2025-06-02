@@ -44,7 +44,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   // Filter states
   const [selectedGenres, setSelectedGenres] = useState(new Set());
-  const [genreArray, setGenreArray] = useState(new Array());
   const [songDetailsFilters, setSongDetailsFilters] = useState({
     popularity: { min: 0.0, max: 1.0 },
     acoustics: { min: 0.0, max: 1.0 },
@@ -53,7 +52,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
     danceability: { min: 0.0, max: 1.0 },
     mood: { min: 0.0, max: 1.0 },
   });
-  const [songDetArray, setSongDetArray] = useState(new Array());
 
   const { spotifyClient } = useSpotifyContext();
 
@@ -288,9 +286,9 @@ export default function FilterDrawer({ isOpen, onClose }) {
             </button>
 
             {changedSongDetailFilters.size !== 0 && (
-              <div className="pt-4">
-                <p className="pb-3 text-heading-5 text-gray-700 font-medium">
-                  Feeling and Sounding like:
+              <div className="pt-4 pb-7">
+                <p className="pb-2 text-heading-5 text-gray-700 font-medium">
+                  Feeling and sounding like:
                 </p>
 
                 <TagList
@@ -320,7 +318,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
             {selectedGenres.size !== 0 && (
               <div className="pt-4">
-                <p className="pb-3 text-heading-5 text-gray-700 font-medium">
+                <p className="pb-2 text-heading-5 text-gray-700 font-medium">
                   From the genres of:
                 </p>
                 <TagList items={selectedGenres} onRemove={removeGenre} />
@@ -340,6 +338,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
         navigateBack={navigateBack}
         songDetailsFilters={songDetailsFilters}
         onFilterChange={handleSongDetailsFilterChange}
+        changed={changedSongDetailsCount}
       />
     </div>
   );
