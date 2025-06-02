@@ -4,6 +4,38 @@ import GenresSection from "./GenresSection";
 import SongDetailsSection from "./SongDetsSection";
 import { useSpotifyContext } from "../../../context/spotify-context";
 
+// Reusable TagList component
+function TagList({ items, onRemove, className = "" }) {
+  if (!items || items.size === 0) return null;
+
+  const tagElements = Array.from(items, (item, index) => (
+    <div
+      key={index}
+      className="group inline-flex items-center gap-2 pl-2 pr-1 py-1 border border-gray-300 hover:border-gray-700 rounded-md text-sm"
+    >
+      <span className="text-body-md text-gray-600 group-hover:text-gray-700">
+        {item
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")}
+      </span>
+      <button
+        onClick={() => onRemove(item)}
+        className="text-gray-600 group-hover:text-gray-700 rounded-full transition-colors"
+        aria-label={`Remove ${item}`}
+      >
+        <X size={20} />
+      </button>
+    </div>
+  ));
+
+  return (
+    <div className={`flex flex-wrap gap-2 mt-2 ${className}`}>
+      {tagElements}
+    </div>
+  );
+}
+
 export default function FilterDrawer({ isOpen, onClose }) {
   const [activePanel, setActivePanel] = useState("main");
   const [sliderValue, setSliderValue] = useState(5);
@@ -24,6 +56,22 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const [songDetArray, setSongDetArray] = useState(new Array());
 
   const { spotifyClient } = useSpotifyContext();
+
+  // Remove functions for TagList
+  const removeGenre = (genre) => {
+    setSelectedGenres((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(genre);
+      return newSet;
+    });
+  };
+
+  const removeSongDetailFilter = (filterName) => {
+    setSongDetailsFilters((prev) => ({
+      ...prev,
+      [filterName]: { min: 0.0, max: 1.0 },
+    }));
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -123,12 +171,38 @@ export default function FilterDrawer({ isOpen, onClose }) {
     }).length;
   }, [songDetailsFilters]);
 
+  // Get changed song detail filters for TagList
+  const changedSongDetailFilters = useMemo(() => {
+    const defaultFilters = {
+      popularity: { min: 0.0, max: 1.0 },
+      acoustics: { min: 0.0, max: 1.0 },
+      energy: { min: 0.0, max: 1.0 },
+      vocals: { min: 0.0, max: 1.0 },
+      danceability: { min: 0.0, max: 1.0 },
+      mood: { min: 0.0, max: 1.0 },
+    };
+
+    const changedFilters = new Set();
+    Object.keys(songDetailsFilters).forEach((key) => {
+      const current = songDetailsFilters[key];
+      const defaultRange = defaultFilters[key];
+      if (
+        current.min !== defaultRange.min ||
+        current.max !== defaultRange.max
+      ) {
+        changedFilters.add(key);
+      }
+    });
+    return changedFilters;
+  }, [songDetailsFilters]);
+
   // Views -------------------------------------------------------------------------------------------
   if (!isVisible) return null;
 
-  const jsxElements = Array.from(selectedGenres, (item, index) => (
-    <div key={index}>{item}</div>
-  ));
+  const numberSongText =
+    changedSongDetailFilters.size !== 0 || selectedGenres.size !== 0
+      ? "random songs"
+      : "Totally random songs";
 
   const renderMainView = () => (
     <div className="h-full flex flex-col">
@@ -136,7 +210,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
       <div className="flex justify-between items-center p-4">
         <h1 className="text-gray-700 text-lg font-medium">Filter Songs</h1>
         <button onClick={onClose} className="text-gray-400 hover:text-white">
-          <X size={20} />
+          <X size={24} />
         </button>
       </div>
       {/* Content */}
@@ -150,7 +224,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
             <div className="py-1 px-2 border border-gray-300 rounded-sm text-gray-700 text-heading-4 min-w-[3rem] text-center">
               {sliderValue}
             </div>
-            <p className="text-gray-700 text-heading-4">Totally random songs</p>
+            <p className="text-gray-700 text-heading-4">{numberSongText}</p>
           </label>
 
           <div className="relative">
@@ -196,23 +270,41 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
         {/* Navigation Items */}
         <div className="space-y-0">
-          <button
-            onClick={() => navigateToPanel("songDetails")}
-            className="w-full h-12 border-t border-gray-200 flex items-center justify-between px-0 transition-colors"
-          >
-            <span className="text-gray-700">
-              Song Details{" "}
-              {changedSongDetailsCount !== 0 && (
-                <span>[{changedSongDetailsCount}]</span>
-              )}
-            </span>
-            <ArrowRight size={16} className="text-gray-500" />
-          </button>
+          <div>
+            <button
+              onClick={() => navigateToPanel("songDetails")}
+              className="group w-full h-12 bg-gray-000 hover:text-gray-700 border-t border-gray-200 flex items-center justify-between px-0 transition-colors"
+            >
+              <span className="text-gray-700">
+                Song Details{" "}
+                {changedSongDetailsCount !== 0 && (
+                  <span>[{changedSongDetailsCount}]</span>
+                )}
+              </span>
+              <ArrowRight
+                size={20}
+                className="text-gray-500 group-hover:text-gray-700 transition-colors"
+              />
+            </button>
+
+            {changedSongDetailFilters.size !== 0 && (
+              <div className="pt-4">
+                <p className="pb-3 text-heading-5 text-gray-700 font-medium">
+                  Feeling and Sounding like:
+                </p>
+
+                <TagList
+                  items={changedSongDetailFilters}
+                  onRemove={removeSongDetailFilter}
+                />
+              </div>
+            )}
+          </div>
 
           <div>
             <button
               onClick={() => navigateToPanel("genres")}
-              className="w-full h-12 border-t border-gray-200 flex items-center justify-between px-0 transition-colors"
+              className="group w-full h-12 bg-gray-000 hover:text-gray-700 border-t border-gray-200 flex items-center justify-between px-0 transition-colors"
             >
               <span className="text-gray-700">
                 Genres{" "}
@@ -220,11 +312,22 @@ export default function FilterDrawer({ isOpen, onClose }) {
                   <span>[{selectedGenres.size}]</span>
                 )}
               </span>
-              <ArrowRight size={16} className="text-gray-500" />
+              <ArrowRight
+                size={20}
+                className="text-gray-500 group-hover:text-gray-700 transition-colors"
+              />
             </button>
-            {jsxElements.map((item) => (
-              <p>{item}</p>
-            ))}
+
+            {selectedGenres.size !== 0 && (
+              <div className="pt-4">
+                <p className="pb-3 text-heading-5 text-gray-700 font-medium">
+                  From the genres of:
+                </p>
+                <TagList items={selectedGenres} onRemove={removeGenre} />
+              </div>
+            )}
+
+            {/* <TagList items={selectedGenres} onRemove={removeGenre} /> */}
           </div>
         </div>
       </div>

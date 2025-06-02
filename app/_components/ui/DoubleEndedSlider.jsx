@@ -27,7 +27,8 @@ export default function DoubleEndedSlider({
 
   // Notify parent when initialized or values change
   useEffect(() => {
-    onChange?.({ min: minVal, max: maxVal });
+    if (onChange) onChange({ min: minVal, max: maxVal });
+    console.log(`min: ${minVal}`, `max: ${maxVal}`);
   }, [minVal, maxVal]);
 
   const getPercent = (value) => ((value - min) / (max - min)) * 100;
@@ -35,23 +36,27 @@ export default function DoubleEndedSlider({
   const handleMinChange = (e) => {
     const val = Math.min(Number(e.target.value), maxVal - step);
     setMinVal(val);
+    console.log(`changed-min: ${minVal}`);
   };
 
   const handleMaxChange = (e) => {
     const val = Math.max(Number(e.target.value), minVal + step);
     setMaxVal(val);
+    console.log(`changed-mx: ${maxVal}`);
   };
 
   return (
     <div className="">
-      <label className="flex items-center gap-2 pb-3 text-sm font-medium text-gray-700">
-        <span className="ml-auto text-heading-4">{label}</span>
-        <div className="px-2 py-1 border border-gray-300 rounded-sm text-heading-4 min-w-[3rem] text-center">
-          {formatValue(minVal)}
-        </div>
-        <span>-</span>
-        <div className="px-2 py-1 border border-gray-300 rounded-sm text-heading-4 min-w-[3rem] text-center">
-          {formatValue(maxVal)}
+      <label className="flex flex-col gap-2 pb-3 text-sm font-medium text-gray-700">
+        <span className="text-gray-700 ml-auto text-heading-4">{label}</span>
+        <div className="flex flex-row">
+          <div className="px-2 py-1 border border-gray-300 rounded-sm text-heading-4 min-w-[3rem] text-center">
+            {formatValue(minVal)}
+          </div>
+          <span>-</span>
+          <div className="px-2 py-1 border border-gray-300 rounded-sm text-heading-4 min-w-[3rem] text-center">
+            {formatValue(maxVal)}
+          </div>
         </div>
       </label>
 
@@ -72,10 +77,9 @@ export default function DoubleEndedSlider({
             step={step}
             value={minVal}
             onChange={handleMinChange}
-            className="absolute w-full h-1 bg-transparent appearance-none pointer-events-none slider-thumb"
+            className="absolute w-full h-1 bg-transparent appearance-none slider-thumb"
             style={{ zIndex: 3 }}
           />
-          {/* Max thumb */}
           <input
             type="range"
             min={min}
@@ -83,7 +87,7 @@ export default function DoubleEndedSlider({
             step={step}
             value={maxVal}
             onChange={handleMaxChange}
-            className="absolute w-full h-1 bg-transparent appearance-none pointer-events-none slider-thumb"
+            className="absolute w-full h-1 bg-transparent appearance-none slider-thumb"
             style={{ zIndex: 2 }}
           />
         </div>
