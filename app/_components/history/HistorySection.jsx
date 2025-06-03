@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
-import styles from "../History.module.scss";
-import CardGrid from "../../CardGrid/CardGrid";
+import CardGrid from "./CardGrid";
 // import { useGridContext } from "../../../context/card-layout-context";
 
 export default function HistorySection({ date, songs, idIndex, isActive }) {
@@ -34,18 +33,40 @@ export default function HistorySection({ date, songs, idIndex, isActive }) {
   // animate the close and open of the section
   // Add loader to view so that the user gets something
 
-  // Change the string of today's date to today
+  const formatDate = (input) => {
+    const [month, day, year] = input.split("/").map(Number);
+    const date = new Date(year, month - 1, day);
+
+    return new Intl.DateTimeFormat("en-US", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(date);
+  };
 
   return (
     <li id={idIndex} className="history-list-item">
       <div id={`${idIndex}-header`} className={styled}>
-        <div className={styles["date-selection-selector"]}>
+        {/* <div className="">
           <h2>{isToday() ? "Today" : `${date}`}</h2>
           <button className="" onClick={toggleSection}>
             {isOpen ? <ChevronUp /> : <ChevronDown />}
           </button>
+        </div> */}
+        <div className="group flex flex-row justify-between">
+          <div className="flex flex-row gap-2 pb-6">
+            <h2 className="text-heading-4 text-gray-700">
+              {isToday() ? "Today" : `${formatDate(date)}`}
+            </h2>
+            <p className="text-gray-600">[{songs.length}]</p>
+          </div>
+          <button
+            className="text-gray-400 group-hover:text-gray-700"
+            onClick={toggleSection}
+          >
+            {isOpen ? <ChevronUp /> : <ChevronDown />}
+          </button>
         </div>
-        <p className={styles["list-item-song-amount"]}>{songs.length} songs</p>
       </div>
       {isOpen && <CardGrid songs={songs} />}
     </li>

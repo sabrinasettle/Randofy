@@ -197,7 +197,7 @@ export default function GenresSection({
       <div className="p-4 flex flex-row justify-between">
         <button
           onClick={navigateBack}
-          className="flex items-center gap-4 text-gray-400 hover:text-white"
+          className="flex items-center gap-4 text-gray-400 hover:text-gray-700"
         >
           <ArrowLeft size={20} />
           <h1 className="text-white text-lg font-medium">Genres</h1>

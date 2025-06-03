@@ -324,8 +324,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
                 <TagList items={selectedGenres} onRemove={removeGenre} />
               </div>
             )}
-
-            {/* <TagList items={selectedGenres} onRemove={removeGenre} /> */}
           </div>
         </div>
       </div>

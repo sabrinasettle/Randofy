@@ -1,7 +1,7 @@
 const FilterButton = ({ handleActivation, string, activeFilter }) => {
   return (
     <div
-      className={activeFilter === string ? `` : ``}
+      className={`p-2 flex items-center text-gray-500 cursor-pointer ${activeFilter === string ? `text-gray-700` : `text - gray - 500`}`}
       onClick={handleActivation}
     >
       {string}
@@ -20,17 +20,17 @@ export default function HistoryFilters({ updateFilter, historyFilter }) {
   }
 
   return (
-    <div id={styles["filter-btns-container"]}>
+    <div className="bg-gray-100 flex flex-row rounded-sm items-center">
       <FilterButton
         handleActivation={handleActivation}
         string={"All"}
         activeFilter={historyFilter}
       />
-      <FilterButton
+      {/* <FilterButton
         handleActivation={handleActivation}
         string={"Today"}
         activeFilter={historyFilter}
-      />
+      /> */}
       <FilterButton
         handleActivation={handleActivation}
         string={"This Week"}
