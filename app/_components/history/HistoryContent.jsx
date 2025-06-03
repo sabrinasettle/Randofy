@@ -2,11 +2,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
 import { useGridContext } from "../../context/card-layout-context";
-import BackLink from "../BackLink";
 import HistorySection from "./HistorySection";
-import HistoryFilters from "./HistoryFilters/HistoryFilters";
+import HistoryFilters from "./filters/HistoryFilters";
 import SongDrawer from "./SongDrawer";
-import CardLayoutOptions from "../ChangeLayout/CardLayoutOptions";
+import CardLayoutOptions from "./filters/CardLayoutOptions";
 import {
   getThisWeek,
   getThisMonth,
@@ -201,7 +200,7 @@ export default function HistoryContent() {
   // console.log(filteredHistory);
 
   return (
-    <div className="px-5 mt-20 h-screen flex flex-col">
+    <div className="px-5 mt-1 h-screen flex flex-col">
       <section className="pb-16 flex flex-row flex-1 overflow-hidden">
         {!history ? (
           <div>No History Yet!</div>

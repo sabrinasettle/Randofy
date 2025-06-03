@@ -1,11 +1,9 @@
-import styles from "../HistoryContent/History.module.scss";
 import Image from "next/image";
-import AudioPlayer from "../AudioPlayer/AudioPlayer";
-import CloseButton from "../Buttons/CloseButton";
 import { ArrowRight, X } from "lucide-react";
 import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists.js";
-import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
+import { useAccessibleAlpha } from "../../utils/useAccessibleAlpha.js";
+// import AudioPlayer from "../player/AudioPlayer/AudioPlayer.jsx";
 
 export default function SongDrawer({ song, isOpen }) {
   const { layoutContext } = useGridContext();
@@ -16,18 +14,9 @@ export default function SongDrawer({ song, isOpen }) {
 
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
 
-  // function handleColor() {
-  //   // console.log(isHover, name);
-  //   if (isHover) return hexToRGBA(song.color, 0.3);
-  //   // `rgba(251, 254, 247, 16%)`;
-  //   return `rgba(251, 254, 247, 4%)`;
-  // }
-
-  // function handleBorder() {
-  //   if (isHover) return hexToRGBA(song.color, 0.3);
-  //   return `rgba(251, 254, 247, 8%)`;
-  // }
-  //
+  const handleClose = () => {
+    layoutContext.closeDrawer();
+  };
 
   function formatYear() {
     //format can be 1986 or 2007-09-18
@@ -35,24 +24,6 @@ export default function SongDrawer({ song, isOpen }) {
     const match = song.release_year.match(yearRegex);
     return match ? match[0] : null;
   }
-
-  // console.log(song.track_name, song.genres);
-  //
-  const artists = createArtists(song);
-
-  console.log(`${hexToRGBA(song.color, 1)}`, song.color);
-
-  // const radial = `bg-radial-[at_25%_25%] from-gray-000 from-40% to-[#93532d]`;
-  // const radial = `bg-radial from-gray-100 from-40% to-[${song.color}]`;
-  // const radial = `bg-radial from-[${song.color}]/60 from-0% to-gray-100 to-60%`;
-  const radial = `bg-[radial-gradient(circle,_${song.color}cc_0%,_theme('colors.gray.100')_60%)]`;
-  // const radial = `bg-radial from-[${song.color}] to-gray-100 from-40%`;
-
-  // to-fuchsia-700
-  //
-  //   const radial = `bg-radial-[at_25%_25%] from-gray-000 from-40% to-[${song.color}]`;
-  //
-  console.log(song);
 
   function msToMinutesSeconds(ms) {
     // Convert milliseconds to seconds
@@ -70,18 +41,17 @@ export default function SongDrawer({ song, isOpen }) {
     return minutes + ":" + seconds;
   }
 
-  // console.log(msToMinutesSeconds(song.song_length));
+  const artists = createArtists(song);
+  const promColor = song.color;
+  const alpha = useAccessibleAlpha(promColor);
 
   return (
     <div
-      className={`w-full border rounded-sm text-gray-600 border-gray-200 z-10 ${radial}`}
-      // className={`w-full border rounded-sm text-gray-600 border-gray-200 z-10`}
+      className={`w-full border rounded-sm text-gray-600 border-gray-200 z-10`}
       id={isOpen ? "" : ""}
       style={{
         height: "calc(100vh - 100px)",
-
-        // backgroundColor: hexToRGBA(song.color, 0.2),
-        // border: `${hexToRGBA(song.color, 0.1)}, 1px, solid`,
+        backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha} , #0A0A0A 80%)`,
       }}
     >
       <div style={{ height: "100%" }}>
@@ -93,8 +63,13 @@ export default function SongDrawer({ song, isOpen }) {
         >
           {song.track_name && (
             <>
-              <div className={styles["drawer-header"]}>
-                <CloseButton closeFunction={layoutContext.closeDrawer} />
+              <div className="w-full flex flex-row justify-end">
+                <button
+                  onClick={() => handleClose}
+                  className="text-gray-400 hover:text-white pb-2"
+                >
+                  <X size={24} />
+                </button>
               </div>
               <div>
                 <div className="">
@@ -105,9 +80,14 @@ export default function SongDrawer({ song, isOpen }) {
                     >
                       {song.track_name}
                     </h1>
-                    <div className="flag-artists-container">
+                    <div className="flex flex-row items-center gap-2">
                       {song.is_explicit && (
-                        <div className="explicit-flag">E</div>
+                        <div
+                          className="w-4 h-[18px] flex justify-center items-center text-gray-000 bg-gray-700 rounded-sm"
+                          id="explicit-flag"
+                        >
+                          E
+                        </div>
                       )}
                       <h2 className="song-artist reg text-sm">{artists}</h2>
                     </div>
@@ -115,7 +95,7 @@ export default function SongDrawer({ song, isOpen }) {
                 </div>
               </div>
 
-              <div className="flex w-full items-center justify-center pt-3 xl:pt-4 pb-5 xl:pb-11">
+              <div className="flex w-full items-center justify-center pt-5 xl:pt-6 pb-5 xl:pb-11">
                 <Image
                   className="album-image"
                   src={song.album_image.url}

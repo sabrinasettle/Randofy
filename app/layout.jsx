@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${hanken_grotesk} ${inclusive_sans} ${ibm_plex_mono}`}
     >
-      <body>
+      <body className="overscroll-none">
         <div className="min-h-screen">
           {/* AuthProvider */}
           <Nav />

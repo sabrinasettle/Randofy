@@ -4,7 +4,7 @@
 import HistoryContent from "../../_components/history/HistoryContent";
 import { SpotifyClientProvider } from "../../context/spotify-context";
 import { CardLayoutProvider } from "../../context/card-layout-context";
-import InformationLink from "../../_components/InformationLink";
+// import InformationLink from "../../_components/layout/InformationLink";
 
 export default function History() {
   return (
@@ -14,7 +14,7 @@ export default function History() {
           <HistoryContent />
         </CardLayoutProvider>
       </SpotifyClientProvider>
-      <InformationLink />
+      {/* <InformationLink /> */}
     </>
   );
 }

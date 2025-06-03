@@ -1,5 +1,5 @@
 "use client";
-import { useGridContext } from "../../context/card-layout-context";
+import { useGridContext } from "../../../context/card-layout-context";
 import { LayoutGrid, LayoutList } from "lucide-react";
 import { useState } from "react";
 
