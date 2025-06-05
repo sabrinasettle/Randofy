@@ -8,8 +8,12 @@ import { createArtists } from "../../utils/createArtists";
 // import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
 import useWindowDimensions from "../../_hooks/useWindowDimensions";
 
+// To do!!!
+// Add is Active when
+// Add Hover -> "See details" with Icon
+
 export default function SongCard({ song, index, songIsActive }) {
-  const [isHover, setIsHover] = useState(false);
+  // const [isHover, setIsHover] = useState(false);
   const { spotifyClient } = useSpotifyContext();
 
   const { layoutContext } = useGridContext();
@@ -95,16 +99,3 @@ export default function SongCard({ song, index, songIsActive }) {
 
   return <div>{layout === "list-grid" ? listItem : squareItem}</div>;
 }
-
-// function handleColor() {
-//   // console.log(isHover, name);
-//   if (isHover) return hexToRGBA(song.color, 0.3);
-//   // `rgba(251, 254, 247, 16%)`;
-//   return `rgba(251, 254, 247, 4%)`;
-// }
-
-// function handleBorder() {
-//   if (isHover) return hexToRGBA(song.color, 0.3);
-//   return `rgba(251, 254, 247, 8%)`;
-// }
-//

@@ -12,6 +12,7 @@ import {
   getPast6Months,
 } from "../../utils/getDates.js";
 import useWindowDimensions from "../../_hooks/useWindowDimensions";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
@@ -221,13 +222,16 @@ export default function HistoryContent() {
                     historyFilter={historyFilter}
                   />
                 )}
-                <div className="right_controls">
-                  {/* {!isAtTop && (
+                <div className="flex flex-row gap-3" id="right_controls">
+                  {!isAtTop && (
                     <button className="text-gray-700" onClick={handleBackToTop}>
                       Back to Top
                     </button>
-                  )} */}
-                  {/* <button>Sort</button> */}
+                  )}
+                  <button className="flex flex-row items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-sm gap-1">
+                    <span>Sort</span>
+                    <ChevronUp size={16} />
+                  </button>
                   {history && <CardLayoutOptions />}
                 </div>
               </div>
@@ -258,7 +262,7 @@ export default function HistoryContent() {
             )} */}
 
             {/* Your existing drawer */}
-            {selectedSong && !isMedScreen && (
+            {selectedSong && (
               <div
                 id="drawer"
                 className="w-96 flex-shrink-0 transition-all duration-300"

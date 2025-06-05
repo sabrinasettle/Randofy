@@ -1,20 +1,42 @@
-import { useState } from "react";
-import Image from "next/image";
-import { ArrowUp, ArrowDown, X } from "lucide-react";
-import { useGridContext } from "../../context/card-layout-context";
-import { createArtists } from "../../utils/createArtists.js";
-import { useAccessibleAlpha } from "../../utils/useAccessibleAlpha.js";
-import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
+import React, { useState } from "react";
+import {
+  ArrowRight,
+  X,
+  Play,
+  Plus,
+  Share2,
+  Calendar,
+  Clock,
+  Disc3,
+} from "lucide-react";
 
-// import AudioPlayer from "../player/AudioPlayer/AudioPlayer.jsx";
+// Mock data for demonstration - replace with your actual props
+const mockSong = {
+  track_name: "Cross My Heart I Hope U Die",
+  album_name: "Cross My Heart I Hope U Die",
+  album_image: { url: "/api/placeholder/240/240" },
+  is_explicit: true,
+  song_length: 169000, // 2:49 in milliseconds
+  release_year: "2020",
+  color: "#D2506B",
+  // Song details for radar chart
+  popularity: 0.7,
+  acoustics: 0.3,
+  energy: 0.8,
+  vocals: 0.6,
+  danceability: 0.9,
+  mood: 0.4,
+  genres: ["Pop", "Electronic", "Indie"],
+  // Additional song details
+  bpm: 128,
+  key: "C Major",
+  producer: "Sarah Johnson",
+  label: "Indie Records",
+};
 
-// To do!!!
-// Add AudioPlayer
-// Add back to song
-// Replace the msToMinutesSeconds funtion with the util
-// Fix closing the drawer
-// Add Charts and drawers
+const mockArtists = "Meg Smith";
 
+// Custom Hexagonal Radar Chart Component
 const RadarChart = ({ data, size = 200 }) => {
   const center = size / 2;
   const radius = size * 0.35;
@@ -129,57 +151,40 @@ const RadarChart = ({ data, size = 200 }) => {
   );
 };
 
-export default function SongDrawer({ song, isOpen }) {
-  const { layoutContext } = useGridContext();
-  const [openSection, setOpenSection] = useState("");
+export default function SongDrawer({ song = mockSong, isOpen = true }) {
   const [activeSection, setActiveSection] = useState(null); // 'details' or 'genres' or null
 
-  const handleCloseDrawer = () => {};
-
   if (!song.track_name) {
-    return <div id={styles["song-drawer__inactive"]}></div>;
+    return <div className="hidden"></div>;
   }
 
-  let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
-
   const handleClose = () => {
-    layoutContext.closeDrawer();
+    console.log("Close drawer");
   };
 
   function formatYear() {
-    //format can be 1986 or 2007-09-18
     const yearRegex = /^\d{4}/;
-    const match = song.release_year.match(yearRegex);
+    const match = song.release_year?.match(yearRegex);
     return match ? match[0] : null;
   }
 
   function msToMinutesSeconds(ms) {
-    // Convert milliseconds to seconds
     let seconds = Math.floor(ms / 1000);
-
-    // Get the minutes
     let minutes = Math.floor(seconds / 60);
-
-    // Get the remaining seconds after extracting minutes
     seconds = seconds % 60;
-
-    // Pad the seconds with a leading zero if needed
     seconds = seconds < 10 ? "0" + seconds : seconds;
-
     return minutes + ":" + seconds;
   }
 
-  const artists = createArtists(song);
+  const artists = mockArtists;
   const promColor = song.color;
-  const alpha = useAccessibleAlpha(promColor);
 
   return (
     <div
-      className={`w-full border rounded-sm text-gray-600 border-gray-200 z-10`}
-      id={isOpen ? "" : ""}
+      className="w-full border rounded-sm text-gray-600 border-gray-200 z-10 relative overflow-hidden"
       style={{
         height: "calc(100vh - 100px)",
-        backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha} , #0A0A0A 80%)`,
+        backgroundImage: `radial-gradient(at 50% 45%, ${promColor}40, #0A0A0A 80%)`,
       }}
     >
       <div className="h-full flex flex-col px-4 pt-3 pb-1 box-border">
@@ -192,37 +197,30 @@ export default function SongDrawer({ song, isOpen }) {
             <X size={24} />
           </button>
         </div>
-        <div>
-          <div className="">
-            <div className="">
-              <h1
-                className="text-heading-4 md:text-heading-5 text-semibold text-gray-700"
-                id="song-title"
-              >
-                {song.track_name}
-              </h1>
-              <div className="flex flex-row items-center gap-2">
-                {song.is_explicit && (
-                  <div
-                    className="w-4 h-[18px] flex justify-center items-center text-gray-000 bg-gray-700 rounded-sm"
-                    id="explicit-flag"
-                  >
-                    E
-                  </div>
-                )}
-                <h2 className="song-artist reg text-sm">{artists}</h2>
+
+        {/* Song title and artist */}
+        <div className="mb-5">
+          <h1 className="text-2xl md:text-3xl font-semibold text-white mb-2">
+            {song.track_name}
+          </h1>
+          <div className="flex flex-row items-center gap-2">
+            {song.is_explicit && (
+              <div className="w-4 h-[18px] flex justify-center items-center text-white bg-gray-700 rounded-sm text-xs">
+                E
               </div>
-            </div>
+            )}
+            <h2 className="text-sm text-gray-300">{artists}</h2>
           </div>
         </div>
 
-        <div className="flex w-full items-center justify-center pt-5 xl:pt-6 pb-5 xl:pb-11">
-          <Image
-            className="album-image"
+        {/* Album cover */}
+        <div className="flex w-full items-center justify-center pb-5">
+          <img
+            className="rounded-lg"
             src={song.album_image.url}
-            height={240}
-            width={240}
-            alt={alt}
+            height={activeSection ? 120 : 240}
+            width={activeSection ? 120 : 240}
+            alt={`Album cover for ${song.album_name} by ${artists}`}
             style={{
               transition: "all 0.5s ease",
               height: activeSection ? "120px" : "240px",
@@ -230,64 +228,68 @@ export default function SongDrawer({ song, isOpen }) {
             }}
           />
         </div>
-        {/* <div
-                  style={{
-                    height: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexDirection: "column",
-                  }}
-                >
-                  <AudioPlayer song={song} />
-                </div> */}
 
+        {/* Audio controls */}
+        <div className="mb-6">
+          {/* Progress bar */}
+          <div className="w-full bg-gray-600 rounded-full h-1 mb-4">
+            <div
+              className="bg-white h-1 rounded-full relative"
+              style={{ width: "30%" }}
+            >
+              <div className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full"></div>
+            </div>
+          </div>
+
+          {/* Control buttons */}
+          <div className="flex items-center justify-between">
+            <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+              <Play size={20} className="text-black ml-1" fill="black" />
+            </button>
+
+            <div className="flex gap-4">
+              <button className="text-gray-300 hover:text-white transition-colors">
+                <Plus size={24} />
+              </button>
+              <button className="text-gray-300 hover:text-white transition-colors">
+                <Share2 size={24} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Song basic info - visible when sections are closed */}
         <div
           className="mb-4 space-y-2 transition-all duration-500 ease-out overflow-hidden"
-          // className="h-full flex flex-col justify-between"
-          id="information-container"
           style={{
             height: activeSection ? "0px" : "auto",
             opacity: activeSection ? 0 : 1,
             marginBottom: activeSection ? "0px" : "16px",
           }}
         >
-          <div className="justify-start flex flex-col">
-            <div className="flex flex-row gap-1">
-              <div className="text-body-md md:text-body-sm text-gray-600">
-                Album:
-              </div>
-              <p
-                className="text-body-md md:text-body-sm text-gray-700"
-                id="song-album"
-              >
-                {song.album_name}
-              </p>
-            </div>
-            <div className="flex flex-row gap-1">
-              <div className="information-label">Length:</div>
-              <p className="text-body-sm text-gray-700" id="song-length">
+          <div className="flex items-center gap-3 text-gray-300">
+            <Disc3 size={16} />
+            <span className="text-sm">{song.album_name}</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 text-gray-300">
+              <Clock size={16} />
+              <span className="text-sm">
                 {msToMinutesSeconds(song.song_length)}
-              </p>
+              </span>
             </div>
-            <div className="flex flex-row gap-1">
-              <div
-                className="text-body-md md:text-body-sm text-gray-600"
-                id="information-label"
-              >
-                Year:
-              </div>
-              <p
-                className="text-body-md md:text-body-sm text-gray-700"
-                id="release_year"
-              >
-                {formatYear()}
-              </p>
+            <div className="flex items-center gap-2 text-gray-300">
+              <Calendar size={16} />
+              <span className="text-sm">{formatYear()}</span>
             </div>
           </div>
         </div>
 
+        {/* Spacer to push content to bottom */}
+        <div className="flex-1"></div>
+
         {/* Song Details Expandable Section */}
-        <div className="border-t border-gray-200">
+        <div className="border-t border-gray-600">
           {/* Song Details Button */}
           <button
             onClick={() => {
@@ -300,10 +302,10 @@ export default function SongDrawer({ song, isOpen }) {
             className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
           >
             <span className="text-white">Song Details</span>
-            <ArrowUp
+            <ArrowRight
               size={20}
               className={`text-gray-400 group-hover:text-gray-300 transition-all duration-300 ${
-                activeSection === "details" ? "rotate-180" : ""
+                activeSection === "details" ? "rotate-90" : ""
               }`}
             />
           </button>
@@ -353,7 +355,7 @@ export default function SongDrawer({ song, isOpen }) {
         </div>
 
         {/* Genres Expandable Section */}
-        <div className="border-t border-gray-200">
+        <div className="border-t border-gray-600">
           <button
             onClick={() => {
               if (activeSection === "genres") {
@@ -365,7 +367,7 @@ export default function SongDrawer({ song, isOpen }) {
             className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
           >
             <span className="text-white">Genres</span>
-            <ArrowUp
+            <ArrowRight
               size={20}
               className={`text-gray-400 group-hover:text-gray-300 transition-all duration-300 ${
                 activeSection === "genres" ? "rotate-90" : ""
@@ -373,26 +375,47 @@ export default function SongDrawer({ song, isOpen }) {
             />
           </button>
 
-          {/* Genres Expandable Content */}
-          <div
-            className="overflow-hidden transition-all duration-500 ease-out"
-            style={{
-              height: activeSection === "genres" ? "120px" : "0px",
-            }}
-          >
-            <div className="py-4">
-              <div className="flex flex-wrap gap-2">
-                {song.genres.map((genre, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-gray-700 text-white text-sm rounded-full hover:bg-gray-600 transition-colors cursor-pointer"
-                  >
-                    {genre}
-                  </span>
-                ))}
-              </div>
-              <div className="mt-4 text-xs text-gray-400">
-                Tap on a genre to explore similar music
+          <div className="border-t border-gray-600">
+            <button
+              onClick={() => {
+                if (activeSection === "genres") {
+                  setActiveSection(null);
+                } else {
+                  setActiveSection("genres");
+                }
+              }}
+              className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
+            >
+              <span className="text-white">Genres</span>
+              <ArrowRight
+                size={20}
+                className={`text-gray-400 group-hover:text-gray-300 transition-all duration-300 ${
+                  activeSection === "genres" ? "rotate-90" : ""
+                }`}
+              />
+            </button>
+
+            {/* Genres Expandable Content */}
+            <div
+              className="overflow-hidden transition-all duration-500 ease-out"
+              style={{
+                height: activeSection === "genres" ? "120px" : "0px",
+              }}
+            >
+              <div className="py-4">
+                <div className="flex flex-wrap gap-2">
+                  {song.genres.map((genre, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-gray-700 text-white text-sm rounded-full hover:bg-gray-600 transition-colors cursor-pointer"
+                    >
+                      {genre}
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-4 text-xs text-gray-400">
+                  Tap on a genre to explore similar music
+                </div>
               </div>
             </div>
           </div>
@@ -400,20 +423,4 @@ export default function SongDrawer({ song, isOpen }) {
       </div>
     </div>
   );
-}
-
-{
-  /* <div id="genre-information">
-                    <div className="information-label">
-                      Sub Genres{" "}
-                      <span className="text-sm">({song.genres.length})</span>
-                    </div>
-                    <ul className="genre-list">
-                      {song.genres.map((genre) => (
-                        <li className="genre-tag text-xs">
-                          <p>{genre}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div> */
 }
