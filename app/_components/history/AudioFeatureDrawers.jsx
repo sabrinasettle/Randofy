@@ -45,7 +45,7 @@ const RadarChart = ({ data, size = 200 }) => {
         <svg width={size} height={size} className="overflow-visible">
           {/* Grid lines */}
           <g className="opacity-30">
-            {[0.2, 0.4, 0.6, 0.8, 1.0].map((multiplier) => (
+            {[0.25, 0.5, 0.75, 1.0].map((multiplier) => (
               <polygon
                 key={multiplier}
                 points={createHexagon(multiplier)}
@@ -114,11 +114,59 @@ const RadarChart = ({ data, size = 200 }) => {
   );
 };
 
-export default function Drawers({ song, activeSection, setActiveSection }) {
+export default function AudioFeatureDrawers({
+  song,
+  activeSection,
+  setActiveSection,
+}) {
   return (
     <>
-      {/* Song Details Expandable Section */}
+      {/* Genres Expandable Section */}
       <div className="border-t border-gray-200">
+        <button
+          onClick={() => {
+            if (activeSection === "genres") {
+              setActiveSection(null);
+            } else {
+              setActiveSection("genres");
+            }
+          }}
+          className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
+        >
+          <span className="text-body-md md:text-body-sm text-gray-700">
+            Genres
+          </span>
+          <ArrowUp
+            size={20}
+            className={` group-hover:text-gray-600 transition-all duration-300 ${
+              activeSection === "genres" ? "rotate-180" : ""
+            } ${activeSection === "genres" ? "text-gray-700" : "text-gray-400"}`}
+          />
+        </button>
+
+        {/* Genres Expandable Content */}
+        <div
+          className="overflow-hidden transition-all duration-500 ease-out"
+          style={{
+            height: activeSection === "genres" ? "120px" : "0px",
+          }}
+        >
+          <div className="py-4">
+            <div className="flex flex-wrap gap-2">
+              {song.genres.map((genre, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 bg-gray-200 text-white text-body-sm rounded-full hover:bg-gray-600 transition-colors cursor-pointer"
+                >
+                  {genre}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Song Details Expandable Section */}
+      <div className="justify-end border-t border-gray-200">
         {/* Song Details Button */}
         <button
           onClick={() => {
@@ -130,7 +178,9 @@ export default function Drawers({ song, activeSection, setActiveSection }) {
           }}
           className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
         >
-          <span className="text-body-md text-gray-700">Song Details</span>
+          <span className="text-body-md md:text-body-sm text-gray-700">
+            Song Details
+          </span>
           <ArrowUp
             size={20}
             className={`group-hover:text-gray-600 transition-all duration-300 ${
@@ -161,52 +211,6 @@ export default function Drawers({ song, activeSection, setActiveSection }) {
               }}
               size={280}
             />
-          </div>
-        </div>
-      </div>
-
-      {/* Genres Expandable Section */}
-      <div className="border-t border-gray-200">
-        <button
-          onClick={() => {
-            if (activeSection === "genres") {
-              setActiveSection(null);
-            } else {
-              setActiveSection("genres");
-            }
-          }}
-          className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
-        >
-          <span className="text-white">Genres</span>
-          <ArrowUp
-            size={20}
-            className={` group-hover:text-gray-600 transition-all duration-300 ${
-              activeSection === "genres" ? "rotate-180" : ""
-            } ${activeSection === "genres" ? "text-gray-700" : "text-gray-400"}`}
-          />
-        </button>
-
-        {/* Genres Expandable Content */}
-        <div
-          className="overflow-hidden transition-all duration-500 ease-out"
-          style={{
-            height: activeSection === "genres" ? "120px" : "0px",
-          }}
-        >
-          <div className="py-4">
-            <div className="flex flex-wrap gap-2">
-              {song.genres.map((genre, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-gray-700 text-white text-sm rounded-full hover:bg-gray-600 transition-colors cursor-pointer"
-                >
-                  {genre}
-                </span>
-              ))}
-            </div>
-            <div className="mt-4 text-xs text-gray-400">
-              Tap on a genre to explore similar music
-            </div>
           </div>
         </div>
       </div>

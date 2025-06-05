@@ -1,21 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 const SpotifyContext = React.createContext(null);
 export default SpotifyContext;
 // import { useColor } from "color-thief-react";
 
 export function SpotifyClientProvider({ children }) {
-  const [spotifyUser, setSpotifyUser] = React.useState(null);
-  const [auth, setAuth] = React.useState(null);
-  const [playlist, setPlaylist] = React.useState(null);
-  const [songIds, setSongIds] = React.useState(null);
-  const [error, setError] = React.useState(null);
-  const [filters, setFilters] = React.useState({}); //set default filters here
-  const [currentSongs, setCurrentSongs] = React.useState([]);
-  const [selectedSong, setSelectedSong] = React.useState({});
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [generationHistory, setGenerationHistory] = React.useState({});
+  const [spotifyUser, setSpotifyUser] = useState(null);
+  const [auth, setAuth] = useState(null);
+  const [playlist, setPlaylist] = useState(null);
+  const [songIds, setSongIds] = useState(null);
+  const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({}); //set default filters here
+  const [currentSongs, setCurrentSongs] = useState([]);
+  const [selectedSong, setSelectedSong] = useState({});
+  const [pageActive, setPageActive] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [generationHistory, setGenerationHistory] = useState({});
+  const [isMobile, setIsMobile] = useState();
+
   //setGenerationHistory = { key: song[]} where song is {title,...}
 
   let defaultFilters = {
@@ -26,15 +29,19 @@ export function SpotifyClientProvider({ children }) {
     energy: [0.0, 1.0], //float range from 0.0 to 1.0
     tempo: [0.0, 1.0], //float range from 0.0 to 1.0
     valence: [0.0, 1.0], //float range from 0.0 to 1.0
-    speechiness: [0.0, 1.0], //float range from 0.0 to 1.0
     market: "",
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const spotifyUser = JSON.parse(localStorage.getItem("spotifyUser"));
     const playlist = JSON.parse(localStorage.getItem("playlist"));
     const history = JSON.parse(localStorage.getItem("history"));
+
+    const [width, height] = useWindowDimensions();
+
+    setIsMobile(width <= 768);
+
     if (auth) {
       setAuth(auth);
     }
@@ -271,7 +278,10 @@ export function SpotifyClientProvider({ children }) {
       setIsLoading(false);
     } else {
       const data = await res.json();
+      console.log(data);
+
       let song = data.recommendedTracks[0];
+      console.log(song);
       setCurrentSongs(data.recommendedTracks);
       setSelectedSong({ index: 0, song });
 
@@ -303,6 +313,7 @@ export function SpotifyClientProvider({ children }) {
     setSelectedSong,
     selectedSong,
     generationHistory,
+    isMobile,
   };
 
   const context = {

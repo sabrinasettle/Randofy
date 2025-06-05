@@ -71,6 +71,26 @@ const getData = async (req, max) => {
     return rgbToHex(dominantColor);
   }
 
+  async function getAudioFeatures(id) {
+    const response = await fetch(image.url);
+    const buf = await response.arrayBuffer();
+    function organizeFeatures(rgbArray) {
+      return(
+
+      )
+      // return (
+      //   "#" +
+      //   rgbArray
+      //     .map((value) => {
+      //       let hex = value.toString(16);
+      //       return hex.length === 1 ? "0" + hex : hex; // Ensure 2-digit hex values
+      //     })
+      //     .join("")
+      // );
+    }
+    return organizeFeatures(dominantColor);
+  }
+
   // new regex(/^:+[a-zA-Z]*:)
   async function retry() {
     let randomOffset = Math.floor(Math.random() * 10);
@@ -88,6 +108,7 @@ const getData = async (req, max) => {
     for (const item of tracks) {
       let genres = await getGenres(item.artists);
       let color = await getBkgrdColor(item.album.images[0]);
+      // let trackAudiofeatures = await getAudioFeatures(item.id)
       //url was an object
 
       recommendedTracks.push({
@@ -100,11 +121,11 @@ const getData = async (req, max) => {
         //could be null
         preview_url: item.preview_url,
         release_year: item.album?.release_date,
-        genres: genres,
         song_length: item.duration_ms,
         genres: genres,
         color: color,
-        // generated_at: new Date()
+        generated_at: new Date(),
+        is_playable: item.is_playable,
       });
     }
     // console.log("text aaaaaaaaaaaaa", recommendedTracks);

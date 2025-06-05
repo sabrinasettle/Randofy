@@ -5,7 +5,10 @@ import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists.js";
 import { useAccessibleAlpha } from "../../utils/useAccessibleAlpha.js";
 import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
-import Drawers from "./SongDetailDrawers";
+import Drawers from "./AudioFeatureDrawers";
+import AudioPlayer from "../SongView/AudioPlayer/AudioPlayer";
+import AudioFeatureDrawers from "./AudioFeatureDrawers";
+import { useSongViewContext } from "../../context/song-view-context";
 
 // import AudioPlayer from "../player/AudioPlayer/AudioPlayer.jsx";
 
@@ -17,7 +20,9 @@ import Drawers from "./SongDetailDrawers";
 // Add Charts and drawers
 
 export default function SongDrawer({ song, isOpen }) {
-  const { layoutContext } = useGridContext();
+  const { songViewContext } = useSongViewContext();
+
+  // const { layoutContext } = useGridContext();
   const [activeSection, setActiveSection] = useState(null); // 'details' or 'genres' or null
 
   if (!song.track_name) {
@@ -27,7 +32,7 @@ export default function SongDrawer({ song, isOpen }) {
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
 
   const handleClose = () => {
-    layoutContext.closeDrawer();
+    songViewContext.closeDrawer();
   };
 
   function formatYear() {
@@ -37,32 +42,33 @@ export default function SongDrawer({ song, isOpen }) {
     return match ? match[0] : null;
   }
 
-  function msToMinutesSeconds(ms) {
-    // Convert milliseconds to seconds
-    let seconds = Math.floor(ms / 1000);
+  // function msToMinutesSeconds(ms) {
+  //   // Convert milliseconds to seconds
+  //   let seconds = Math.floor(ms / 1000);
 
-    // Get the minutes
-    let minutes = Math.floor(seconds / 60);
+  //   // Get the minutes
+  //   let minutes = Math.floor(seconds / 60);
 
-    // Get the remaining seconds after extracting minutes
-    seconds = seconds % 60;
+  //   // Get the remaining seconds after extracting minutes
+  //   seconds = seconds % 60;
 
-    // Pad the seconds with a leading zero if needed
-    seconds = seconds < 10 ? "0" + seconds : seconds;
+  //   // Pad the seconds with a leading zero if needed
+  //   seconds = seconds < 10 ? "0" + seconds : seconds;
 
-    return minutes + ":" + seconds;
-  }
+  //   return minutes + ":" + seconds;
+  // }
 
   const artists = createArtists(song);
   const promColor = song.color;
   const alpha = useAccessibleAlpha(promColor);
+  console.log(song);
 
   return (
     <div
       className={`w-full border rounded-sm text-gray-600 border-gray-200 z-10`}
       id={isOpen ? "" : ""}
       style={{
-        height: "calc(100vh - 100px)",
+        height: "calc(100vh - 98px)",
         backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha} , #0A0A0A 80%)`,
       }}
     >
@@ -102,8 +108,10 @@ export default function SongDrawer({ song, isOpen }) {
 
         <div
           className={`flex ${
-            activeSection ? "flex-row items-start gap-4" : "flex-col"
-          } w-full ${activeSection ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500`}
+            activeSection
+              ? "flex-row items-start gap-4"
+              : "flex-col items-center"
+          } w-full ${activeSection ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
         >
           {/* Album Image Wrapper */}
           <div
@@ -111,74 +119,75 @@ export default function SongDrawer({ song, isOpen }) {
               activeSection ? "justify-start" : "justify-center items-center"
             } transition-all duration-500`}
             style={{
-              width: activeSection ? "88px" : "240px", // 👈 shrink container
+              width: activeSection ? "88px" : "240px", // Animate actual size
               height: activeSection ? "88px" : "240px",
               transition: "width 0.5s ease, height 0.5s ease",
+              overflow: "hidden", // Prevent layout jank during resize
             }}
           >
-            <div
+            <Image
+              className="album-image"
+              src={song.album_image.url}
+              width={240}
+              height={240}
+              alt={alt}
               style={{
-                transformOrigin: "top left",
-                transition: "transform 0.5s ease",
-                transform: "scale(1)",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                transition: "all 0.5s ease",
               }}
-            >
-              <Image
-                className="album-image"
-                src={song.album_image.url}
-                height={240}
-                width={240}
-                alt={alt}
-                style={{
-                  transform: activeSection ? "scale(0.366)" : "scale(1)",
-                  transformOrigin: "top left",
-                }}
-              />
-            </div>
+            />
           </div>
+          {/* Controller placeholder */}
+          <div>
+            <AudioPlayer song={song} />
+          </div>
+        </div>
 
-          {/* Song Info - Only shows when section is collapsed */}
-          <div
-            className={`${activeSection ? "hidden" : "block"} space-y-2 transition-all duration-500 ease-out`}
-            id="information-container"
-          >
-            <div className="justify-start flex flex-col">
-              <div className="flex flex-row gap-1">
-                <div className="text-body-md md:text-body-sm text-gray-600">
-                  Album:
-                </div>
-                <p
-                  className="text-body-md md:text-body-sm text-gray-700"
-                  id="song-album"
-                >
-                  {song.album_name}
-                </p>
+        {/* Song Info - Only shows when section is collapsed */}
+        <div
+          className={`${activeSection ? "hidden" : "block"} space-y-2 transition-all duration-500 ease-in-out`}
+          id="information-container"
+        >
+          <div className="justify-start flex flex-col">
+            <div className="flex flex-row gap-1">
+              <div className="text-body-md md:text-body-sm text-gray-600">
+                Album:
               </div>
-              <div className="flex flex-row gap-1">
-                <div className="information-label">Length:</div>
-                <p className="text-body-sm text-gray-700" id="song-length">
-                  {msToMinutesSeconds(song.song_length)}
-                </p>
+              <p
+                className="text-body-md md:text-body-sm text-gray-700"
+                id="song-album"
+              >
+                {song.album_name}
+              </p>
+            </div>
+            <div className="flex flex-row gap-1">
+              <div className="information-label">Length:</div>
+              <p className="text-body-sm text-gray-700" id="song-length">
+                {millisToMinutesAndSeconds(song.song_length)}
+              </p>
+            </div>
+            <div className="flex flex-row gap-1">
+              <div
+                className="text-body-md md:text-body-sm text-gray-600"
+                id="information-label"
+              >
+                Year:
               </div>
-              <div className="flex flex-row gap-1">
-                <div
-                  className="text-body-md md:text-body-sm text-gray-600"
-                  id="information-label"
-                >
-                  Year:
-                </div>
-                <p
-                  className="text-body-md md:text-body-sm text-gray-700"
-                  id="release_year"
-                >
-                  {formatYear()}
-                </p>
-              </div>
+              <p
+                className="text-body-md md:text-body-sm text-gray-700"
+                id="release_year"
+              >
+                {formatYear()}
+              </p>
             </div>
           </div>
         </div>
 
-        <Drawers
+        <div className="flex-1"></div>
+
+        <AudioFeatureDrawers
           song={song}
           activeSection={activeSection}
           setActiveSection={setActiveSection}

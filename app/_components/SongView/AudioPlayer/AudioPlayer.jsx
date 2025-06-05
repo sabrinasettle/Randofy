@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { createArtists } from "../../utils/createArtists.js";
+import { createArtists } from "../../../utils/createArtists.js";
 import Controls from "./Controls/Controls";
 import ProgressBar from "./ProgressBar";
 import { Share2, Plus } from "lucide-react";
@@ -58,7 +58,7 @@ export default function AudioPlayer({ song }) {
 
   //If the audio file is hosted on a different domain than your React app, you may need to configure Cross-Origin Resource Sharing (CORS) on the server serving the audio file.
   const preview = song.preview_url;
-  const artists = createArtists(song);
+  // const artists = createArtists(song);
 
   return (
     <div>
@@ -81,12 +81,15 @@ export default function AudioPlayer({ song }) {
               {/* toast suggesting to be logged in iif not? */}
               <button
                 id="add-song"
-                className="song-action-btn icon-btn"
+                className="hover:bg-gray-200 hover:text-gray-700 text-gray-600"
                 disabled={true}
               >
                 <Plus width={20} height={20} />
               </button>
-              <button id="share-song" className="song-action-btn icon-btn">
+              <button
+                id="share-song"
+                className="hover:bg-gray-200 hover:text-gray-700 text-gray-600"
+              >
                 <Share2 width={16} height={16} />
               </button>
             </div>

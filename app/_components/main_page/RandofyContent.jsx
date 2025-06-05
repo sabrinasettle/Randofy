@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
-import Loading from "../Loading/Loading";
+import Loading from "../layout/Loading";
 // import DoubleEndedSlider from "../ui/DoubleEndedSlider";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import GetSongsButton from "./GetSongsButton";
