@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
-// import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists.js";
 import { useAccessibleAlpha } from "../../_hooks/useAccessibleAlpha.js";
 import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
@@ -9,24 +8,17 @@ import AudioPlayer from "./AudioPlayer/AudioPlayer";
 import AudioFeatureDrawers from "./AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../context/song-view-context";
 import { usePathname } from "next/navigation";
-
-// import AudioPlayer from "../player/AudioPlayer/AudioPlayer.jsx";
-
 // To do!!!
-// Add AudioPlayer
 // Add back to song
-// Replace the msToMinutesSeconds funtion with the util
-// Fix closing the drawer
-// Add Charts and drawers
-
+//
 export default function SongView() {
   const { songViewContext } = useSongViewContext();
   const song = songViewContext.selectedSong.song;
   const isMobile = songViewContext.isMobile;
+  const isDefault = songViewContext.isDefault;
   const pathname = usePathname();
   if (pathname !== "/") songViewContext.setIsDefault(false);
   else songViewContext.setIsDefault(true);
-  const isDefault = songViewContext.isDefault;
 
   const [activeSection, setActiveSection] = useState(null); // 'details' or 'genres' or null
 
@@ -38,6 +30,7 @@ export default function SongView() {
 
   const handleClose = () => {
     songViewContext.closeDetails();
+    songViewContext.markDrawerOpen();
   };
 
   function formatYear() {
@@ -57,12 +50,9 @@ export default function SongView() {
 
   const mainDiv = isDefault
     ? `border rounded-sm border-gray-200`
-    : `w-full border rounded-sm border-gray-200 z-10`;
+    : `w-full border rounded-sm border-gray-200 z-50`;
 
   const imageBool = showImage();
-  console.log(
-    `Should show the image right? ${imageBool ? `yes ${imageBool}` : "no"}`,
-  );
 
   return (
     <div
@@ -142,9 +132,10 @@ export default function SongView() {
               />
             </div>
             {/* Controller placeholder */}
-            <div>
-              <AudioPlayer song={song} />
-            </div>
+
+            {/* <div className="flex-1"> */}
+            <AudioPlayer song={song} />
+            {/* </div> */}
           </div>
         )}
 
@@ -203,10 +194,6 @@ export default function SongView() {
           activeSection={activeSection}
           setActiveSection={setActiveSection}
         />
-
-        {/* Song Details Expandable Section */}
-
-        {/* Genres Expandable Section */}
       </div>
     </div>
   );

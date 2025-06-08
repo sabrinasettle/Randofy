@@ -1,3 +1,5 @@
+import { useSongViewContext } from "../../../context/song-view-context";
+
 const FilterButton = ({ handleActivation, string, activeFilter }) => {
   return (
     <div
@@ -11,6 +13,8 @@ const FilterButton = ({ handleActivation, string, activeFilter }) => {
 
 export default function HistoryFilters({ updateFilter, historyFilter }) {
   // const [activeFilter, setActiveFilter] = useState("All");
+  const { songViewContext } = useSongViewContext();
+  const isMobile = songViewContext.isMobile;
 
   function handleActivation(e) {
     let element = e.target;
@@ -26,11 +30,6 @@ export default function HistoryFilters({ updateFilter, historyFilter }) {
         string={"All"}
         activeFilter={historyFilter}
       />
-      {/* <FilterButton
-        handleActivation={handleActivation}
-        string={"Today"}
-        activeFilter={historyFilter}
-      /> */}
       <FilterButton
         handleActivation={handleActivation}
         string={"This Week"}

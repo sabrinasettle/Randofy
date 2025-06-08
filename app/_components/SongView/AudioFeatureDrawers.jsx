@@ -1,4 +1,5 @@
 import { ArrowUp } from "lucide-react";
+import { useSongViewContext } from "../../context/song-view-context";
 
 const RadarChart = ({ data, size = 200 }) => {
   const center = size / 2;
@@ -119,6 +120,8 @@ export default function AudioFeatureDrawers({
   activeSection,
   setActiveSection,
 }) {
+  const { songViewContext } = useSongViewContext();
+
   return (
     <>
       {/* Genres Expandable Section */}
@@ -127,8 +130,10 @@ export default function AudioFeatureDrawers({
           onClick={() => {
             if (activeSection === "genres") {
               setActiveSection(null);
+              songViewContext.markDrawerOpen();
             } else {
               setActiveSection("genres");
+              songViewContext.markDrawerOpen();
             }
           }}
           className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
@@ -172,8 +177,10 @@ export default function AudioFeatureDrawers({
           onClick={() => {
             if (activeSection === "details") {
               setActiveSection(null);
+              songViewContext.markDrawerOpen();
             } else {
               setActiveSection("details");
+              songViewContext.markDrawerOpen();
             }
           }}
           className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"

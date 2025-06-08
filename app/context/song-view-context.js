@@ -15,6 +15,7 @@ export function SongViewProvider({ children }) {
   // const [pageActive, setPageActive] = useState(null);
   const [isMobile, setIsMobile] = useState(null);
   const [isDefault, setIsDefault] = useState(true);
+  const [drawersOpen, setDrawersOpen] = useState(false);
   const { width, height } = useWindowDimensions();
 
   //setGenerationHistory = { key: song[]} where song is {title,...}
@@ -32,6 +33,9 @@ export function SongViewProvider({ children }) {
     setIsDetailsOpen(false);
   }
 
+  function markDrawerOpen() {
+    setDrawersOpen(!drawersOpen);
+  }
   // const isTrackSelected = (track_name) => {
   //   return track_name === selectedSong.song.track_name;
   // };
@@ -46,6 +50,8 @@ export function SongViewProvider({ children }) {
     setIsDetailsOpen,
     isDefault,
     setIsDefault,
+    markDrawerOpen,
+    drawersOpen,
     // isTrackSelected,
   };
 

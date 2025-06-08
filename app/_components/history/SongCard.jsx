@@ -9,6 +9,7 @@ export default function SongCard({ song, index }) {
   const { songViewContext } = useSongViewContext();
   const { layoutContext } = useGridContext();
   const layout = layoutContext.layoutType;
+  const isMobile = songViewContext.isMobile;
 
   const [isActive, setIsActive] = useState(false);
 
@@ -76,7 +77,7 @@ export default function SongCard({ song, index }) {
 
   const squareItem = (
     <li onClick={moveOrNot}>
-      <div className="relative w-56 h-56 bg-gray-100 border border-gray-100">
+      <div className={`relative h-56 w-56 bg-gray-100 border border-gray-100`}>
         <Image
           src={song.album_image.url}
           fill

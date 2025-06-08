@@ -20,18 +20,21 @@ export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
   // const { layoutContext } = useGridContext();
   const { songViewContext } = useSongViewContext();
-  const scrollContainerRef = useRef(null);
+  const isMobile = songViewContext.isMobile;
+  const isDefault = songViewContext.isDefault;
 
   const [historyFilter, setHistoryFilter] = useState("All");
-  const [sortFilter, setSortFilter] = useState("newest");
   const [activeSection, setActiveSection] = useState(0);
   const [isAtTop, setIsAtTop] = useState(true);
 
+  // const [sortFilter, setSortFilter] = useState("newest");
   let history = spotifyClient.generationHistory;
   let selectedSong = songViewContext.selectedSong.song;
   const isDrawerOpen = songViewContext.isDetailsOpen;
 
-  const sortOptions = ["newest to oldest", "oldest to newest"];
+  // const sortOptions = ["newest to oldest", "oldest to newest"];
+  // filter Options
+  const scrollContainerRef = useRef(null);
 
   console.log(history);
 
@@ -206,7 +209,7 @@ export default function HistoryContent() {
 
   return (
     // h-screen
-    <div className="px-5 pb-2 h-[calc(100vh-72px)] flex flex-col">
+    <div className="px-4 pb-2 h-[calc(100vh-72px)] flex flex-col">
       <section className="flex flex-row flex-1 overflow-hidden">
         {!history || isEmptyObject(history) ? (
           <div className="w-full flex justify-center items-center text-gray-700">
@@ -235,10 +238,14 @@ export default function HistoryContent() {
                       Back to Top
                     </button>
                   )}
-                  <button className="flex flex-row items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-sm gap-1">
+                  {/* <button className="flex flex-row items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-sm gap-1">
                     <span>Sort</span>
                     <ChevronUp size={16} />
                   </button>
+                  <button className="flex flex-row items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-sm gap-1">
+                    <span>Filters</span>
+                    <ChevronUp size={16} />
+                  </button> */}
                   {history && <CardLayoutOptions />}
                 </div>
               </div>
