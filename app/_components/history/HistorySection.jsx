@@ -45,7 +45,7 @@ export default function HistorySection({ date, songs, idIndex, isActive }) {
   };
 
   return (
-    <li id={idIndex} className="history-list-item">
+    <li id={idIndex} className="">
       <div id={`${idIndex}-header`} className={styled}>
         {/* <div className="">
           <h2>{isToday() ? "Today" : `${date}`}</h2>
@@ -53,7 +53,7 @@ export default function HistorySection({ date, songs, idIndex, isActive }) {
             {isOpen ? <ChevronUp /> : <ChevronDown />}
           </button>
         </div> */}
-        <div className="group flex flex-row justify-between">
+        <div className="group flex flex-row justify-between w-full">
           <div className="flex flex-row gap-2 pb-6">
             <h2 className="text-heading-4 text-gray-700">
               {isToday() ? "Today" : `${formatDate(date)}`}

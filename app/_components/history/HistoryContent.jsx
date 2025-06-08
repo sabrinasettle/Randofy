@@ -209,8 +209,8 @@ export default function HistoryContent() {
 
   return (
     // h-screen
-    <div className="px-4 pb-2 h-[calc(100vh-72px)] flex flex-col">
-      <section className="flex flex-row flex-1 overflow-hidden">
+    <div className="px-3 md:px-4 pb-2 h-[calc(100vh-72px)] flex flex-col">
+      <section className="flex flex-row flex-1 md:overflow-hidden">
         {!history || isEmptyObject(history) ? (
           <div className="w-full flex justify-center items-center text-gray-700">
             <p>No History Yet!</p>
@@ -220,12 +220,12 @@ export default function HistoryContent() {
             <div
               id="history-column"
               ref={scrollContainerRef}
-              className={`flex-1 flex flex-col transition-all duration-300 ${
-                selectedSong ? "mr-4" : ""
+              className={`flex-1 flex flex-col transition-all duration-300 pt-3 md:pt-1 ${
+                isDrawerOpen ? "sm:mr-0 md:mr-4" : "mr-0"
               }`}
             >
               {/* Your existing header with filters */}
-              <div className="w-full flex flex-row items-center justify-between flex-shrink-0 pb-4">
+              <div className="w-full flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between flex-shrink-0 pb-4">
                 {history && (
                   <HistoryFilters
                     updateFilter={updateFilter}
@@ -279,9 +279,8 @@ export default function HistoryContent() {
             {selectedSong && isDrawerOpen && (
               <div
                 id="drawer"
-                className="w-96 flex-shrink-0 transition-all duration-300"
+                className="md:w-96 md:static md:flex-shrink-0 transition-all duration-300"
               >
-                {/* <SongDrawer /> */}
                 <SongView />
               </div>
             )}

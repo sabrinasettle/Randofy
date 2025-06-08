@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { createArtists } from "../../utils/createArtists.js";
@@ -8,19 +8,20 @@ import AudioPlayer from "./AudioPlayer/AudioPlayer";
 import AudioFeatureDrawers from "./AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../context/song-view-context";
 import { usePathname } from "next/navigation";
-// To do!!!
-// Add back to song
-//
+
 export default function SongView() {
   const { songViewContext } = useSongViewContext();
   const song = songViewContext.selectedSong.song;
   const isMobile = songViewContext.isMobile;
   const isDefault = songViewContext.isDefault;
+  const isOpen = songViewContext.isDetailsOpen;
   const pathname = usePathname();
   if (pathname !== "/") songViewContext.setIsDefault(false);
   else songViewContext.setIsDefault(true);
 
   const [activeSection, setActiveSection] = useState(null); // 'details' or 'genres' or null
+  const [isVisible, setIsVisible] = useState(false);
+  const [animateIn, setAnimateIn] = useState(false);
 
   if (!song.track_name) {
     return <div id="song-drawer__inactive"></div>;
@@ -30,6 +31,7 @@ export default function SongView() {
 
   const handleClose = () => {
     songViewContext.closeDetails();
+    songViewContext.setSelectedSong({});
     songViewContext.markDrawerOpen();
   };
 
@@ -49,17 +51,42 @@ export default function SongView() {
   };
 
   const mainDiv = isDefault
-    ? `border rounded-sm border-gray-200`
-    : `w-full border rounded-sm border-gray-200 z-50`;
+    ? `border rounded-sm border-gray-200 backdrop-blur-sm`
+    : `relative w-full md:w-lg h-full bg-gray-000  transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)] ${
+        animateIn ? "translate-x-0" : "translate-x-full"
+      } top-0 right-0 md:static w-full h-full mb-2 md:mb-3 border border-transparent md:border-gray-200 md:rounded-sm z-50 backdrop-blur-sm
+`;
 
   const imageBool = showImage();
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+
+      // Ensure the drawer is rendered before transitioning
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setAnimateIn(true);
+        });
+      });
+    } else {
+      setAnimateIn(false);
+
+      // Delay unmount to let transition play
+      const timeout = setTimeout(() => {
+        setIsVisible(false);
+      }, 500); // matches transition duration
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isOpen]);
 
   return (
     <div
       className={`${mainDiv}`}
       // id={isOpen ? "" : ""}
       style={{
-        height: "calc(100vh - 98px)",
+        // height: "calc(100vh - 98px)",
         backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha} , #0A0A0A 80%)`,
       }}
     >

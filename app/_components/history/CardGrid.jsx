@@ -3,10 +3,7 @@ import SongCard from "./SongCard";
 
 export default function CardGrid({ songs }) {
   const { layoutContext } = useGridContext();
-
   const layout = layoutContext.layoutType;
-
-  // let arrayReversed = songs.reverse();
 
   function reverseArr(input) {
     var ret = new Array();
@@ -18,8 +15,11 @@ export default function CardGrid({ songs }) {
 
   let reversedSongs = reverseArr(songs);
 
+  // Updated to use grid for square layout to give proper sizing constraints
   const list =
-    layout === "list-grid" ? "flex flex-col" : "flex flex-row flex-wrap gap-3";
+    layout === "list-grid"
+      ? "flex flex-col"
+      : "grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6";
 
   return (
     <ul className={list}>

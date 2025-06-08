@@ -10,7 +10,6 @@ export default function SongCard({ song, index }) {
   const { layoutContext } = useGridContext();
   const layout = layoutContext.layoutType;
   const isMobile = songViewContext.isMobile;
-
   const [isActive, setIsActive] = useState(false);
 
   function checkIsActive() {
@@ -34,55 +33,70 @@ export default function SongCard({ song, index }) {
   const activeStyle = checkIsActive()
     ? "bg-gray-100 border-gray-700 hover:border-gray-700"
     : "border-gray-100 hover:border-gray-200";
-
   const activeTextStyle = checkIsActive()
     ? "text-gray-700"
     : "text-gray-600 group-hover:text-gray-700";
 
+  const imageSize = isMobile ? 64 : 74;
+
   const listItem = (
     <li
-      className={`group transition-colors duration-100 flex flex-row items-center justify-between px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
+      className={`group w-full transition-colors duration-100 flex flex-row items-center justify-start md:justify-between px-1 md:px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
       id={`${song.track_name}-${song.album_name}`}
       key={keyString}
       onClick={moveOrNot}
     >
-      <div className="w-16 h-16 bg-gray-100">
-        <Image src={song.album_image.url} width={70} height={70} alt={alt} />
+      {/* Mobile: smaller image */}
+      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 flex-shrink-0">
+        <Image
+          src={song.album_image.url}
+          width={imageSize}
+          height={imageSize}
+          alt={alt}
+          className="w-full h-full object-cover rounded"
+        />
       </div>
-      <div className="flex-1 flex flex-col pl-20 gap-1">
-        <p className="text-body-md md:text-body-sm text-gray-700 font-semibold">
+
+      {/* Mobile: reduced left padding and adjusted layout */}
+      <div className="flex flex-col md:flex-1 pl-3 sm:pl-4 md:pl-20 gap-0 md:gap-1 min-w-0">
+        <p className="text-body-md text-gray-700 font-semibold truncate">
           {song.track_name}
         </p>
         <span
-          className={`flex flex-row gap-1 text-body-sm font-normal ${activeTextStyle}`}
+          className={`flex flex-row gap-1 text-body-sm md:text-body-md font-normal ${activeTextStyle}`}
         >
           {song.is_explicit && <div className="explicit-flag">E</div>}
-          <p>{artists}</p>
+          <p className={`text-body-sm md:text-body-md ${activeTextStyle}`}>
+            {artists}
+          </p>
         </span>
       </div>
+
+      {/* Mobile: hide album name on very small screens, show on sm+ */}
       <div
-        className={`flex-1 text-body-sm text-gray-600 font-normal ${activeTextStyle}`}
+        className={`hidden md:flex md:flex-1 text-body-sm md:text-body-md font-normal ${activeTextStyle} min-w-0`}
       >
-        <p>{song.album_name}</p>
-        {/* {!checkIsActive() && (
-          <div className={`hidden group-hover:block`}>
-            <p className="text-gray-000 group-hover:text-gray-500 text-caption">
-              Click to View More
-            </p>
-          </div>
-        )} */}
+        <p className="truncate">{song.album_name}</p>
       </div>
     </li>
   );
 
   const squareItem = (
-    <li onClick={moveOrNot}>
-      <div className={`relative h-56 w-56 bg-gray-100 border border-gray-100`}>
+    <li onClick={moveOrNot} className="w-full">
+      {/* Mobile: responsive square sizing - 2 columns on mobile, maintains desktop size on larger screens */}
+      <div
+        className={`relative bg-gray-100 border border-gray-100 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 sm:aspect-auto`}
+        style={{
+          width: "100%",
+          aspectRatio: "1 / 1",
+        }}
+      >
         <Image
           src={song.album_image.url}
           fill
           alt={alt}
           className="object-cover"
+          sizes="(max-width: 640px) 50vw, (max-width: 768px) 160px, (max-width: 1024px) 192px, 224px"
         />
       </div>
     </li>

@@ -358,7 +358,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
       {/* Drawer Container */}
       <div
-        className={`relative w-full md:w-lg h-full bg-gray-000 shadow-xl transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)] ${
+        className={`relative w-full md:w-lg h-full bg-gray-000 transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)] ${
           animateIn ? "translate-x-0" : "translate-x-full"
         }`}
       >
