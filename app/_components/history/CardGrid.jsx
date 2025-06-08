@@ -28,7 +28,6 @@ export default function CardGrid({ songs }) {
           song={song}
           index={index}
           scrollTo
-          songIsActive
           key={`song ` + `${song.track_name}`}
         />
       ))}

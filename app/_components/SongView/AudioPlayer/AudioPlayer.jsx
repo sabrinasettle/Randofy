@@ -1,11 +1,17 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { createArtists } from "../../../utils/createArtists.js";
-import Controls from "./Controls/Controls";
-import ProgressBar from "./ProgressBar";
+import Controls from "./Controls/Controls.jsx";
+import ProgressBar from "./ProgressBar.jsx";
 import { Share2, Plus } from "lucide-react";
+import { useSongViewContext } from "../../../context/song-view-context.js";
 
-export default function AudioPlayer({ song }) {
+export default function AudioPlayer({
+  song,
+  hasInformation,
+  setOpenInformation: _setOpenInfoermation = null,
+}) {
+  const { songViewContext } = useSongViewContext();
   const [isPlaying, setIsPlaying] = useState(false);
   const [openInformation, setOpenInformation] = useState(false);
   const audioRef = useRef(null);
@@ -84,6 +90,7 @@ export default function AudioPlayer({ song }) {
                 className="hover:bg-gray-200 hover:text-gray-700 text-gray-600"
                 disabled={true}
               >
+                {/* 44px at mobile */}
                 <Plus width={20} height={20} />
               </button>
               <button

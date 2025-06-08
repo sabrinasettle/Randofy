@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import useWindowDimensions from "../_hooks/useWindowDimensions";
+
 const SongViewContext = React.createContext(null);
 export default SongViewContext;
 
@@ -9,41 +11,46 @@ export function SongViewProvider({ children }) {
   const pathname = usePathname();
   const [error, setError] = useState(null);
   const [selectedSong, setSelectedSong] = useState({});
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   // const [pageActive, setPageActive] = useState(null);
   const [isMobile, setIsMobile] = useState(null);
-  const [isDefault, setDefault] = useState(true);
-  const [isDetailsOpen, setIsDetailsOpen] = React.useState(false);
+  const [isDefault, setIsDefault] = useState(true);
+  const { width, height } = useWindowDimensions();
 
   //setGenerationHistory = { key: song[]} where song is {title,...}
 
   useEffect(() => {
-    const [width, height] = useWindowDimensions();
     setIsMobile(width <= 768);
-
-    if (pathname === "/history") isDefault(false);
-    else isDefault(true);
   }, []);
 
-  function openSongView(page) {
+  function openDetails() {
     // setPageActive(page);
-    isDetailsOpen(true);
+    setIsDetailsOpen(true);
   }
 
-  function closeSongView() {
+  function closeDetails() {
     setIsDetailsOpen(false);
   }
 
-  const songView = {
-    setCurrentSongs,
+  // const isTrackSelected = (track_name) => {
+  //   return track_name === selectedSong.song.track_name;
+  // };
+
+  const songViewContext = {
     setSelectedSong,
     selectedSong,
     isMobile,
-    openSongView,
-    closeSongView,
+    openDetails,
+    closeDetails,
+    isDetailsOpen,
+    setIsDetailsOpen,
+    isDefault,
+    setIsDefault,
+    // isTrackSelected,
   };
 
   const context = {
-    songView,
+    songViewContext,
   };
 
   return (

@@ -5,9 +5,10 @@ import { X } from "lucide-react";
 import { createArtists } from "../../utils/createArtists.js";
 import { useAccessibleAlpha } from "../../_hooks/useAccessibleAlpha.js";
 import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
-import AudioPlayer from "../SongView/AudioPlayer/AudioPlayer";
-import AudioFeatureDrawers from "../SongView/AudioFeatureDrawers.jsx";
+import AudioPlayer from "./AudioPlayer/AudioPlayer";
+import AudioFeatureDrawers from "./AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../context/song-view-context";
+import { usePathname } from "next/navigation";
 
 // import AudioPlayer from "../player/AudioPlayer/AudioPlayer.jsx";
 
@@ -18,9 +19,14 @@ import { useSongViewContext } from "../../context/song-view-context";
 // Fix closing the drawer
 // Add Charts and drawers
 
-export default function SongDrawer() {
+export default function SongView() {
   const { songViewContext } = useSongViewContext();
   const song = songViewContext.selectedSong.song;
+  const isMobile = songViewContext.isMobile;
+  const pathname = usePathname();
+  if (pathname !== "/") songViewContext.setIsDefault(false);
+  else songViewContext.setIsDefault(true);
+  const isDefault = songViewContext.isDefault;
 
   const [activeSection, setActiveSection] = useState(null); // 'details' or 'genres' or null
 
@@ -41,30 +47,26 @@ export default function SongDrawer() {
     return match ? match[0] : null;
   }
 
-  // function msToMinutesSeconds(ms) {
-  //   // Convert milliseconds to seconds
-  //   let seconds = Math.floor(ms / 1000);
-
-  //   // Get the minutes
-  //   let minutes = Math.floor(seconds / 60);
-
-  //   // Get the remaining seconds after extracting minutes
-  //   seconds = seconds % 60;
-
-  //   // Pad the seconds with a leading zero if needed
-  //   seconds = seconds < 10 ? "0" + seconds : seconds;
-
-  //   return minutes + ":" + seconds;
-  // }
-
   const artists = createArtists(song);
   const promColor = song.color;
   const alpha = useAccessibleAlpha(promColor);
-  console.log(song);
+
+  const showImage = () => {
+    return isMobile || !isDefault;
+  };
+
+  const mainDiv = isDefault
+    ? `border rounded-sm border-gray-200`
+    : `w-full border rounded-sm border-gray-200 z-10`;
+
+  const imageBool = showImage();
+  console.log(
+    `Should show the image right? ${imageBool ? `yes ${imageBool}` : "no"}`,
+  );
 
   return (
     <div
-      className={`w-full border rounded-sm text-gray-600 border-gray-200 z-10`}
+      className={`${mainDiv}`}
       // id={isOpen ? "" : ""}
       style={{
         height: "calc(100vh - 98px)",
@@ -99,50 +101,58 @@ export default function SongDrawer() {
                     E
                   </div>
                 )}
-                <h2 className="song-artist reg text-sm">{artists}</h2>
+                <h2 className="text-gray-600">{artists}</h2>
               </div>
             </div>
           </div>
         </div>
 
-        <div
-          className={`flex ${
-            activeSection
-              ? "flex-row items-start gap-4"
-              : "flex-col items-center"
-          } w-full ${activeSection ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
-        >
-          {/* Album Image Wrapper */}
+        {imageBool && (
           <div
             className={`flex ${
-              activeSection ? "justify-start" : "justify-center items-center"
-            } transition-all duration-500`}
-            style={{
-              width: activeSection ? "88px" : "240px", // Animate actual size
-              height: activeSection ? "88px" : "240px",
-              transition: "width 0.5s ease, height 0.5s ease",
-              overflow: "hidden", // Prevent layout jank during resize
-            }}
+              activeSection
+                ? "flex-row items-start gap-4"
+                : "flex-col items-center"
+            } w-full ${activeSection ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
           >
-            <Image
-              className="album-image"
-              src={song.album_image.url}
-              width={240}
-              height={240}
-              alt={alt}
+            {/* Album Image Wrapper */}
+            <div
+              className={`flex ${
+                activeSection ? "justify-start" : "justify-center items-center"
+              } transition-all duration-500`}
               style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                transition: "all 0.5s ease",
+                width: activeSection ? "88px" : "240px", // Animate actual size
+                height: activeSection ? "88px" : "240px",
+                transition: "width 0.5s ease, height 0.5s ease",
+                overflow: "hidden", // Prevent layout jank during resize
               }}
-            />
+            >
+              <Image
+                className="album-image"
+                src={song.album_image.url}
+                width={240}
+                height={240}
+                alt={alt}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  transition: "all 0.5s ease",
+                }}
+              />
+            </div>
+            {/* Controller placeholder */}
+            <div>
+              <AudioPlayer song={song} />
+            </div>
           </div>
-          {/* Controller placeholder */}
+        )}
+
+        {!imageBool && (
           <div>
             <AudioPlayer song={song} />
           </div>
-        </div>
+        )}
 
         {/* Song Info - Only shows when section is collapsed */}
         <div
@@ -151,9 +161,12 @@ export default function SongDrawer() {
         >
           <div className="justify-start flex flex-col">
             <div className="flex flex-row gap-1">
-              <div className="text-body-md md:text-body-sm text-gray-600">
+              <p
+                className="text-body-md md:text-body-sm text-gray-600"
+                id="information-label"
+              >
                 Album:
-              </div>
+              </p>
               <p
                 className="text-body-md md:text-body-sm text-gray-700"
                 id="song-album"
@@ -162,18 +175,17 @@ export default function SongDrawer() {
               </p>
             </div>
             <div className="flex flex-row gap-1">
-              <div className="information-label">Length:</div>
+              <p className="text-body-md md:text-body-sm text-gray-600">
+                Length:
+              </p>
               <p className="text-body-sm text-gray-700" id="song-length">
                 {millisToMinutesAndSeconds(song.song_length)}
               </p>
             </div>
             <div className="flex flex-row gap-1">
-              <div
-                className="text-body-md md:text-body-sm text-gray-600"
-                id="information-label"
-              >
+              <p className="text-body-md md:text-body-sm text-gray-600">
                 Year:
-              </div>
+              </p>
               <p
                 className="text-body-md md:text-body-sm text-gray-700"
                 id="release_year"
@@ -198,20 +210,4 @@ export default function SongDrawer() {
       </div>
     </div>
   );
-}
-
-{
-  /* <div id="genre-information">
-                    <div className="information-label">
-                      Sub Genres{" "}
-                      <span className="text-sm">({song.genres.length})</span>
-                    </div>
-                    <ul className="genre-list">
-                      {song.genres.map((genre) => (
-                        <li className="genre-tag text-xs">
-                          <p>{genre}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div> */
 }

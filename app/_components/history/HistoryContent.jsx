@@ -2,21 +2,24 @@
 import { useState, useRef, useEffect } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
 import { useGridContext } from "../../context/card-layout-context";
+import { useSongViewContext } from "../../context/song-view-context";
 import HistorySection from "./HistorySection";
 import HistoryFilters from "./filters/HistoryFilters";
-import SongDrawer from "./SongDrawer";
+// import SongDrawer from "./SongDrawer";
+import SongView from "../SongView/SongView";
 import CardLayoutOptions from "./filters/CardLayoutOptions";
 import {
   getThisWeek,
   getThisMonth,
   getPast6Months,
 } from "../../utils/getDates.js";
-import useWindowDimensions from "../../_hooks/useWindowDimensions";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp } from "lucide-react";
+// import useWindowDimensions from "../../_hooks/useWindowDimensions";
 
 export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
-  const { layoutContext } = useGridContext();
+  // const { layoutContext } = useGridContext();
+  const { songViewContext } = useSongViewContext();
   const scrollContainerRef = useRef(null);
 
   const [historyFilter, setHistoryFilter] = useState("All");
@@ -25,17 +28,17 @@ export default function HistoryContent() {
   const [isAtTop, setIsAtTop] = useState(true);
 
   let history = spotifyClient.generationHistory;
-  let selectedSong = spotifyClient.selectedSong.song;
-  const isDrawerOpen = layoutContext.isDrawerOpen;
+  let selectedSong = songViewContext.selectedSong.song;
+  const isDrawerOpen = songViewContext.isDetailsOpen;
 
   const sortOptions = ["newest to oldest", "oldest to newest"];
 
-  const { width, height } = useWindowDimensions();
-  const isSmallScreen = width <= 628;
-  const isMedScreen = width <= 1024;
+  console.log(history);
 
-  // import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
-  // import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
+  // Responsive code
+  // const { width, height } = useWindowDimensions();
+  // const isSmallScreen = width <= 628;
+  // const isMedScreen = width <= 1024;
 
   useEffect(() => {
     // history-songlist-container
@@ -199,19 +202,23 @@ export default function HistoryContent() {
 
   const filteredHistory = filteredSongHistory();
   // console.log(filteredHistory);
+  const isEmptyObject = (obj) => Object.keys(obj).length === 0;
 
   return (
-    <div className="px-5 mt-1 h-screen flex flex-col">
-      <section className="pb-16 flex flex-row flex-1 overflow-hidden">
-        {!history ? (
-          <div>No History Yet!</div>
+    // h-screen
+    <div className="px-5 pb-2 h-[calc(100vh-72px)] flex flex-col">
+      <section className="flex flex-row flex-1 overflow-hidden">
+        {!history || isEmptyObject(history) ? (
+          <div className="w-full flex justify-center items-center text-gray-700">
+            <p>No History Yet!</p>
+          </div>
         ) : (
-          <div className="flex flex-row w-full h-full">
+          <div className="mt-1 flex flex-row w-full h-full pb-4">
             <div
               id="history-column"
               ref={scrollContainerRef}
               className={`flex-1 flex flex-col transition-all duration-300 ${
-                selectedSong && !isMedScreen ? "mr-4" : ""
+                selectedSong ? "mr-4" : ""
               }`}
             >
               {/* Your existing header with filters */}
@@ -262,12 +269,13 @@ export default function HistoryContent() {
             )} */}
 
             {/* Your existing drawer */}
-            {selectedSong && (
+            {selectedSong && isDrawerOpen && (
               <div
                 id="drawer"
                 className="w-96 flex-shrink-0 transition-all duration-300"
               >
-                <SongDrawer song={selectedSong} isOpen={isDrawerOpen} />
+                {/* <SongDrawer /> */}
+                <SongView />
               </div>
             )}
           </div>

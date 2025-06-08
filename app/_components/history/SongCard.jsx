@@ -1,65 +1,46 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useSpotifyContext } from "../../context/spotify-context";
+import { useSongViewContext } from "../../context/song-view-context";
 import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists";
-// import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
-// import { hexToRGBA } from "../../utils/convertHexToRGBA.js";
-import useWindowDimensions from "../../_hooks/useWindowDimensions";
 
-// To do!!!
-// Add is Active when
-// Add Hover -> "See details" with Icon
-
-export default function SongCard({ song, index, songIsActive }) {
-  // const [isHover, setIsHover] = useState(false);
-  const { spotifyClient } = useSpotifyContext();
-
+export default function SongCard({ song, index }) {
+  const { songViewContext } = useSongViewContext();
   const { layoutContext } = useGridContext();
   const layout = layoutContext.layoutType;
 
-  const { width, height } = useWindowDimensions();
-  const isSmallScreen = width <= 628;
-  const isMedScreen = width <= 1024;
+  const [isActive, setIsActive] = useState(false);
 
-  // function hoverOver() {
-  //   setIsHover(true);
-  // }
-
-  // function mouseLeave() {
-  //   setIsHover(false);
-  // }
-
-  function isActive() {
-    console.log(
-      spotifyClient.setSelectedSong,
-      spotifyClient.setSelectedSong.track_name,
-    );
-    return song.track_name === spotifyClient.setSelectedSong.track_name;
+  function checkIsActive() {
+    return song.track_name === songViewContext.selectedSong?.song?.track_name;
   }
 
-  // isActive();
+  // Update active state when selected song changes
+  useEffect(() => {
+    setIsActive(checkIsActive());
+  }, [songViewContext.selectedSong, song.track_name]);
 
   function moveOrNot() {
-    if (isActive()) {
-      spotifyClient.setSelectedSong({ index: index, song: { song } });
-      songIsActive(song);
-      layoutContext.openSongDetails();
-    } else {
-      spotifyClient.setSelectedSong({ index: index, song });
-      layoutContext.openSongDetails();
-      // scrollTo(index);
-    }
+    songViewContext.setSelectedSong({ index: index, song });
+    songViewContext.openDetails();
   }
 
-  let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
-  let keyString = `${song.track_name}` + `${song.track_id}`;
+  let alt = `Album cover for ${song.album_name} by ${createArtists(song)}`;
+  let keyString = `${song.track_name}${song.track_id}`;
   const artists = createArtists(song);
+
+  const activeStyle = checkIsActive()
+    ? "bg-gray-100 border-gray-700 hover:border-gray-700"
+    : "border-gray-100 hover:border-gray-200";
+
+  const activeTextStyle = checkIsActive()
+    ? "text-gray-700"
+    : "text-gray-600 group-hover:text-gray-700";
 
   const listItem = (
     <li
-      className="group flex flex-row items-center justify-between px-2 py-3 border-b border-gray-200 hover:bg-gray-100"
+      className={`group transition-colors duration-100 flex flex-row items-center justify-between px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
       id={`${song.track_name}-${song.album_name}`}
       key={keyString}
       onClick={moveOrNot}
@@ -71,15 +52,24 @@ export default function SongCard({ song, index, songIsActive }) {
         <p className="text-body-md md:text-body-sm text-gray-700 font-semibold">
           {song.track_name}
         </p>
-
-        <p className="flex flex-row gap-1text-body-sm text-gray-600 group-hover:text-gray-700 font-normal">
+        <span
+          className={`flex flex-row gap-1 text-body-sm font-normal ${activeTextStyle}`}
+        >
           {song.is_explicit && <div className="explicit-flag">E</div>}
-          {artists}
-        </p>
+          <p>{artists}</p>
+        </span>
       </div>
-
-      <div className="flex-1 text-body-sm text-gray-600 group-hover:text-gray-700 font-normal">
-        {song.album_name}
+      <div
+        className={`flex-1 text-body-sm text-gray-600 font-normal ${activeTextStyle}`}
+      >
+        <p>{song.album_name}</p>
+        {/* {!checkIsActive() && (
+          <div className={`hidden group-hover:block`}>
+            <p className="text-gray-000 group-hover:text-gray-500 text-caption">
+              Click to View More
+            </p>
+          </div>
+        )} */}
       </div>
     </li>
   );

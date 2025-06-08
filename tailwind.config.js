@@ -52,6 +52,19 @@ export default {
         "gray-100": "#191919",
         "gray-000": "#0A0A0A",
       },
+      perspective: {
+        1000: "1000px",
+      },
     },
   },
+
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        ".perspective-1000": {
+          perspective: "1000px",
+        },
+      });
+    },
+  ],
 };

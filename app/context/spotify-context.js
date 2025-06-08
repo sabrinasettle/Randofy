@@ -38,9 +38,9 @@ export function SpotifyClientProvider({ children }) {
     const playlist = JSON.parse(localStorage.getItem("playlist"));
     const history = JSON.parse(localStorage.getItem("history"));
 
-    const [width, height] = useWindowDimensions();
+    // const [width, height] = useWindowDimensions();
 
-    setIsMobile(width <= 768);
+    // setIsMobile(width <= 768);
 
     if (auth) {
       setAuth(auth);

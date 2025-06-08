@@ -71,25 +71,16 @@ const getData = async (req, max) => {
     return rgbToHex(dominantColor);
   }
 
-  async function getAudioFeatures(id) {
-    const response = await fetch(image.url);
-    const buf = await response.arrayBuffer();
-    function organizeFeatures(rgbArray) {
-      return(
+  // async function getAudioFeatures(id) {
+  //   const response = await fetch(image.url);
+  //   const buf = await response.arrayBuffer();
+  //   function organizeFeatures(rgbArray) {
+  //     return(
 
-      )
-      // return (
-      //   "#" +
-      //   rgbArray
-      //     .map((value) => {
-      //       let hex = value.toString(16);
-      //       return hex.length === 1 ? "0" + hex : hex; // Ensure 2-digit hex values
-      //     })
-      //     .join("")
-      // );
-    }
-    return organizeFeatures(dominantColor);
-  }
+  //     )
+  //   }
+  //   return organizeFeatures(dominantColor);
+  // }
 
   // new regex(/^:+[a-zA-Z]*:)
   async function retry() {

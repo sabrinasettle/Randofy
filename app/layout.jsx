@@ -5,6 +5,8 @@ import {
   ibm_plex_mono,
 } from "./utils/fonts.js";
 import Nav from "./_components/layout/header/Header";
+import { SpotifyClientProvider } from "./context/spotify-context";
+import { SongViewProvider } from "./context/song-view-context";
 
 export const metadata = {
   title: "Randofy",
@@ -17,14 +19,18 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${hanken_grotesk} ${inclusive_sans} ${ibm_plex_mono}`}
     >
-      <body className="overscroll-none">
-        <div className="min-h-screen">
-          {/* AuthProvider */}
-          <Nav />
-          {children}
-        </div>
-        {/* Auth Provider */}
-      </body>
+      <SpotifyClientProvider>
+        <SongViewProvider>
+          <body className="overscroll-none">
+            <div className="min-h-screen">
+              {/* AuthProvider */}
+              <Nav />
+              {children}
+            </div>
+            {/* Auth Provider */}
+          </body>
+        </SongViewProvider>
+      </SpotifyClientProvider>
     </html>
   );
 }
