@@ -31,7 +31,7 @@ export default function SongCard({ song, index }) {
   const artists = createArtists(song);
 
   const activeStyle = checkIsActive()
-    ? "bg-gray-100 border-gray-700 hover:border-gray-700"
+    ? "md:bg-gray-100 md:border-gray-700 hover:border-gray-700"
     : "border-gray-100 hover:border-gray-200";
   const activeTextStyle = checkIsActive()
     ? "text-gray-700"

@@ -8,10 +8,8 @@ import AudioPlayer from "./AudioPlayer/AudioPlayer";
 import AudioFeatureDrawers from "./AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../context/song-view-context";
 import { usePathname } from "next/navigation";
-import Default from "./SongViews/Default.jsx";
-import History from "./SongViews/History.jsx";
 
-export default function SongView() {
+export default function History() {
   const { songViewContext } = useSongViewContext();
   const song = songViewContext.selectedSong.song;
   const isMobile = songViewContext.isMobile;
@@ -52,6 +50,14 @@ export default function SongView() {
     return isMobile || !isDefault;
   };
 
+  const mainDiv = isDefault
+    ? `border rounded-sm border-gray-200 backdrop-blur-sm`
+    : `relative w-full md:w-lg h-full bg-gray-000  transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)] ${
+        animateIn ? "translate-x-0" : "translate-x-full"
+      } top-0 right-0 md:static w-full h-full mb-2 md:mb-3 border border-transparent md:border-gray-200 md:rounded-sm z-50 backdrop-blur-sm
+`;
+
+  const imageBool = showImage();
   // Determine the view state
   const isFullScreenOverlay = !isDefault && isOpen; // Not default (other pages) + detailed = full-screen overlay
   const isContainedDrawer = isDefault && isOpen; // Default (home page) + detailed = contained in parent
@@ -59,10 +65,16 @@ export default function SongView() {
 
   // Animation effect - only for full-screen overlay
   useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+
+      // Ensure the drawer is rendered before transitioning
+      requestAnimationFrame(() => {
     if (isFullScreenOverlay) {
       if (isOpen) {
         setIsVisible(true);
         requestAnimationFrame(() => {
+          setAnimateIn(true);
           requestAnimationFrame(() => {
             setAnimateIn(true);
           });
@@ -161,7 +173,7 @@ export default function SongView() {
           </div>
         </div>
 
-        {imageBool && (
+
           <div
             className={`flex ${
               activeSection
@@ -197,13 +209,9 @@ export default function SongView() {
             </div>
             <AudioPlayer song={song} />
           </div>
-        )}
 
-        {!imageBool && (
-          <div>
-            <AudioPlayer song={song} />
-          </div>
-        )}
+
+
 
         {/* Song Info - Only shows when section is collapsed */}
         <div

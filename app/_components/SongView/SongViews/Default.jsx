@@ -8,10 +8,8 @@ import AudioPlayer from "./AudioPlayer/AudioPlayer";
 import AudioFeatureDrawers from "./AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../context/song-view-context";
 import { usePathname } from "next/navigation";
-import Default from "./SongViews/Default.jsx";
-import History from "./SongViews/History.jsx";
 
-export default function SongView() {
+export default function Default() {
   const { songViewContext } = useSongViewContext();
   const song = songViewContext.selectedSong.song;
   const isMobile = songViewContext.isMobile;
@@ -52,6 +50,13 @@ export default function SongView() {
     return isMobile || !isDefault;
   };
 
+  const mainDiv = isDefault
+    ? `border rounded-sm border-gray-200 backdrop-blur-sm`
+    : `relative w-full md:w-lg h-full bg-gray-000  transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)]
+        top-0 right-0 md:static w-full h-full mb-2 md:mb-3 border border-transparent md:border-gray-200 md:rounded-sm z-50 backdrop-blur-sm
+`;
+
+  const imageBool = showImage();
   // Determine the view state
   const isFullScreenOverlay = !isDefault && isOpen; // Not default (other pages) + detailed = full-screen overlay
   const isContainedDrawer = isDefault && isOpen; // Default (home page) + detailed = contained in parent
@@ -59,10 +64,16 @@ export default function SongView() {
 
   // Animation effect - only for full-screen overlay
   useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+
+      // Ensure the drawer is rendered before transitioning
+      requestAnimationFrame(() => {
     if (isFullScreenOverlay) {
       if (isOpen) {
         setIsVisible(true);
         requestAnimationFrame(() => {
+          setAnimateIn(true);
           requestAnimationFrame(() => {
             setAnimateIn(true);
           });
@@ -82,9 +93,6 @@ export default function SongView() {
   }, [isOpen, isFullScreenOverlay]);
 
   // Don't render full-screen overlay when not visible
-  if (isFullScreenOverlay && !isVisible) {
-    return null;
-  }
 
   const imageBool = showImage();
 
@@ -161,49 +169,13 @@ export default function SongView() {
           </div>
         </div>
 
-        {imageBool && (
-          <div
-            className={`flex ${
-              activeSection
-                ? "flex-row items-start gap-4"
-                : "flex-col items-center"
-            } w-full ${activeSection ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
-          >
-            {/* Album Image Wrapper */}
-            <div
-              className={`flex ${
-                activeSection ? "justify-start" : "justify-center items-center"
-              } transition-all duration-500`}
-              style={{
-                width: activeSection ? "88px" : "240px",
-                height: activeSection ? "88px" : "240px",
-                transition: "width 0.5s ease, height 0.5s ease",
-                overflow: "hidden",
-              }}
-            >
-              <Image
-                className="album-image"
-                src={song.album_image.url}
-                width={240}
-                height={240}
-                alt={alt}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  transition: "all 0.5s ease",
-                }}
-              />
-            </div>
-            <AudioPlayer song={song} />
-          </div>
-        )}
 
-        {!imageBool && (
+
+
           <div>
             <AudioPlayer song={song} />
           </div>
-        )}
+
 
         {/* Song Info - Only shows when section is collapsed */}
         <div
