@@ -6,7 +6,7 @@ import { useSongViewContext } from "../../context/song-view-context";
 import HistorySection from "./HistorySection";
 import HistoryFilters from "./filters/HistoryFilters";
 // import SongDrawer from "./SongDrawer";
-import SongView from "../SongView/SongView";
+import SongViewController from "../SongView/SongViewController";
 import CardLayoutOptions from "./filters/CardLayoutOptions";
 import {
   getThisWeek,
@@ -253,7 +253,7 @@ export default function HistoryContent() {
               {/* Your existing scrollable content */}
               <div
                 id="history-songlist-container"
-                className="mt-8 flex-1 overflow-y-auto"
+                className="mt-8 overflow-y-auto"
               >
                 <ul className="flex flex-col gap-24" id="history-songlist">
                   {Object.keys(filteredHistory)
@@ -275,13 +275,9 @@ export default function HistoryContent() {
               <button className="btn btn__overlay back-to-top">To Top</button>
             )} */}
 
-            {/* Your existing drawer */}
             {selectedSong && isDrawerOpen && (
-              <div
-                id="drawer"
-                className="md:w-96 md:static md:flex-shrink-0 transition-all duration-300"
-              >
-                <SongView />
+              <div id="drawer" className="">
+                <SongViewController />
               </div>
             )}
           </div>
