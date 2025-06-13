@@ -65,8 +65,12 @@ export default function SongViewController() {
 
   // Don't render full-screen overlay when not visible
 
-  // Determine container styles based on view state
-  // ${animateIn ? "translate-x-0" : "translate-x-full"}
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  // height: 100%;
+  // width: 100%;
+  // no border
   const getContainerStyles = () => {
     return {
       className:
@@ -93,8 +97,8 @@ export default function SongViewController() {
             </button>
           </div>
         )}
+        {isDefault ? <DefaultView /> : <HistoryView />}
       </div>
-      {isDefault ? <DefaultView /> : <HistoryView />}
     </div>
   );
 }

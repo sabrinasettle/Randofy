@@ -21,7 +21,6 @@ export default function HistoryContent() {
   // const { layoutContext } = useGridContext();
   const { songViewContext } = useSongViewContext();
   const isMobile = songViewContext.isMobile;
-  const isDefault = songViewContext.isDefault;
 
   const [historyFilter, setHistoryFilter] = useState("All");
   const [activeSection, setActiveSection] = useState(0);
@@ -220,7 +219,7 @@ export default function HistoryContent() {
             <div
               id="history-column"
               ref={scrollContainerRef}
-              className={`flex-1 flex flex-col transition-all duration-300 pt-3 md:pt-1 ${
+              className={`flex flex-col flex-1 ${isMobile && isDrawerOpen ? `w-full` : `w-4/6`} ${
                 isDrawerOpen ? "sm:mr-0 md:mr-4" : "mr-0"
               }`}
             >
@@ -276,7 +275,7 @@ export default function HistoryContent() {
             )} */}
 
             {selectedSong && isDrawerOpen && (
-              <div id="drawer" className="">
+              <div id="drawer" className="flex-1">
                 <SongViewController />
               </div>
             )}
