@@ -217,7 +217,7 @@ export default function HistoryContent() {
             <div
               id="history-column"
               ref={scrollContainerRef}
-              className={`flex flex-col flex-1 ${isMobile && isDrawerOpen ? `w-full` : `w-4/6`} ${
+              className={`flex flex-col flex-1 ${isMobile && isDrawerOpen ? `w-full` : `w-full`} ${
                 isDrawerOpen ? "sm:mr-0 md:mr-4" : "mr-0"
               }`}
             >
@@ -269,9 +269,12 @@ export default function HistoryContent() {
             </div>
 
             {selectedSong && isDrawerOpen && (
-              // <div id="drawer" className="flex-1">
-              <SongViewController />
-              // </div>
+              <div
+                id="drawer"
+                className={`${!isMobile && isDrawerOpen ? `md:w-96 xl:w-1/4 flex-shrink-0` : ``}`}
+              >
+                <SongViewController />
+              </div>
             )}
           </div>
         )}
