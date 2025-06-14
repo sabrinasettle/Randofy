@@ -6,14 +6,13 @@ import { useSongViewContext } from "../../context/song-view-context";
 import HistorySection from "./HistorySection";
 import HistoryFilters from "./filters/HistoryFilters";
 // import SongDrawer from "./SongDrawer";
-import SongView from "../SongView/SongView";
+import SongViewController from "../SongView/SongViewController";
 import CardLayoutOptions from "./filters/CardLayoutOptions";
 import {
   getThisWeek,
   getThisMonth,
   getPast6Months,
 } from "../../utils/getDates.js";
-import { ChevronUp } from "lucide-react";
 // import useWindowDimensions from "../../_hooks/useWindowDimensions";
 
 export default function HistoryContent() {
@@ -21,11 +20,11 @@ export default function HistoryContent() {
   // const { layoutContext } = useGridContext();
   const { songViewContext } = useSongViewContext();
   const isMobile = songViewContext.isMobile;
-  const isDefault = songViewContext.isDefault;
 
   const [historyFilter, setHistoryFilter] = useState("All");
   const [activeSection, setActiveSection] = useState(0);
   const [isAtTop, setIsAtTop] = useState(true);
+  const [isLoading, setIsloading] = useState(true);
 
   // const [sortFilter, setSortFilter] = useState("newest");
   let history = spotifyClient.generationHistory;
@@ -37,11 +36,6 @@ export default function HistoryContent() {
   const scrollContainerRef = useRef(null);
 
   console.log(history);
-
-  // Responsive code
-  // const { width, height } = useWindowDimensions();
-  // const isSmallScreen = width <= 628;
-  // const isMedScreen = width <= 1024;
 
   useEffect(() => {
     // history-songlist-container
@@ -209,7 +203,10 @@ export default function HistoryContent() {
 
   return (
     // h-screen
-    <div className="px-3 md:px-4 pb-2 h-[calc(100vh-72px)] flex flex-col">
+    <div
+      id="hisotry-content"
+      className="px-3 md:px-4 pb-2 h-[calc(100vh-71px)] flex flex-col"
+    >
       <section className="flex flex-row flex-1 md:overflow-hidden">
         {!history || isEmptyObject(history) ? (
           <div className="w-full flex justify-center items-center text-gray-700">
@@ -220,7 +217,7 @@ export default function HistoryContent() {
             <div
               id="history-column"
               ref={scrollContainerRef}
-              className={`flex-1 flex flex-col transition-all duration-300 pt-3 md:pt-1 ${
+              className={`flex flex-col flex-1 ${isMobile && isDrawerOpen ? `w-full` : `w-full`} ${
                 isDrawerOpen ? "sm:mr-0 md:mr-4" : "mr-0"
               }`}
             >
@@ -253,7 +250,7 @@ export default function HistoryContent() {
               {/* Your existing scrollable content */}
               <div
                 id="history-songlist-container"
-                className="mt-8 flex-1 overflow-y-auto"
+                className="mt-8 overflow-y-auto"
               >
                 <ul className="flex flex-col gap-24" id="history-songlist">
                   {Object.keys(filteredHistory)
@@ -271,21 +268,19 @@ export default function HistoryContent() {
               </div>
             </div>
 
-            {/* {!isAtTop && (
-              <button className="btn btn__overlay back-to-top">To Top</button>
-            )} */}
-
-            {/* Your existing drawer */}
             {selectedSong && isDrawerOpen && (
               <div
                 id="drawer"
-                className="md:w-96 md:static md:flex-shrink-0 transition-all duration-300"
+                className={`${!isMobile && isDrawerOpen ? `md:w-96 xl:w-1/4 flex-shrink-0` : ``}`}
               >
-                <SongView />
+                <SongViewController />
               </div>
             )}
           </div>
         )}
+        {/* {!isAtTop && (
+              <button className="btn btn__overlay back-to-top">To Top</button>
+            )} */}
       </section>
     </div>
   );

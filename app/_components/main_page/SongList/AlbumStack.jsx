@@ -13,7 +13,7 @@ export default function AlbumStack() {
   const albums = spotifyClient.currentSongs;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-white px-4 select-none">
+    <div className="flex flex-col items-center justify-center text-white px-4 select-none">
       {/* Counter */}
       <div className="mb-8 text-sm opacity-60 font-medium">
         {activeIndex + 1} / {albums.length}

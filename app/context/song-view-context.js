@@ -1,28 +1,25 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
-import useWindowDimensions from "../_hooks/useWindowDimensions";
+import { useIsMobile } from "../_hooks/useIsMobile";
 
 const SongViewContext = React.createContext(null);
 export default SongViewContext;
 
 export function SongViewProvider({ children }) {
-  const pathname = usePathname();
-  const [error, setError] = useState(null);
   const [selectedSong, setSelectedSong] = useState({});
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  // const [pageActive, setPageActive] = useState(null);
-  const [isMobile, setIsMobile] = useState(null);
   const [isDefault, setIsDefault] = useState(true);
   const [drawersOpen, setDrawersOpen] = useState(false);
-  const { width, height } = useWindowDimensions();
+  const [activeSection, setActiveSection] = useState(null);
 
   //setGenerationHistory = { key: song[]} where song is {title,...}
-
+  //
   useEffect(() => {
-    setIsMobile(width <= 768);
-  }, []);
+    console.log("drawersOpen changed to:", drawersOpen);
+  }, [drawersOpen]);
+
+  const isMobile = useIsMobile();
 
   function openDetails() {
     // setPageActive(page);
@@ -31,14 +28,18 @@ export function SongViewProvider({ children }) {
 
   function closeDetails() {
     setIsDetailsOpen(false);
+    setDrawersOpen(false);
   }
 
-  function markDrawerOpen() {
-    setDrawersOpen(!drawersOpen);
+  function handleDrawerOpen(string) {
+    setDrawersOpen(true);
+    setActiveSection(string);
   }
-  // const isTrackSelected = (track_name) => {
-  //   return track_name === selectedSong.song.track_name;
-  // };
+
+  function handleDrawerClosed() {
+    setDrawersOpen(false);
+    setActiveSection(null);
+  }
 
   const songViewContext = {
     setSelectedSong,
@@ -50,9 +51,12 @@ export function SongViewProvider({ children }) {
     setIsDetailsOpen,
     isDefault,
     setIsDefault,
-    markDrawerOpen,
+    setDrawersOpen,
+    handleDrawerOpen,
+    handleDrawerClosed,
     drawersOpen,
-    // isTrackSelected,
+    activeSection,
+    setActiveSection,
   };
 
   const context = {
@@ -73,19 +77,3 @@ export function useSongViewContext() {
   }
   return context;
 }
-
-// first attempt
-// const ContextProvider = (props) => {
-//     const [isLoading, setIsLoading] = useState(true);
-
-//     return (
-//         <Context.Provider value={{
-//                 isLoading,
-//                 // setIsLoading,
-//             }}>
-//             {props.children}
-//         </Context.Provider>
-//     );
-// };
-
-// export default ContextProvider;

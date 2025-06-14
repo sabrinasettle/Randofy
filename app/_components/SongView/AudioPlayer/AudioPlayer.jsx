@@ -20,8 +20,6 @@ export default function AudioPlayer({
   const isDefault = songViewContext.isDefault;
   const areDrawersOpen = songViewContext.drawersOpen;
 
-  console.log(song);
-
   // Reset currentTime and stop playing when song changes
   useEffect(() => {
     setCurrentTime(0);

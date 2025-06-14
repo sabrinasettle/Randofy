@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
       <SpotifyClientProvider>
         <SongViewProvider>
           <body className="overscroll-none">
-            <div className="min-h-screen">
+            <div className="h-screen">
               {/* AuthProvider */}
               <Nav />
               {children}

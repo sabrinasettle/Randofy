@@ -9,7 +9,9 @@ export default function GetSongsButton({ isSmall }) {
   return (
     <button
       id="__get_songs"
-      className={classString}
+      className={`w-full md:w-auto transition-all duration-700 ease-in-out ${
+        isSmall ? "text-sm" : "text-heading-5"
+      } ${classString}`}
       onClick={spotifyClient.getSongs}
     >
       Get Songs
