@@ -13,7 +13,6 @@ import {
   getThisMonth,
   getPast6Months,
 } from "../../utils/getDates.js";
-import { ChevronUp } from "lucide-react";
 // import useWindowDimensions from "../../_hooks/useWindowDimensions";
 
 export default function HistoryContent() {
@@ -25,6 +24,7 @@ export default function HistoryContent() {
   const [historyFilter, setHistoryFilter] = useState("All");
   const [activeSection, setActiveSection] = useState(0);
   const [isAtTop, setIsAtTop] = useState(true);
+  const [isLoading, setIsloading] = useState(true);
 
   // const [sortFilter, setSortFilter] = useState("newest");
   let history = spotifyClient.generationHistory;
@@ -36,11 +36,6 @@ export default function HistoryContent() {
   const scrollContainerRef = useRef(null);
 
   console.log(history);
-
-  // Responsive code
-  // const { width, height } = useWindowDimensions();
-  // const isSmallScreen = width <= 628;
-  // const isMedScreen = width <= 1024;
 
   useEffect(() => {
     // history-songlist-container
@@ -208,7 +203,10 @@ export default function HistoryContent() {
 
   return (
     // h-screen
-    <div className="px-3 md:px-4 pb-2 h-[calc(100vh-72px)] flex flex-col">
+    <div
+      id="hisotry-content"
+      className="px-3 md:px-4 pb-2 h-[calc(100vh-71px)] flex flex-col"
+    >
       <section className="flex flex-row flex-1 md:overflow-hidden">
         {!history || isEmptyObject(history) ? (
           <div className="w-full flex justify-center items-center text-gray-700">
@@ -270,17 +268,16 @@ export default function HistoryContent() {
               </div>
             </div>
 
-            {/* {!isAtTop && (
-              <button className="btn btn__overlay back-to-top">To Top</button>
-            )} */}
-
             {selectedSong && isDrawerOpen && (
-              <div id="drawer" className="flex-1">
-                <SongViewController />
-              </div>
+              // <div id="drawer" className="flex-1">
+              <SongViewController />
+              // </div>
             )}
           </div>
         )}
+        {/* {!isAtTop && (
+              <button className="btn btn__overlay back-to-top">To Top</button>
+            )} */}
       </section>
     </div>
   );

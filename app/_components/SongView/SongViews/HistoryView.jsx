@@ -11,9 +11,8 @@ import { useSongViewContext } from "../../../context/song-view-context";
 export default function HistoryView() {
   const { songViewContext } = useSongViewContext();
   const song = songViewContext.selectedSong.song;
-  const isMobile = songViewContext.isMobile;
-  // const isDefault = songViewContext.isDefault; // true = home page, false = other pages
-  const isOpen = songViewContext.isDetailsOpen; // true = detailed view, false = not detailed
+  const isOpen = songViewContext.drawersOpen;
+  const areDrawersOpen = songViewContext.drawersOpen;
 
   const [activeSection, setActiveSection] = useState(null);
   // const [isVisible, setIsVisible] = useState(false);
@@ -63,17 +62,19 @@ export default function HistoryView() {
 
       <div
         className={`flex ${
-          activeSection ? "flex-row items-start gap-4" : "flex-col items-center"
-        } w-full ${activeSection ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
+          areDrawersOpen
+            ? "flex-row items-start gap-4"
+            : "flex-col items-center"
+        } w-full ${areDrawersOpen ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
       >
         {/* Album Image Wrapper */}
         <div
           className={`flex ${
-            activeSection ? "justify-start" : "justify-center items-center"
+            areDrawersOpen ? "justify-start" : "justify-center items-center"
           } transition-all duration-500`}
           style={{
-            width: activeSection ? "88px" : "240px",
-            height: activeSection ? "88px" : "240px",
+            width: areDrawersOpen ? "88px" : "240px",
+            height: areDrawersOpen ? "88px" : "240px",
             transition: "width 0.5s ease, height 0.5s ease",
             overflow: "hidden",
           }}
@@ -97,7 +98,7 @@ export default function HistoryView() {
 
       {/* Song Info - Only shows when section is collapsed */}
       <div
-        className={`${activeSection ? "hidden" : "block"} space-y-2 transition-all duration-500 ease-in-out`}
+        className={`${areDrawersOpen ? "hidden" : "block"} space-y-2 transition-all duration-500 ease-in-out`}
         id="information-container"
       >
         <div className="justify-start flex flex-col">
@@ -138,13 +139,11 @@ export default function HistoryView() {
       <div className="flex-1"></div>
 
       {/* AudioFeatureDrawers - only show in detailed views */}
-      {isOpen && (
-        <AudioFeatureDrawers
-          song={song}
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-        />
-      )}
+      <AudioFeatureDrawers
+        song={song}
+        activeSection={songViewContext.activeSection}
+        setActiveSection={songViewContext.setActiveSection}
+      />
     </>
   );
 }

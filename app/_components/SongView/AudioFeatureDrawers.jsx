@@ -129,11 +129,11 @@ export default function AudioFeatureDrawers({
         <button
           onClick={() => {
             if (activeSection === "genres") {
-              setActiveSection(null);
-              songViewContext.markDrawerOpen();
+              // setActiveSection(null);
+              songViewContext.handleDrawerClosed(); // ✅ Closing section
             } else {
-              setActiveSection("genres");
-              songViewContext.markDrawerOpen();
+              // setActiveSection("genres");
+              songViewContext.handleDrawerOpen("genres"); // ✅ Opening section
             }
           }}
           className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
@@ -176,11 +176,11 @@ export default function AudioFeatureDrawers({
         <button
           onClick={() => {
             if (activeSection === "details") {
-              setActiveSection(null);
-              songViewContext.markDrawerOpen();
+              // setActiveSection(null);
+              songViewContext.handleDrawerClosed(); // ✅ Closing section
             } else {
-              setActiveSection("details");
-              songViewContext.markDrawerOpen();
+              // setActiveSection("details");
+              songViewContext.handleDrawerOpen("details"); // ✅ Opening section
             }
           }}
           className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"

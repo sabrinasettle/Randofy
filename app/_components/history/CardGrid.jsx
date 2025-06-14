@@ -28,7 +28,7 @@ export default function CardGrid({ songs }) {
           song={song}
           index={index}
           scrollTo
-          key={`song ` + `${song.track_name}`}
+          key={`song ` + `${song.track_name} + ${index}`}
         />
       ))}
     </ul>
