@@ -1,11 +1,6 @@
-import { useState, useEffect } from "react";
-// import Image from "next/image";
+import { useEffect } from "react";
 import { X } from "lucide-react";
 import { useAccessibleAlpha } from "../../_hooks/useAccessibleAlpha.js";
-// import { createArtists } from "../../utils/createArtists.js";
-// import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
-// import AudioPlayer from "./AudioPlayer/AudioPlayer.jsx";
-// import AudioFeatureDrawers from "./AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../context/song-view-context.js";
 import { usePathname } from "next/navigation";
 import DefaultView from "./SongViews/DefaultView.jsx";
