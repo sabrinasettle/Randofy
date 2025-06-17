@@ -17,8 +17,8 @@ export default function SongViewController() {
   if (pathname !== "/") songViewContext.setIsDefault(false);
   else songViewContext.setIsDefault(true);
 
-  if (!song.track_name) {
-    return <div id="song-drawer__inactive"></div>;
+  if (!song) {
+    return <div id="song-drawer__inactive">No Song Available</div>;
   }
 
   const handleClose = () => {

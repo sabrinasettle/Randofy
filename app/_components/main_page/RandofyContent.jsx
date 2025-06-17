@@ -1,14 +1,16 @@
 "use client";
 import { useState } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
-import Loading from "../layout/Loading";
+// import Loading from "../layout/Loading";
 // import DoubleEndedSlider from "../ui/DoubleEndedSlider";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
-import GetSongsButton from "./GetSongsButton";
+// import GetSongsButton from "./GetSongsButton";
 import AlbumStack from "./SongList/AlbumStack";
+import AlbumCarousel from "./SongList/AlbumCarousel";
 import LoadingBall from "../ui/loading/LoadingBall";
 import ButtonsContainer from "./ButtonsContainer";
 
+<<<<<<< HEAD
 // Have a cancel button that abandons the search?? if isLoading
 const GenerateButton = ({ spotifyClient, isSmall }) => {
   return (
@@ -37,6 +39,8 @@ const FilterButton = ({ handleOpen, isSmall }) => {
   );
 };
 
+=======
+>>>>>>> fbb34e8 (feat(AlbumCarousel): created and tweaking)
 export default function RandofyContent() {
   const { spotifyClient } = useSpotifyContext();
   const [filtersOpen, setFilterOpen] = useState(false);
@@ -47,11 +51,17 @@ export default function RandofyContent() {
   function showItem() {
     if (spotifyClient.isLoading)
       return (
-        <div className="w-full">
+        <div className="w-full flex justify-center items-center">
           <LoadingBall isLoading={spotifyClient.isLoading} />
         </div>
       );
-    else if (spotifyClient.currentSongs.length !== 0) return <AlbumStack />;
+    else if (spotifyClient.currentSongs.length !== 0)
+      return (
+        <div className="w-full flex justify-center items-center">
+          {/* <LoadingBall isLoading={true} /> */}
+          <AlbumCarousel songs={spotifyClient.currentSongs} />
+        </div>
+      );
     return null; // Return null when no content to show
   }
 
@@ -66,20 +76,20 @@ export default function RandofyContent() {
 
       {/* Default state - centered text */}
       {!hasContent && (
-        <div className="flex-1 flex flex-col items-center justify-center max-w-[600px] px-4">
-          <h1 className="font-display text-display-1 text-gray-700 pb-16 text-center">
+        <div className="flex flex-col items-center justify-center max-w-[600px] px-4 h-min">
+          <h1 className="text-display-1 text-gray-700 pb-16 text-center">
             5 totally random songs from Spotify
           </h1>
           {/* Spacer for buttons on larger screens */}
-          <div className="hidden md:block h-16"></div>
+          {/* <div className="hidden md:block h-16"></div> */}
         </div>
       )}
 
       {/* Content Container - shows when loading or has songs */}
       {hasContent && (
         <div
-          className={`w-full transition-all duration-700 ease-in-out opacity-100 ${
-            hasContent ? "flex-1 md:mt-20" : ""
+          className={`h-full w-full flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-2 ${
+            hasContent ? "md:mt-1" : ""
           }`}
           id="content-container"
         >
