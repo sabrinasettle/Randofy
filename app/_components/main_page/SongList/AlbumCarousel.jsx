@@ -30,8 +30,8 @@ export default function AlbumCarousel({ songs }) {
     const loader = new THREE.TextureLoader();
     const planes = [];
 
-    const spacing = 2.8;
-    const angle = -0.5;
+    const spacing = 2.2;
+    const angle = -0.9;
 
     songs.forEach((song) => {
       const texture = loader.load(song.album_image.url);
