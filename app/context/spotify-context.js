@@ -11,7 +11,7 @@ export function SpotifyClientProvider({ children }) {
   const [playlist, setPlaylist] = useState(null);
   const [songIds, setSongIds] = useState(null);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({}); //set default filters here
+  // const [filters, setFilters] = useState({}); //set default filters here
   const [currentSongs, setCurrentSongs] = useState([]);
   const [selectedSong, setSelectedSong] = useState({});
   const [pageActive, setPageActive] = useState(null);
@@ -19,28 +19,49 @@ export function SpotifyClientProvider({ children }) {
   const [generationHistory, setGenerationHistory] = useState({});
   const [isMobile, setIsMobile] = useState();
 
+  // Filters
+  const [songLimit, setSongLimit] = useState(5);
+  const [songDetails, setSongDetails] = useState({
+    popularity: { min: 0, max: 100 },
+    acoustics: { min: 0.0, max: 1.0 },
+    energy: { min: 0.0, max: 1.0 },
+    vocals: { min: 0.0, max: 1.0 },
+    danceability: { min: 0.0, max: 1.0 },
+    mood: { min: 0.0, max: 1.0 },
+  });
+  const [genres, setGenres] = useState(new Set());
+
   //setGenerationHistory = { key: song[]} where song is {title,...}
 
-  let defaultFilters = {
+  // let defaultFilters = {
+  //   numberOfSongs: 5,
+  //   popularity: [0, 100],
+  //   acousticness: [0.0, 1.0], //float range from 0.0 to 1.0
+  //   danceability: [0.0, 1.0], //float range from 0.0 to 1.0
+  //   energy: [0.0, 1.0], //float range from 0.0 to 1.0
+  //   tempo: [0.0, 1.0], //float range from 0.0 to 1.0
+  //   valence: [0.0, 1.0], //float range from 0.0 to 1.0
+  //   market: "",
+  // };
+
+  const [filters, setFilters] = useState({
     numberOfSongs: 5,
-    popularity: [0, 100],
-    acousticness: [0.0, 1.0], //float range from 0.0 to 1.0
-    danceability: [0.0, 1.0], //float range from 0.0 to 1.0
-    energy: [0.0, 1.0], //float range from 0.0 to 1.0
-    tempo: [0.0, 1.0], //float range from 0.0 to 1.0
-    valence: [0.0, 1.0], //float range from 0.0 to 1.0
-    market: "",
-  };
+    details: {
+      popularity: { min: 0, max: 100 },
+      acoustics: { min: 0.0, max: 1.0 },
+      energy: { min: 0.0, max: 1.0 },
+      vocals: { min: 0.0, max: 1.0 },
+      danceability: { min: 0.0, max: 1.0 },
+      mood: { min: 0.0, max: 1.0 },
+    },
+    genres: [],
+  });
 
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const spotifyUser = JSON.parse(localStorage.getItem("spotifyUser"));
     const playlist = JSON.parse(localStorage.getItem("playlist"));
     const history = JSON.parse(localStorage.getItem("history"));
-
-    // const [width, height] = useWindowDimensions();
-
-    // setIsMobile(width <= 768);
 
     if (auth) {
       setAuth(auth);
@@ -305,7 +326,6 @@ export function SpotifyClientProvider({ children }) {
 
   const spotifyClient = {
     getPlaylist,
-    setFilters,
     getSongs,
     currentSongs,
     setCurrentSongs,
@@ -314,6 +334,16 @@ export function SpotifyClientProvider({ children }) {
     selectedSong,
     generationHistory,
     isMobile,
+    //first filters attempt
+    filters,
+    setFilters,
+    // Filters
+    songLimit,
+    setSongLimit,
+    songDetails,
+    setSongDetails,
+    genres,
+    setGenres,
   };
 
   const context = {

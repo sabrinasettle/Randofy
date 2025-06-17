@@ -54,6 +54,8 @@ export default function FilterDrawer({ isOpen, onClose }) {
   });
 
   const { spotifyClient } = useSpotifyContext();
+  const { filters } = spotifyClient;
+  const { details, numberOfSongs, genres } = filters;
 
   // Remove functions for TagList
   const removeGenre = (genre) => {
@@ -65,10 +67,22 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const removeSongDetailFilter = (filterName) => {
-    setSongDetailsFilters((prev) => ({
-      ...prev,
-      [filterName]: { min: 0.0, max: 1.0 },
-    }));
+    // add filters
+    spotifyClient.setFilters((prev) => {
+      const newFilter = prev;
+      if (filterName.includes("popularity")) {
+        newFilter.details = {
+          ...prev.details,
+          [filterName]: { min: 0, max: 100 },
+        };
+      } else {
+        newFilter.details = {
+          ...prev.details,
+          [filterName]: { min: 0.0, max: 1.0 },
+        };
+      }
+      return newFilter;
+    });
   };
 
   useEffect(() => {

@@ -75,6 +75,8 @@ const getData = (req, max, callback) => {
   }
   doit();
 };
+
+// error in Vercel HERE
 export const config = {
   api: {
     externalResolver: true,
