@@ -43,23 +43,24 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const [animateIn, setAnimateIn] = useState(false);
 
   // Filter states
-  const [selectedGenres, setSelectedGenres] = useState(new Set());
-  const [songDetailsFilters, setSongDetailsFilters] = useState({
-    popularity: { min: 0.0, max: 1.0 },
-    acoustics: { min: 0.0, max: 1.0 },
-    energy: { min: 0.0, max: 1.0 },
-    vocals: { min: 0.0, max: 1.0 },
-    danceability: { min: 0.0, max: 1.0 },
-    mood: { min: 0.0, max: 1.0 },
-  });
+  // const [selectedGenres, setSelectedGenres] = useState(new Set());
+
+  // const [songDetailsFilters, setSongDetailsFilters] = useState({
+  //   popularity: { min: 0.0, max: 1.0 },
+  //   acoustics: { min: 0.0, max: 1.0 },
+  //   energy: { min: 0.0, max: 1.0 },
+  //   vocals: { min: 0.0, max: 1.0 },
+  //   danceability: { min: 0.0, max: 1.0 },
+  //   mood: { min: 0.0, max: 1.0 },
+  // });
 
   const { spotifyClient } = useSpotifyContext();
-  const { filters } = spotifyClient;
-  const { details, numberOfSongs, genres } = filters;
+  const songDetailsFilters = spotifyClient.songDetails;
+  const selectedGenres = spotifyClient.genres;
 
   // Remove functions for TagList
   const removeGenre = (genre) => {
-    setSelectedGenres((prev) => {
+    spotifyClient.setGenres((prev) => {
       const newSet = new Set(prev);
       newSet.delete(genre);
       return newSet;
@@ -67,22 +68,11 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const removeSongDetailFilter = (filterName) => {
-    // add filters
-    spotifyClient.setFilters((prev) => {
-      const newFilter = prev;
-      if (filterName.includes("popularity")) {
-        newFilter.details = {
-          ...prev.details,
-          [filterName]: { min: 0, max: 100 },
-        };
-      } else {
-        newFilter.details = {
-          ...prev.details,
-          [filterName]: { min: 0.0, max: 1.0 },
-        };
-      }
-      return newFilter;
-    });
+    spotifyClient.setSongDetails((prev) => ({
+      // add the if statement back for logicing the popularity value
+      ...prev,
+      [filterName]: { min: 0.0, max: 1.0 },
+    }));
   };
 
   useEffect(() => {
@@ -128,11 +118,11 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const clearFilters = () => {
     switch (activePanel) {
       case "genres":
-        setSelectedGenres(new Set());
+        spotifyClient.setGenres(new Set());
         break;
       case "songDetails":
-        setSongDetailsFilters({
-          popularity: { min: 0.0, max: 1.0 },
+        spotifyClient.setSongDetails({
+          popularity: { min: 0, max: 100 },
           acoustics: { min: 0.0, max: 1.0 },
           energy: { min: 0.0, max: 1.0 },
           vocals: { min: 0.0, max: 1.0 },
@@ -143,9 +133,9 @@ export default function FilterDrawer({ isOpen, onClose }) {
       case "main":
       default:
         // Clear all filters
-        setSelectedGenres(new Set());
-        setSongDetailsFilters({
-          popularity: { min: 0.0, max: 1.0 },
+        spotifyClient.setGenres(new Set());
+        spotifyClient.setSongDetails({
+          popularity: { min: 0, max: 100 },
           acoustics: { min: 0.0, max: 1.0 },
           energy: { min: 0.0, max: 1.0 },
           vocals: { min: 0.0, max: 1.0 },
@@ -158,7 +148,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const handleSongDetailsFilterChange = (filterName, range) => {
-    setSongDetailsFilters((prev) => ({
+    spotifyClient.setSongDetails((prev) => ({
       ...prev,
       [filterName]: range,
     }));
@@ -166,7 +156,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   const changedSongDetailsCount = useMemo(() => {
     const defaultFilters = {
-      popularity: { min: 0.0, max: 1.0 },
+      popularity: { min: 0, max: 100 },
       acoustics: { min: 0.0, max: 1.0 },
       energy: { min: 0.0, max: 1.0 },
       vocals: { min: 0.0, max: 1.0 },
@@ -186,7 +176,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   // Get changed song detail filters for TagList
   const changedSongDetailFilters = useMemo(() => {
     const defaultFilters = {
-      popularity: { min: 0.0, max: 1.0 },
+      popularity: { min: 0, max: 100 },
       acoustics: { min: 0.0, max: 1.0 },
       energy: { min: 0.0, max: 1.0 },
       vocals: { min: 0.0, max: 1.0 },

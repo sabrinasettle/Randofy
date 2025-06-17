@@ -75,7 +75,7 @@ export function SpotifyClientProvider({ children }) {
     if (history) {
       setGenerationHistory(history);
     }
-    setFilters(defaultFilters);
+    // setFilters(defaultFilters);
 
     const params = new URLSearchParams(window.location.search.substring(1));
     const code = params.get("code");
