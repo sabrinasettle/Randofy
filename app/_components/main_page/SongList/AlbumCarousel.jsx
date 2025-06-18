@@ -22,20 +22,18 @@ export default function AlbumCarousel({ songs }) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     mountRef.current.appendChild(renderer.domElement);
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
 
-    // Load textures & planes
     const loader = new THREE.TextureLoader();
     const planes = [];
 
-    const spacing = 2.2;
-    const angle = -0.9;
+    const spacing = 1.2;
+    const maxAngle = 1;
 
     songs.forEach((song) => {
       const texture = loader.load(song.album_image.url);
-      const geometry = new THREE.PlaneGeometry(2, 2); // square
+      const geometry = new THREE.PlaneGeometry(2, 2);
       const material = new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.DoubleSide,
@@ -45,12 +43,30 @@ export default function AlbumCarousel({ songs }) {
       planes.push(plane);
     });
 
-    // Interaction
     let scrollIndex = 0;
     let targetIndex = 0;
     let isDragging = false;
     let startX = 0;
     let dragOffset = 0;
+
+    let wheelAccum = 0;
+    const wheelThreshold = 18;
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      const delta = e.deltaY + e.deltaX * 0.4;
+      wheelAccum += delta;
+
+      if (wheelAccum > wheelThreshold) {
+        targetIndex += 1;
+        wheelAccum = 0;
+      } else if (wheelAccum < -wheelThreshold) {
+        targetIndex -= 1;
+        wheelAccum = 0;
+      }
+
+      targetIndex = Math.max(0, Math.min(songs.length - 1, targetIndex));
+    };
 
     const onPointerDown = (e) => {
       isDragging = true;
@@ -64,7 +80,6 @@ export default function AlbumCarousel({ songs }) {
       dragOffset += delta;
       startX = x;
 
-      // Do not allow dragging beyond ends
       const proposed = targetIndex + dragOffset;
       if (proposed < 0) dragOffset = -targetIndex;
       if (proposed > songs.length - 1)
@@ -74,25 +89,8 @@ export default function AlbumCarousel({ songs }) {
     const onPointerUp = () => {
       if (!isDragging) return;
       isDragging = false;
-      // Snap targetIndex to nearest slot:
       targetIndex = Math.round(targetIndex + dragOffset);
       dragOffset = 0;
-    };
-
-    const onWheel = (e) => {
-      e.preventDefault();
-      // Use deltaX or deltaY, normalize it to steps:
-      let delta = e.deltaY || e.deltaX;
-
-      // Use threshold so tiny flicks don’t jump:
-      if (delta > 10) {
-        targetIndex += 1;
-      } else if (delta < -10) {
-        targetIndex -= 1;
-      }
-
-      // Clamp to bounds:
-      targetIndex = Math.max(0, Math.min(songs.length - 1, targetIndex));
     };
 
     renderer.domElement.addEventListener("mousedown", onPointerDown);
@@ -104,9 +102,8 @@ export default function AlbumCarousel({ songs }) {
     renderer.domElement.addEventListener("touchmove", onPointerMove);
     renderer.domElement.addEventListener("touchend", onPointerUp);
 
-    renderer.domElement.addEventListener("wheel", onWheel);
+    renderer.domElement.addEventListener("wheel", onWheel, { passive: false });
 
-    // Resize
     const onResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -114,8 +111,7 @@ export default function AlbumCarousel({ songs }) {
     };
     window.addEventListener("resize", onResize);
 
-    // Animate
-    const speed = 1.3; // was 0.1 → slower for smoother snap
+    const speed = 0.07;
 
     const animate = () => {
       requestAnimationFrame(animate);
@@ -126,7 +122,11 @@ export default function AlbumCarousel({ songs }) {
       planes.forEach((plane, i) => {
         const offset = i - scrollIndex;
         plane.position.x = offset * spacing;
-        plane.rotation.y = offset * angle;
+
+        // Smooth angle interpolation:
+        const sign = offset < 0 ? 1 : -1;
+        const t = THREE.MathUtils.clamp(Math.abs(offset), 0, 1);
+        plane.rotation.y = THREE.MathUtils.lerp(0, sign * maxAngle, t);
       });
 
       renderer.render(scene, camera);
