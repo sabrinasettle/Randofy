@@ -58,7 +58,11 @@ export default function RandofyContent() {
   return (
     <div className="flex h-full w-full flex-col items-center relative overflow-hidden">
       {/* Buttons Container - responsive behavior */}
-      <ButtonsContainer hasContent={hasContent} />
+      <ButtonsContainer
+        hasContent={hasContent}
+        filtersOpen={filtersOpen}
+        setFilterOpen={setFilterOpen}
+      />
 
       {/* Default state - centered text */}
       {!hasContent && (

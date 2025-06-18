@@ -38,7 +38,7 @@ function TagList({ items, onRemove, className = "" }) {
 
 export default function FilterDrawer({ isOpen, onClose }) {
   const [activePanel, setActivePanel] = useState("main");
-  const [sliderValue, setSliderValue] = useState(5);
+  // const [sliderValue, setSliderValue] = useState(5);
   const [isVisible, setIsVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
 
@@ -57,6 +57,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const { spotifyClient } = useSpotifyContext();
   const songDetailsFilters = spotifyClient.songDetails;
   const selectedGenres = spotifyClient.genres;
+  const sliderValue = spotifyClient.songLimit;
 
   // Remove functions for TagList
   const removeGenre = (genre) => {
@@ -98,7 +99,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   }, [isOpen]);
 
   const handleSliderChange = (e) => {
-    setSliderValue(parseInt(e.target.value));
+    spotifyClient.setSongLimit(parseInt(e.target.value));
     // update the filters through spotifyClient
   };
 
@@ -142,7 +143,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
           danceability: { min: 0.0, max: 1.0 },
           mood: { min: 0.0, max: 1.0 },
         });
-        setSliderValue(5);
+        spotifyClient.setSongLimit(5);
         break;
     }
   };
@@ -350,7 +351,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
       <GenresSection
         navigateBack={navigateBack}
         selectedGenres={selectedGenres}
-        setSelectedGenres={setSelectedGenres}
       />
     </div>
   );
