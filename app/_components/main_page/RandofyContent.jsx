@@ -7,6 +7,7 @@ import FilterDrawer from "./FilterDrawer/FilterDrawer";
 // import GetSongsButton from "./GetSongsButton";
 import AlbumStack from "./SongList/AlbumStack";
 import AlbumCarousel from "./SongList/AlbumCarousel";
+import SongListController from "./SongList/SongListController";
 import LoadingBall from "../ui/loading/LoadingBall";
 import ButtonsContainer from "./ButtonsContainer";
 
@@ -59,7 +60,11 @@ export default function RandofyContent() {
       return (
         <div className="w-full flex justify-center items-center">
           {/* <LoadingBall isLoading={true} /> */}
-          <AlbumCarousel songs={spotifyClient.currentSongs} />
+          {/* <AlbumCarousel songs={spotifyClient.currentSongs} /> */}
+          <SongListController
+            songs={spotifyClient.currentSongs}
+            len={spotifyClient.currentSongs.length}
+          />
         </div>
       );
     return null; // Return null when no content to show
