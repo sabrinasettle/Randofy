@@ -31,7 +31,7 @@ export default function AlbumCarousel({ songs }) {
     const planes = [];
 
     const baseSpacing = 0.9; // tight stack
-    const extraGap = isMobile ? 0.8 : 1.4; // extra space around active
+    const extraGap = isMobile ? 0.8 : 1.4;
     const halfGap = extraGap / 2;
     const maxAngle = 1.5;
     const planeSize = isMobile ? 1.3 : 2;
@@ -99,6 +99,28 @@ export default function AlbumCarousel({ songs }) {
       dragOffset = 0;
     };
 
+    // === Raycaster for click ===
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    const onClick = (e) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(planes);
+
+      if (intersects.length > 0) {
+        const clickedPlane = intersects[0].object;
+        const clickedIndex = planes.indexOf(clickedPlane);
+        if (clickedIndex !== -1) {
+          targetIndex = clickedIndex;
+        }
+      }
+    };
+
+    // === Events ===
     renderer.domElement.addEventListener("mousedown", onPointerDown);
     renderer.domElement.addEventListener("mousemove", onPointerMove);
     renderer.domElement.addEventListener("mouseup", onPointerUp);
@@ -109,6 +131,7 @@ export default function AlbumCarousel({ songs }) {
     renderer.domElement.addEventListener("touchend", onPointerUp);
 
     renderer.domElement.addEventListener("wheel", onWheel, { passive: false });
+    renderer.domElement.addEventListener("click", onClick);
 
     const onResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -125,21 +148,18 @@ export default function AlbumCarousel({ songs }) {
       const desiredIndex = targetIndex + dragOffset;
       scrollIndex += (desiredIndex - scrollIndex) * speed;
 
-      // Fractional active index for smooth blend
       const floorIndex = Math.floor(scrollIndex);
       const blend = scrollIndex - floorIndex;
 
       planes.forEach((plane, i) => {
         let pos = i * baseSpacing;
 
-        // Smooth split: left of floorIndex shifts left, right of ceil shifts right
         if (i < floorIndex) {
           pos -= halfGap;
         } else if (i > floorIndex + 1) {
           pos += halfGap;
         }
 
-        // For planes at floor and floor+1: blend smoothly
         if (i === floorIndex) {
           pos -= halfGap * blend;
         } else if (i === floorIndex + 1) {
@@ -148,7 +168,6 @@ export default function AlbumCarousel({ songs }) {
 
         plane.position.x = pos - scrollIndex * baseSpacing;
 
-        // Rotation
         const offset = i - scrollIndex;
         const sign = offset < 0 ? 1 : -1;
         const t = THREE.MathUtils.clamp(Math.abs(offset), 0, 1);
