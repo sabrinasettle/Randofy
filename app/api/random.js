@@ -76,12 +76,12 @@ const getData = (req, max, callback) => {
   doit();
 };
 
-// error in Vercel HERE
-export const config = {
-  api: {
-    externalResolver: true,
-  },
-};
+// // error in Vercel HERE
+// export const config = {
+//   api: {
+//     externalResolver: true,
+//   },
+// };
 
 /* GET random song object https://.../random */
 export default function GET(req, res) {
