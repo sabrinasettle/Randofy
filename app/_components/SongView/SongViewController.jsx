@@ -18,7 +18,11 @@ export default function SongViewController() {
   else songViewContext.setIsDefault(true);
 
   if (!song) {
-    return <div id="song-drawer__inactive">No Song Available</div>;
+    return (
+      <div id="song-drawer__inactive" className="text-gray-700">
+        No Song Available
+      </div>
+    );
   }
 
   const handleClose = () => {

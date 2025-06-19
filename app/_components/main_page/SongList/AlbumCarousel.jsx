@@ -166,6 +166,10 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
         lastReportedIndex = currentIndex;
         if (onIndexChange) {
           onIndexChange(currentIndex);
+          songViewContext.setSelectedSong({
+            index: currentIndex,
+            song: songs[currentIndex],
+          });
         }
       }
 

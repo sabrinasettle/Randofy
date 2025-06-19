@@ -6,24 +6,26 @@ import { useSpotifyContext } from "../../../context/spotify-context";
 
 export default function SongListController({ songs, len }) {
   const { spotifyClient } = useSpotifyContext;
-  const { songView } = useSongViewContext();
+  const { songViewContext } = useSongViewContext();
   const [currentIndex, setCurrentIndex] = useState(0);
+  songViewContext.setSelectedSong({
+    index: currentIndex,
+    song: songs[currentIndex],
+  });
   // const songs = spotifyClient.currentSongs;
 
   return (
     <div className="flex flex-col items-center">
       {/* Index number */}
-      <div className="text-white text-xl font-bold mb-2">
+      <div className="text-white text-body-md font-normal mb-2">
         {currentIndex + 1} / {songs.length}
       </div>
 
-      {/* Carousel container with a tight height */}
-      {/* <div className="w-full h-[70vh] relative"> */}
       <AlbumCarousel
         songs={songs}
         onIndexChange={setCurrentIndex} // Make sure AlbumCarousel calls this
       />
-      {/* </div> */}
+      <SongViewController />
     </div>
   );
 }

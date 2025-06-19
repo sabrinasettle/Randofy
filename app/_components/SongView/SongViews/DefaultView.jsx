@@ -53,34 +53,35 @@ export default function DefaultView() {
 
   // Determine container styles based on view state
   const getContainerStyles = () => {
-    if (isFullScreenOverlay) {
-      // Full-screen overlay with slide animation (other pages)
-      return {
-        className: `fixed inset-0 z-50 w-full h-full backdrop-blur-sm transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          animateIn ? "translate-x-0" : "translate-x-full"
-        }`,
-        style: {
-          backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-        },
-      };
-    } else if (isContainedDrawer) {
-      // Contained within parent drawer (home page, detailed)
-      return {
-        className:
-          "w-full h-full border border-gray-200 rounded-sm backdrop-blur-sm",
-        style: {
-          backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-        },
-      };
-    } else {
-      // Minimal view (home page, not detailed)
-      return {
-        className: "w-full border border-gray-200 rounded-sm backdrop-blur-sm",
-        style: {
-          backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-        },
-      };
-    }
+    // if (isFullScreenOverlay) {
+    //   // Full-screen overlay with slide animation (other pages)
+    //   return {
+    //     className: `fixed inset-0 z-50 w-full h-full backdrop-blur-sm transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+    //       animateIn ? "translate-x-0" : "translate-x-full"
+    //     }`,
+    //     style: {
+    //       backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
+    //     },
+    //   };
+    // } else if (isContainedDrawer) {
+    //   // Contained within parent drawer (home page, detailed)
+    //   return {
+    //     className:
+    //       "w-full h-full border border-gray-200 rounded-sm backdrop-blur-sm",
+    //     style: {
+    //       backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
+    //     },
+    //   };
+    // } else {
+    //   // Minimal view (home page, not detailed)
+    return {
+      className:
+        "w-full lg:min-w-[564px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
+      style: {
+        backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
+      },
+    };
+    // }
   };
 
   const containerStyles = getContainerStyles();
@@ -116,7 +117,7 @@ export default function DefaultView() {
       </div>
 
       {/* Song Info - Only shows when section is collapsed */}
-      <div
+      {/* <div
         className={`${activeSection ? "hidden" : "block"} space-y-2 transition-all duration-500 ease-in-out`}
         id="information-container"
       >
@@ -155,7 +156,7 @@ export default function DefaultView() {
         </div>
       </div>
 
-      <div className="flex-1"></div>
+      <div className="flex-1"></div> */}
 
       {/* AudioFeatureDrawers - only show in detailed views */}
       {isOpen && (
