@@ -32,8 +32,8 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
     // const baseSpacing = 0.9; // tight stack
     const planeSize = isMobile ? 1.3 : 2.8;
-    const unActivePlaneSize = isMobile ? 1.2 : 2.6;
-    const baseSpacing = planeSize * 0.4; // proportional spacing to prevent overlap
+    const unActivePlaneSize = isMobile ? 1.2 : 2.4;
+    const baseSpacing = planeSize * 0.3; // proportional spacing to prevent overlap
     const extraGap = isMobile ? 1 : 2;
     const halfGap = extraGap / 2;
     const maxAngle = 1.5;
