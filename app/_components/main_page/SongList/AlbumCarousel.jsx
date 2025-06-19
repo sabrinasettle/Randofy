@@ -2,9 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { useSongViewContext } from "../../../context/song-view-context";
 
 export default function AlbumCarousel({ songs }) {
   const mountRef = useRef(null);
+  const { songViewContext } = useSongViewContext();
+  const isMobile = songViewContext.isMobile;
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -22,21 +25,24 @@ export default function AlbumCarousel({ songs }) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     mountRef.current.appendChild(renderer.domElement);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    scene.add(ambientLight);
+    scene.add(new THREE.AmbientLight(0xffffff, 1));
 
     const loader = new THREE.TextureLoader();
     const planes = [];
 
-    const spacing = 1.2;
-    const maxAngle = 1;
+    const baseSpacing = 0.9; // tight stack
+    const extraGap = isMobile ? 0.8 : 1.4; // extra space around active
+    const halfGap = extraGap / 2;
+    const maxAngle = 1.5;
+    const planeSize = isMobile ? 1.3 : 2;
 
     songs.forEach((song) => {
       const texture = loader.load(song.album_image.url);
-      const geometry = new THREE.PlaneGeometry(2, 2);
+      const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
       const material = new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.DoubleSide,
+        transparent: true,
       });
       const plane = new THREE.Mesh(geometry, material);
       scene.add(plane);
@@ -119,14 +125,38 @@ export default function AlbumCarousel({ songs }) {
       const desiredIndex = targetIndex + dragOffset;
       scrollIndex += (desiredIndex - scrollIndex) * speed;
 
-      planes.forEach((plane, i) => {
-        const offset = i - scrollIndex;
-        plane.position.x = offset * spacing;
+      // Fractional active index for smooth blend
+      const floorIndex = Math.floor(scrollIndex);
+      const blend = scrollIndex - floorIndex;
 
-        // Smooth angle interpolation:
+      planes.forEach((plane, i) => {
+        let pos = i * baseSpacing;
+
+        // Smooth split: left of floorIndex shifts left, right of ceil shifts right
+        if (i < floorIndex) {
+          pos -= halfGap;
+        } else if (i > floorIndex + 1) {
+          pos += halfGap;
+        }
+
+        // For planes at floor and floor+1: blend smoothly
+        if (i === floorIndex) {
+          pos -= halfGap * blend;
+        } else if (i === floorIndex + 1) {
+          pos += halfGap * (1 - blend);
+        }
+
+        plane.position.x = pos - scrollIndex * baseSpacing;
+
+        // Rotation
+        const offset = i - scrollIndex;
         const sign = offset < 0 ? 1 : -1;
         const t = THREE.MathUtils.clamp(Math.abs(offset), 0, 1);
         plane.rotation.y = THREE.MathUtils.lerp(0, sign * maxAngle, t);
+
+        if (Math.abs(offset) < 0.01) {
+          plane.rotation.y = 0;
+        }
       });
 
       renderer.render(scene, camera);
@@ -134,15 +164,20 @@ export default function AlbumCarousel({ songs }) {
     animate();
 
     return () => {
-      mountRef.current.removeChild(renderer.domElement);
+      if (
+        mountRef.current &&
+        renderer.domElement.parentNode === mountRef.current
+      ) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
       window.removeEventListener("resize", onResize);
     };
-  }, [songs]);
+  }, [songs, isMobile]);
 
   return (
     <div
       ref={mountRef}
-      className="w-full h-screen bg-black overflow-hidden relative"
+      className="w-full h-screen bg-transparent overflow-hidden relative"
     />
   );
 }
