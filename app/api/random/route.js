@@ -83,7 +83,7 @@ const getData = async (req, max) => {
     // add Market to the query
     const reccomendations = await spotifyApi.getReccomendations(search, query);
     const data = await reccomendations.json();
-    console.log("retry", data);
+    // console.log("retry", data);
     const tracks = data.tracks;
 
     let recommendedTracks = [];
@@ -114,17 +114,6 @@ const getData = async (req, max) => {
         is_playable: item.is_playable,
         href: `https://open.spotify.com/track/${item.id}`,
 
-        //       acousticness: 0.00187,
-        // danceability: 0.552,
-        //       energy: 0.645,
-        //       key: 7,
-        //       loudness: -6.595,
-        //       mode: 1,
-        //       speechiness: 0.0268,
-        //       instrumentalness: 0.00000138,
-        //       liveness: 0.0424,
-        //       valence: 0.588,
-        //       tempo: 89.518,
         audioFeatures: {
           acousticness: trackAudiofeatures.acousticness,
           danceability: trackAudiofeatures.danceability,
@@ -141,7 +130,6 @@ const getData = async (req, max) => {
         },
       });
     }
-    // console.log("text aaaaaaaaaaaaa", recommendedTracks);
     let returnData = {
       recommendedTracks,
     };

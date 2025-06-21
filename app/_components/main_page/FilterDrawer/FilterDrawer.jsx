@@ -62,9 +62,8 @@ export default function FilterDrawer({ isOpen, onClose }) {
   // Remove functions for TagList
   const removeGenre = (genre) => {
     spotifyClient.setGenres((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(genre);
-      return newSet;
+      prev.delete(genre);
+      return prev;
     });
   };
 
