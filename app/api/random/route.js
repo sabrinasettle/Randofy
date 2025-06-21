@@ -135,88 +135,6 @@ const getData = async (req, max) => {
     };
     retData = returnData;
     return returnData;
-
-    // spotifyApi.getReccomendations(search, filters).then(
-    //   async function (request) {
-    //     const data = await request.json();
-    //     // console.log(data);
-    //     const tracks = data.tracks;
-    //     // remove
-    //     // const item = tracks.items[0] || [];
-    //     console.log(tracks);
-    //     // if (!tracks || tracks.total === 0) {
-    //     //   return doit();
-    //     // }
-    //     // } else {
-    //     //   let ids = [];
-    //     //   tracks.items.map((song) => {
-    //     //     ids.push(song.id);
-    //     //   });
-    //     //   // console.log("test ids", ids);
-    //     //   const audioFeaturesRequest = spotifyApi.getTracksAudioFeatures(ids);
-    //     //   const audioFeaturesData = await audioFeaturesRequest.json();
-    //     //   const audioFeatures = audioFeaturesData.audio_features || {};
-    //     //   console.log(audioFeatures);
-    //     // }
-    //     // get ip from vercel headers
-    //     const country = req.headers["x-vercel-ip-country"];
-    //     if (
-    //       (country && item && item.album.available_markets.includes(country)) ||
-    //       process.env.NODE_ENV === "development"
-    //     ) {
-    //       // console.log(item.id);
-    //       // add duration, genres
-    //       //
-    //       let recommendedTracks = [];
-    //       tracks.map((item) => {
-    //         recommendedTracks.push({
-    //           track_name: item.name,
-    //           is_explicit: item.explicit,
-    //           album_name: item.album?.name,
-    //           album_image: item.album.images[1],
-    //           track_id: item.id,
-    //           //could be null
-    //           preview_url: item.preview_url,
-    //         });
-    //       });
-
-    //       let returnData = {
-    //         //   album_name: item.album?.name,
-    //         //   album_image: item.album.images[1],
-    //         //   track_artist: item.artists[0].name,
-    //         //   track_name: item.name,
-    //         //   preview_url: item.preview_url,
-    //         //   spotify_url: item.external_urls.spotify,
-    //         //   is_explicit: item.explicit,
-    //         //   track_id: item.id,
-    //         //   attempts: att,
-    //         recommendedTracks,
-    //       };
-    //       // max is the maxium amount of requests
-    //       if (max === 1) {
-    //         retData = returnData;
-    //         // callback(returnData);
-    //       } else {
-    //         retArray.push(returnData);
-    //         if (index >= max) {
-    //           retData = returnData;
-    //           // callback(retArray);
-    //         } else {
-    //           index++;
-    //           search = getRandomSearch();
-    //           att = 0;
-    //           retry();
-    //         }
-    //       }
-    //     } else {
-    //       console.log("bad Market Match");
-    //       doit();
-    //     }
-    //   },
-    //   function (err) {
-    //     doit();
-    //   },
-    // );
   }
   if (!retData) {
     return await doit();
@@ -224,12 +142,6 @@ const getData = async (req, max) => {
     return retData;
   }
 };
-export const config = {
-  api: {
-    externalResolver: true,
-  },
-};
-
 /* GET random song object https://.../random */
 export async function GET(req) {
   // console.log("test", query);
