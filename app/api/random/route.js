@@ -7,13 +7,10 @@ const getData = async (req, max) => {
   let search = getRandomSearch();
 
   const searchParams = req.nextUrl.searchParams;
-  const query = searchParams.get("filters");
+  const query = searchParams.toString();
 
-  const filters = JSON.parse(query);
-
-  let numberOfSongs = filters.numberOfSongs;
-  // console.log(numberOfSongs);
-  // console.log(search, filters);
+  // const filters = JSON.parse(query);
+  // console.log("Get Data \n\n\n\n\nSearch: ", search, "\n\nQuery: ", query);
 
   // let max = 1;
   let att = 0;
@@ -22,6 +19,7 @@ const getData = async (req, max) => {
   let retData;
   // doit tracks attempts, by count
   async function doit() {
+    //attempts
     att++;
     // console.log("attempt number: ", att, search );
     if (att % 50 === 0) {
@@ -71,36 +69,33 @@ const getData = async (req, max) => {
     return rgbToHex(dominantColor);
   }
 
-  // async function getAudioFeatures(id) {
-  //   const response = await fetch(image.url);
-  //   const buf = await response.arrayBuffer();
-  //   function organizeFeatures(rgbArray) {
-  //     return(
-
-  //     )
-  //   }
-  //   return organizeFeatures(dominantColor);
-  // }
+  //array of ids
+  async function getAudioFeatures(ids) {
+    // console.log("get audio features", ids);
+    const response = await spotifyApi.getTracksAudioFeatures(ids);
+    const audioFeatures = await response.json(); // assuming `.json()` is needed
+    return audioFeatures;
+  }
 
   // new regex(/^:+[a-zA-Z]*:)
   async function retry() {
     let randomOffset = Math.floor(Math.random() * 10);
     // add Market to the query
-    const reccomendations = await spotifyApi.getReccomendations(
-      search,
-      filters,
-    );
+    const reccomendations = await spotifyApi.getReccomendations(search, query);
     const data = await reccomendations.json();
-    console.log("retry", data);
+    // console.log("retry", data);
     const tracks = data.tracks;
 
     let recommendedTracks = [];
+    const ids = tracks.map((item) => item.id);
+    let { audio_features: tracksAudiofeatures } = await getAudioFeatures(ids);
 
     for (const item of tracks) {
       let genres = await getGenres(item.artists);
       let color = await getBkgrdColor(item.album.images[0]);
-      // let trackAudiofeatures = await getAudioFeatures(item.id)
-      //url was an object
+      let trackAudiofeatures = tracksAudiofeatures.find(
+        (feature) => feature.id === item.id,
+      );
 
       recommendedTracks.push({
         track_name: item.name,
@@ -117,96 +112,29 @@ const getData = async (req, max) => {
         color: color,
         generated_at: new Date(),
         is_playable: item.is_playable,
+        href: `https://open.spotify.com/track/${item.id}`,
+
+        audioFeatures: {
+          acousticness: trackAudiofeatures.acousticness,
+          danceability: trackAudiofeatures.danceability,
+          energy: trackAudiofeatures.energy,
+          instrumentalness: trackAudiofeatures.instrumentalness,
+          liveness: trackAudiofeatures.liveness,
+          loudness: trackAudiofeatures.loudness,
+          speechiness: trackAudiofeatures.speechiness,
+          tempo: trackAudiofeatures.tempo,
+          valence: trackAudiofeatures.valence,
+          // mode: trackAudiofeatures.mode,
+          // key: trackAudiofeatures.key,
+          // time_signature: trackAudiofeatures.time_signature
+        },
       });
     }
-    // console.log("text aaaaaaaaaaaaa", recommendedTracks);
     let returnData = {
       recommendedTracks,
     };
     retData = returnData;
     return returnData;
-
-    // spotifyApi.getReccomendations(search, filters).then(
-    //   async function (request) {
-    //     const data = await request.json();
-    //     // console.log(data);
-    //     const tracks = data.tracks;
-    //     // remove
-    //     // const item = tracks.items[0] || [];
-    //     console.log(tracks);
-    //     // if (!tracks || tracks.total === 0) {
-    //     //   return doit();
-    //     // }
-    //     // } else {
-    //     //   let ids = [];
-    //     //   tracks.items.map((song) => {
-    //     //     ids.push(song.id);
-    //     //   });
-    //     //   // console.log("test ids", ids);
-    //     //   const audioFeaturesRequest = spotifyApi.getTracksAudioFeatures(ids);
-    //     //   const audioFeaturesData = await audioFeaturesRequest.json();
-    //     //   const audioFeatures = audioFeaturesData.audio_features || {};
-    //     //   console.log(audioFeatures);
-    //     // }
-    //     // get ip from vercel headers
-    //     const country = req.headers["x-vercel-ip-country"];
-    //     if (
-    //       (country && item && item.album.available_markets.includes(country)) ||
-    //       process.env.NODE_ENV === "development"
-    //     ) {
-    //       // console.log(item.id);
-    //       // add duration, genres
-    //       //
-    //       let recommendedTracks = [];
-    //       tracks.map((item) => {
-    //         recommendedTracks.push({
-    //           track_name: item.name,
-    //           is_explicit: item.explicit,
-    //           album_name: item.album?.name,
-    //           album_image: item.album.images[1],
-    //           track_id: item.id,
-    //           //could be null
-    //           preview_url: item.preview_url,
-    //         });
-    //       });
-
-    //       let returnData = {
-    //         //   album_name: item.album?.name,
-    //         //   album_image: item.album.images[1],
-    //         //   track_artist: item.artists[0].name,
-    //         //   track_name: item.name,
-    //         //   preview_url: item.preview_url,
-    //         //   spotify_url: item.external_urls.spotify,
-    //         //   is_explicit: item.explicit,
-    //         //   track_id: item.id,
-    //         //   attempts: att,
-    //         recommendedTracks,
-    //       };
-    //       // max is the maxium amount of requests
-    //       if (max === 1) {
-    //         retData = returnData;
-    //         // callback(returnData);
-    //       } else {
-    //         retArray.push(returnData);
-    //         if (index >= max) {
-    //           retData = returnData;
-    //           // callback(retArray);
-    //         } else {
-    //           index++;
-    //           search = getRandomSearch();
-    //           att = 0;
-    //           retry();
-    //         }
-    //       }
-    //     } else {
-    //       console.log("bad Market Match");
-    //       doit();
-    //     }
-    //   },
-    //   function (err) {
-    //     doit();
-    //   },
-    // );
   }
   if (!retData) {
     return await doit();
@@ -214,12 +142,6 @@ const getData = async (req, max) => {
     return retData;
   }
 };
-export const config = {
-  api: {
-    externalResolver: true,
-  },
-};
-
 /* GET random song object https://.../random */
 export async function GET(req) {
   // console.log("test", query);

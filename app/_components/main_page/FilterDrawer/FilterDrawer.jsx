@@ -38,34 +38,38 @@ function TagList({ items, onRemove, className = "" }) {
 
 export default function FilterDrawer({ isOpen, onClose }) {
   const [activePanel, setActivePanel] = useState("main");
-  const [sliderValue, setSliderValue] = useState(5);
+  // const [sliderValue, setSliderValue] = useState(5);
   const [isVisible, setIsVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
 
   // Filter states
-  const [selectedGenres, setSelectedGenres] = useState(new Set());
-  const [songDetailsFilters, setSongDetailsFilters] = useState({
-    popularity: { min: 0.0, max: 1.0 },
-    acoustics: { min: 0.0, max: 1.0 },
-    energy: { min: 0.0, max: 1.0 },
-    vocals: { min: 0.0, max: 1.0 },
-    danceability: { min: 0.0, max: 1.0 },
-    mood: { min: 0.0, max: 1.0 },
-  });
+  // const [selectedGenres, setSelectedGenres] = useState(new Set());
+
+  // const [songDetailsFilters, setSongDetailsFilters] = useState({
+  //   popularity: { min: 0.0, max: 1.0 },
+  //   acoustics: { min: 0.0, max: 1.0 },
+  //   energy: { min: 0.0, max: 1.0 },
+  //   vocals: { min: 0.0, max: 1.0 },
+  //   danceability: { min: 0.0, max: 1.0 },
+  //   mood: { min: 0.0, max: 1.0 },
+  // });
 
   const { spotifyClient } = useSpotifyContext();
+  const songDetailsFilters = spotifyClient.songDetails;
+  const selectedGenres = spotifyClient.genres;
+  const sliderValue = spotifyClient.songLimit;
 
   // Remove functions for TagList
   const removeGenre = (genre) => {
-    setSelectedGenres((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(genre);
-      return newSet;
+    spotifyClient.setGenres((prev) => {
+      prev.delete(genre);
+      return prev;
     });
   };
 
   const removeSongDetailFilter = (filterName) => {
-    setSongDetailsFilters((prev) => ({
+    spotifyClient.setSongDetails((prev) => ({
+      // add the if statement back for logicing the popularity value
       ...prev,
       [filterName]: { min: 0.0, max: 1.0 },
     }));
@@ -94,7 +98,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   }, [isOpen]);
 
   const handleSliderChange = (e) => {
-    setSliderValue(parseInt(e.target.value));
+    spotifyClient.setSongLimit(parseInt(e.target.value));
     // update the filters through spotifyClient
   };
 
@@ -114,11 +118,11 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const clearFilters = () => {
     switch (activePanel) {
       case "genres":
-        setSelectedGenres(new Set());
+        spotifyClient.setGenres(new Set());
         break;
       case "songDetails":
-        setSongDetailsFilters({
-          popularity: { min: 0.0, max: 1.0 },
+        spotifyClient.setSongDetails({
+          popularity: { min: 0, max: 100 },
           acoustics: { min: 0.0, max: 1.0 },
           energy: { min: 0.0, max: 1.0 },
           vocals: { min: 0.0, max: 1.0 },
@@ -129,22 +133,22 @@ export default function FilterDrawer({ isOpen, onClose }) {
       case "main":
       default:
         // Clear all filters
-        setSelectedGenres(new Set());
-        setSongDetailsFilters({
-          popularity: { min: 0.0, max: 1.0 },
+        spotifyClient.setGenres(new Set());
+        spotifyClient.setSongDetails({
+          popularity: { min: 0, max: 100 },
           acoustics: { min: 0.0, max: 1.0 },
           energy: { min: 0.0, max: 1.0 },
           vocals: { min: 0.0, max: 1.0 },
           danceability: { min: 0.0, max: 1.0 },
           mood: { min: 0.0, max: 1.0 },
         });
-        setSliderValue(5);
+        spotifyClient.setSongLimit(5);
         break;
     }
   };
 
   const handleSongDetailsFilterChange = (filterName, range) => {
-    setSongDetailsFilters((prev) => ({
+    spotifyClient.setSongDetails((prev) => ({
       ...prev,
       [filterName]: range,
     }));
@@ -152,7 +156,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   const changedSongDetailsCount = useMemo(() => {
     const defaultFilters = {
-      popularity: { min: 0.0, max: 1.0 },
+      popularity: { min: 0, max: 100 },
       acoustics: { min: 0.0, max: 1.0 },
       energy: { min: 0.0, max: 1.0 },
       vocals: { min: 0.0, max: 1.0 },
@@ -172,7 +176,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   // Get changed song detail filters for TagList
   const changedSongDetailFilters = useMemo(() => {
     const defaultFilters = {
-      popularity: { min: 0.0, max: 1.0 },
+      popularity: { min: 0, max: 100 },
       acoustics: { min: 0.0, max: 1.0 },
       energy: { min: 0.0, max: 1.0 },
       vocals: { min: 0.0, max: 1.0 },
@@ -346,7 +350,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
       <GenresSection
         navigateBack={navigateBack}
         selectedGenres={selectedGenres}
-        setSelectedGenres={setSelectedGenres}
       />
     </div>
   );
