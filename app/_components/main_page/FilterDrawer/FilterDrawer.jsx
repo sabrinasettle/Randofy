@@ -408,7 +408,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
               Clear
             </button>
             <button
-              className="px-6 py-2 bg-gray-700 text-gray-000 rounded hover:bg-gray-200 transition-colors"
+              className="px-6 py-2 bg-gray-600 border border-transparent hover:border-gray-600 hover:bg-gray-700 text-gray-000 rounded transition-colors duration-400 ease-in-out"
               onClick={() => closeAndGet()}
             >
               Get Songs
