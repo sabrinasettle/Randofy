@@ -117,6 +117,7 @@ const getData = async (req, max) => {
         color: color,
         generated_at: new Date(),
         is_playable: item.is_playable,
+        href: `https://open.spotify.com/track/${item.id}`,
       });
     }
     // console.log("text aaaaaaaaaaaaa", recommendedTracks);
