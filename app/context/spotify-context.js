@@ -31,32 +31,6 @@ export function SpotifyClientProvider({ children }) {
   });
   const [genres, setGenres] = useState(new Set());
 
-  //setGenerationHistory = { key: song[]} where song is {title,...}
-
-  // let defaultFilters = {
-  //   numberOfSongs: 5,
-  //   popularity: [0, 100],
-  //   acousticness: [0.0, 1.0], //float range from 0.0 to 1.0
-  //   danceability: [0.0, 1.0], //float range from 0.0 to 1.0
-  //   energy: [0.0, 1.0], //float range from 0.0 to 1.0
-  //   tempo: [0.0, 1.0], //float range from 0.0 to 1.0
-  //   valence: [0.0, 1.0], //float range from 0.0 to 1.0
-  //   market: "",
-  // };
-
-  const [filters, setFilters] = useState({
-    numberOfSongs: 5,
-    details: {
-      popularity: { min: 0, max: 100 },
-      acoustics: { min: 0.0, max: 1.0 },
-      energy: { min: 0.0, max: 1.0 },
-      vocals: { min: 0.0, max: 1.0 },
-      danceability: { min: 0.0, max: 1.0 },
-      mood: { min: 0.0, max: 1.0 },
-    },
-    genres: [],
-  });
-
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const spotifyUser = JSON.parse(localStorage.getItem("spotifyUser"));
@@ -289,9 +263,43 @@ export function SpotifyClientProvider({ children }) {
 
   const getSongs = async () => {
     setIsLoading(true);
-    // await checkTokenTime();
+
     const params = new URLSearchParams();
-    params.set("filters", JSON.stringify(filters));
+
+    // const [songDetails, setSongDetails] = useState({
+    //   popularity: { min: 0, max: 100 },
+    //   acoustics: { min: 0.0, max: 1.0 },
+    //   energy: { min: 0.0, max: 1.0 },
+    //   vocals: { min: 0.0, max: 1.0 },
+    //   danceability: { min: 0.0, max: 1.0 },
+    //   mood: { min: 0.0, max: 1.0 },
+    // });
+
+    params.set("limit", songLimit);
+
+    params.set("min_popularity", songDetails.popularity.min);
+    params.set("max_popularity", songDetails.popularity.max);
+
+    params.set("min_energy", songDetails.energy.min);
+    params.set("max_energy", songDetails.energy.max);
+
+    params.set("min_danceability", songDetails.danceability.min);
+    params.set("max_danceability", songDetails.danceability.max);
+
+    params.set("min_acousticness", songDetails.acoustics.min);
+    params.set("max_acousticness", songDetails.acoustics.max);
+
+    params.set("min_speechiness", songDetails.vocals.min);
+    params.set("max_speechiness", songDetails.vocals.max);
+
+    params.set("min_valence", songDetails.mood.min);
+    params.set("max_valence", songDetails.mood.max);
+
+    if (!genres.size === 0) {
+      const fiveGenres = genres.size > 5 ? genres.slice(0, 5) : genres;
+      params.set("genres", Array.from(fiveGenres));
+    }
+
     const res = await fetch("/api/random?" + params.toString());
 
     if (!res.ok) {
@@ -302,7 +310,7 @@ export function SpotifyClientProvider({ children }) {
       console.log(data);
 
       let song = data.recommendedTracks[0];
-      console.log(song);
+      // console.log(song);
       setCurrentSongs(data.recommendedTracks);
       setSelectedSong({ index: 0, song });
 
@@ -334,9 +342,6 @@ export function SpotifyClientProvider({ children }) {
     selectedSong,
     generationHistory,
     isMobile,
-    //first filters attempt
-    filters,
-    setFilters,
     // Filters
     songLimit,
     setSongLimit,

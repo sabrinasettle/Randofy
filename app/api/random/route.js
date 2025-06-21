@@ -7,13 +7,10 @@ const getData = async (req, max) => {
   let search = getRandomSearch();
 
   const searchParams = req.nextUrl.searchParams;
-  const query = searchParams.get("filters");
+  const query = searchParams.toString();
 
-  const filters = JSON.parse(query);
-
-  let numberOfSongs = filters.numberOfSongs;
-  // console.log(numberOfSongs);
-  // console.log(search, filters);
+  // const filters = JSON.parse(query);
+  // console.log("Get Data \n\n\n\n\nSearch: ", search, "\n\nQuery: ", query);
 
   // let max = 1;
   let att = 0;
@@ -22,6 +19,7 @@ const getData = async (req, max) => {
   let retData;
   // doit tracks attempts, by count
   async function doit() {
+    //attempts
     att++;
     // console.log("attempt number: ", att, search );
     if (att % 50 === 0) {
@@ -71,36 +69,33 @@ const getData = async (req, max) => {
     return rgbToHex(dominantColor);
   }
 
-  // async function getAudioFeatures(id) {
-  //   const response = await fetch(image.url);
-  //   const buf = await response.arrayBuffer();
-  //   function organizeFeatures(rgbArray) {
-  //     return(
-
-  //     )
-  //   }
-  //   return organizeFeatures(dominantColor);
-  // }
+  //array of ids
+  async function getAudioFeatures(ids) {
+    // console.log("get audio features", ids);
+    const response = await spotifyApi.getTracksAudioFeatures(ids);
+    const audioFeatures = await response.json(); // assuming `.json()` is needed
+    return audioFeatures;
+  }
 
   // new regex(/^:+[a-zA-Z]*:)
   async function retry() {
     let randomOffset = Math.floor(Math.random() * 10);
     // add Market to the query
-    const reccomendations = await spotifyApi.getReccomendations(
-      search,
-      filters,
-    );
+    const reccomendations = await spotifyApi.getReccomendations(search, query);
     const data = await reccomendations.json();
     console.log("retry", data);
     const tracks = data.tracks;
 
     let recommendedTracks = [];
+    const ids = tracks.map((item) => item.id);
+    let { audio_features: tracksAudiofeatures } = await getAudioFeatures(ids);
 
     for (const item of tracks) {
       let genres = await getGenres(item.artists);
       let color = await getBkgrdColor(item.album.images[0]);
-      // let trackAudiofeatures = await getAudioFeatures(item.id)
-      //url was an object
+      let trackAudiofeatures = tracksAudiofeatures.find(
+        (feature) => feature.id === item.id,
+      );
 
       recommendedTracks.push({
         track_name: item.name,
@@ -118,6 +113,32 @@ const getData = async (req, max) => {
         generated_at: new Date(),
         is_playable: item.is_playable,
         href: `https://open.spotify.com/track/${item.id}`,
+
+        //       acousticness: 0.00187,
+        // danceability: 0.552,
+        //       energy: 0.645,
+        //       key: 7,
+        //       loudness: -6.595,
+        //       mode: 1,
+        //       speechiness: 0.0268,
+        //       instrumentalness: 0.00000138,
+        //       liveness: 0.0424,
+        //       valence: 0.588,
+        //       tempo: 89.518,
+        audioFeatures: {
+          acousticness: trackAudiofeatures.acousticness,
+          danceability: trackAudiofeatures.danceability,
+          energy: trackAudiofeatures.energy,
+          instrumentalness: trackAudiofeatures.instrumentalness,
+          liveness: trackAudiofeatures.liveness,
+          loudness: trackAudiofeatures.loudness,
+          speechiness: trackAudiofeatures.speechiness,
+          tempo: trackAudiofeatures.tempo,
+          valence: trackAudiofeatures.valence,
+          // mode: trackAudiofeatures.mode,
+          // key: trackAudiofeatures.key,
+          // time_signature: trackAudiofeatures.time_signature
+        },
       });
     }
     // console.log("text aaaaaaaaaaaaa", recommendedTracks);
