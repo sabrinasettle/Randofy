@@ -5,7 +5,7 @@ export default function InformationLink() {
     <Link
       href="/information"
       className="absolute font-mono bg-gray-100 rounded-sm
-bottom-[20px] right-[20px] px-2 py-1 text-gray-700"
+bottom-[20px] right-[20px] px-2 py-1 text-gray-700 border border-transparent hover:border-gray-200"
     >
       i
     </Link>
