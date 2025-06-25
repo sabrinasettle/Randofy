@@ -35,18 +35,19 @@
 // 	}
 // }
 
-// app/api/refresh/route.js
+var redirect_uri =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000/"
+    : "https://randofy.vercel.app/";
+
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const refresh = searchParams.get("refresh_token");
+  const searchParams = req.nextUrl.searchParams;
+  const code = searchParams.get("code");
 
-  if (!refresh) {
-    return NextResponse.json(
-      { error: "Missing refresh_token" },
-      { status: 400 },
-    );
+  if (!code) {
+    return NextResponse.json({ error: "Missing code" }, { status: 400 });
   }
 
   const encoded = Buffer.from(
@@ -57,9 +58,11 @@ export async function GET(req) {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "Access-Control-Allow-Header": "*",
+      "Cache-Control": "no-cache",
       Authorization: `Basic ${encoded}`,
     },
-    body: `grant_type=refresh_token&refresh_token=${refresh}`,
+    body: `grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}`,
   });
 
   const raw = await res.text();

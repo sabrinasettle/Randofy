@@ -7,6 +7,7 @@ export default SpotifyContext;
 
 export function SpotifyClientProvider({ children }) {
   const [spotifyUser, setSpotifyUser] = useState(null);
+  const [_code, setCode] = useState(null);
   const [auth, setAuth] = useState(null);
   const [playlist, setPlaylist] = useState(null);
   const [songIds, setSongIds] = useState(null);
@@ -54,7 +55,7 @@ export function SpotifyClientProvider({ children }) {
     const code = params.get("code");
 
     if (code) {
-      onSuccessCode(code);
+      setCode(code);
     }
   }, []);
 
@@ -100,13 +101,16 @@ export function SpotifyClientProvider({ children }) {
   };
 
   const getSpotifyUser = async () => {
+    // console.log("getUser", auth);
+    if (!auth) return;
+
     const res = await fetch("https://api.spotify.com/v1/me", {
-      // headers: {
-      //   Authorization: `Bearer ${auth.access_token}`,
-      // },
+      headers: {
+        Authorization: `Bearer ${auth.access_token}`,
+      },
     });
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     setSpotifyUser(data);
     localStorage.setItem("spotifyUser", JSON.stringify(data));
     window.history.pushState(
@@ -138,31 +142,36 @@ export function SpotifyClientProvider({ children }) {
   };
 
   const tokenCall = async (code) => {
+    // console.log("tokenCall", _code);
+    if (!_code) return;
     // gets the user https://api.spotify.com/v1/me
     // https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
     // needs the access_token and token_type in the request
-    const res = await fetch("/api/token", {
+    const res = await fetch(`/api/token?code=${_code}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      params: {
-        code,
-      },
     });
-    const data = await res.json();
-    const seconds = data.expires_in;
-    data.created_at = new Date();
-    data.expires_at = new Date().setSeconds(
-      data.created_at.getSeconds() + seconds,
-    );
-    localStorage.setItem("auth", JSON.stringify(data));
-    setAuth(data);
-    getSpotifyUser();
+    if (!res.ok) {
+      throw new Error("Failed to fetch token");
+    } else {
+      const data = await res.json();
+      const seconds = data.expires_in;
+      data.created_at = new Date();
+      data.expires_at = new Date().setSeconds(
+        data.created_at.getSeconds() + seconds,
+      );
+      localStorage.setItem("auth", JSON.stringify(data));
+      setAuth(data);
+      getSpotifyUser();
+    }
     // needs error handling;
   };
 
   const findPlaylist = async (offset, total) => {
+    console.log("findPlaylist", auth);
+    if (!auth) return;
     const res = await fetch(
       `https://api.spotify.com/v1/me/playlists?limit=50&offset=${offset}`,
       {
@@ -201,7 +210,7 @@ export function SpotifyClientProvider({ children }) {
     // looks for the playlist 'Randofy' in user playlists to see if its available
     await checkTokenTime();
     // recursive because can only get 50 items at a time
-    // await findPlaylist(0, -1);
+    await findPlaylist(0, -1);
   };
 
   const createPlaylist = async () => {
@@ -278,6 +287,12 @@ export function SpotifyClientProvider({ children }) {
     console.log("Logged out.");
   };
 
+  React.useMemo(async () => {
+    if (_code) {
+      await onSuccessCode(_code);
+    }
+  }, [_code]);
+
   const getSongs = async () => {
     setIsLoading(true);
 
@@ -324,7 +339,7 @@ export function SpotifyClientProvider({ children }) {
       setIsLoading(false);
     } else {
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
 
       let song = data.recommendedTracks[0];
       // console.log(song);
