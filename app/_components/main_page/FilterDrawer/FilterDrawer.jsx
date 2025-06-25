@@ -111,7 +111,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const closeAndGet = () => {
-    // spotifyClient.getSongs();
+    spotifyClient.getSongs();
     onClose();
   };
 
