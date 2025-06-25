@@ -13,18 +13,29 @@ export default function Nav() {
 `;
   return (
     <nav className={styleClass}>
-      <Link href="/" className="px-1 py-1 rounded-sm bg-gray-100 text-gray-700">
-        <Image
-          src="/RandofyIcon - White 1.svg"
-          unoptimized
-          width={24}
-          height={24}
-        />
-      </Link>
-      <AuthButton />
-      <Link href="/history" className="text-gray-700">
+      <div className="flex flex-row items-center gap-2">
+        <Link
+          href="/"
+          className="px-1 py-1 rounded-sm transition-all duration-400 ease-in-out"
+        >
+          <Image
+            src="/RandofyIcon - White 1.svg"
+            unoptimized
+            width={24}
+            height={24}
+          />
+        </Link>
+        <AuthButton />
+      </div>
+      {/* <div className="flex flex-row items-center gap-2"> */}
+      <Link
+        href="/history"
+        className="text-gray-700 text-body-md hover:underline transition-all duration-400 ease-in"
+      >
         History
       </Link>
+      {/* <AuthButton /> */}
+      {/* </div> */}
     </nav>
   );
 }

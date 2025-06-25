@@ -144,10 +144,6 @@ const getData = async (req, max) => {
 };
 /* GET random song object https://.../random */
 export async function GET(req) {
-  // console.log("test", query);
-
-  // return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
-
   if (!spotifyApi) {
     // return Response.json(returnData);
     // return response.status(500).send("No API");
