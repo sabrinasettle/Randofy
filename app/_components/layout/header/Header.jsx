@@ -13,15 +13,20 @@ export default function Nav() {
 `;
   return (
     <nav className={styleClass}>
-      <Link href="/" className="px-1 py-1 rounded-sm bg-gray-100 text-gray-700">
-        <Image
-          src="/RandofyIcon - White 1.svg"
-          unoptimized
-          width={24}
-          height={24}
-        />
-      </Link>
-      <AuthButton />
+      <div>
+        <Link
+          href="/"
+          className="px-1 py-1 rounded-sm bg-gray-100 text-gray-700"
+        >
+          <Image
+            src="/RandofyIcon - White 1.svg"
+            unoptimized
+            width={24}
+            height={24}
+          />
+        </Link>
+        <AuthButton />
+      </div>
       <Link href="/history" className="text-gray-700">
         History
       </Link>

@@ -14,7 +14,6 @@ export function SpotifyClientProvider({ children }) {
   // const [filters, setFilters] = useState({}); //set default filters here
   const [currentSongs, setCurrentSongs] = useState([]);
   const [selectedSong, setSelectedSong] = useState({});
-  const [pageActive, setPageActive] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [generationHistory, setGenerationHistory] = useState({});
   const [isMobile, setIsMobile] = useState();
@@ -73,8 +72,8 @@ export function SpotifyClientProvider({ children }) {
   //   setError(null);
   // };
   async function onSuccessCode(code) {
-    tokenCall(code);
-    checkForPlaylist();
+    await tokenCall(code);
+    await checkForPlaylist();
   }
 
   const checkTokenTime = async () => {
@@ -102,11 +101,12 @@ export function SpotifyClientProvider({ children }) {
 
   const getSpotifyUser = async () => {
     const res = await fetch("https://api.spotify.com/v1/me", {
-      headers: {
-        Authorization: `Bearer ${auth.access_token}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${auth.access_token}`,
+      // },
     });
     const data = await res.json();
+    console.log(data);
     setSpotifyUser(data);
     localStorage.setItem("spotifyUser", JSON.stringify(data));
     window.history.pushState(
@@ -201,7 +201,7 @@ export function SpotifyClientProvider({ children }) {
     // looks for the playlist 'Randofy' in user playlists to see if its available
     await checkTokenTime();
     // recursive because can only get 50 items at a time
-    await findPlaylist(0, -1);
+    // await findPlaylist(0, -1);
   };
 
   const createPlaylist = async () => {
@@ -259,6 +259,23 @@ export function SpotifyClientProvider({ children }) {
 
       setGenerationHistory(songHistory);
     }
+  };
+
+  const loginRequest = async () => {
+    window.location.href = "/api/login";
+  };
+
+  const logoutRequest = () => {
+    // Clear localStorage/sessionStorage/cookies
+    localStorage.removeItem("auth");
+    localStorage.removeItem("spotifyUser");
+
+    // Optionally: clear from state/context too
+    setAuth(null);
+    setSpotifyUser(null);
+
+    // Optional: Show a toast or message if needed
+    console.log("Logged out.");
   };
 
   const getSongs = async () => {
@@ -333,6 +350,9 @@ export function SpotifyClientProvider({ children }) {
   // };
 
   const spotifyClient = {
+    spotifyUser,
+    loginRequest,
+    logoutRequest,
     getPlaylist,
     getSongs,
     currentSongs,
