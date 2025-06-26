@@ -5,13 +5,13 @@ const RadarChart = ({ data, size = 200 }) => {
   const center = size / 2;
   const radius = size * 0.35;
 
+  // 5 attributes, evenly spaced (360 / 5 = 72 degrees apart)
   const attributes = [
     { key: "energy", label: "Energy", angle: 0 },
-    { key: "danceability", label: "Danceability", angle: 60 },
-    { key: "acoustics", label: "Acoustics", angle: 120 },
-    { key: "vocals", label: "Vocals", angle: 180 },
-    { key: "mood", label: "Mood", angle: 240 },
-    { key: "popularity", label: "Popularity", angle: 300 },
+    { key: "danceability", label: "Danceability", angle: 72 },
+    { key: "acoustics", label: "Acoustics", angle: 144 },
+    { key: "mood", label: "Mood", angle: 216 },
+    { key: "popularity", label: "Popularity", angle: 288 },
   ];
 
   const getPoint = (angle, distance) => {
@@ -22,7 +22,7 @@ const RadarChart = ({ data, size = 200 }) => {
     };
   };
 
-  const createHexagon = (radiusMultiplier) => {
+  const createPolygon = (radiusMultiplier) => {
     return attributes
       .map((attr) => getPoint(attr.angle, radius * radiusMultiplier))
       .map((pt) => `${pt.x},${pt.y}`)
@@ -38,7 +38,7 @@ const RadarChart = ({ data, size = 200 }) => {
   const dataPolygon = dataPoints.map((pt) => `${pt.x},${pt.y}`).join(" ");
 
   return (
-    <div className="flex justify-center items-center py-8">
+    <div className="flex justify-center items-center py-5">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="absolute left-0 top-0">
           {/* Grid lines and axes */}
@@ -46,7 +46,7 @@ const RadarChart = ({ data, size = 200 }) => {
             {[0.25, 0.5, 0.75, 1].map((multiplier) => (
               <polygon
                 key={multiplier}
-                points={createHexagon(multiplier)}
+                points={createPolygon(multiplier)}
                 fill="none"
                 stroke="#E5E5E5"
                 strokeWidth="1"
@@ -129,51 +129,53 @@ export default function AudioFeatureDrawers({
   return (
     <>
       {/* Genres Expandable Section */}
-      <div className="border-t border-gray-200">
-        <button
-          onClick={() => {
-            if (activeSection === "genres") {
-              // setActiveSection(null);
-              songViewContext.handleDrawerClosed(); // ✅ Closing section
-            } else {
-              // setActiveSection("genres");
-              songViewContext.handleDrawerOpen("genres"); // ✅ Opening section
-            }
-          }}
-          className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
-        >
-          <span className="text-body-md md:text-body-sm text-gray-700">
-            Genres
-          </span>
-          <ArrowUp
-            size={20}
-            className={` group-hover:text-gray-600 transition-all duration-300 ${
-              activeSection === "genres" ? "rotate-180" : ""
-            } ${activeSection === "genres" ? "text-gray-700" : "text-gray-400"}`}
-          />
-        </button>
+      {song.genres.length > 0 && (
+        <div className="border-t border-gray-200">
+          <button
+            onClick={() => {
+              if (activeSection === "genres") {
+                // setActiveSection(null);
+                songViewContext.handleDrawerClosed(); // ✅ Closing section
+              } else {
+                // setActiveSection("genres");
+                songViewContext.handleDrawerOpen("genres"); // ✅ Opening section
+              }
+            }}
+            className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
+          >
+            <span className="text-body-md md:text-body-sm text-gray-700">
+              Genres
+            </span>
+            <ArrowUp
+              size={20}
+              className={` group-hover:text-gray-600 transition-all duration-300 ${
+                activeSection === "genres" ? "rotate-180" : ""
+              } ${activeSection === "genres" ? "text-gray-700" : "text-gray-400"}`}
+            />
+          </button>
 
-        {/* Genres Expandable Content */}
-        <div
-          className="overflow-hidden transition-all duration-500 ease-out"
-          style={{
-            height: activeSection === "genres" ? "120px" : "0px",
-          }}
-        >
-          <div className="py-4">
-            <div className="flex flex-wrap gap-2">
-              {song.genres.map((genre, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-gray-200 text-white text-body-sm rounded-full hover:bg-gray-600 transition-colors cursor-pointer"
-                >
-                  {genre}
-                </span>
-              ))}
+          {/* Genres Expandable Content */}
+          <div
+            className="overflow-hidden transition-all duration-500 ease-out"
+            style={{
+              height: activeSection === "genres" ? "120px" : "0px",
+            }}
+          >
+            <div className="py-4">
+              <div className="flex flex-wrap gap-2">
+                {song.genres.map((genre, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-gray-200 text-white text-body-sm rounded-full"
+                  >
+                    {genre}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
       {/* Song Details Expandable Section */}
       <div className="justify-end border-t border-gray-200">
         {/* Song Details Button */}
@@ -190,7 +192,7 @@ export default function AudioFeatureDrawers({
           className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
         >
           <span className="text-body-md md:text-body-sm text-gray-700">
-            Song Details
+            Audio Details
           </span>
           <ArrowUp
             size={20}
@@ -216,7 +218,6 @@ export default function AudioFeatureDrawers({
                 popularity: song.popularity,
                 acoustics: song.audioFeatures.acousticness,
                 energy: song.audioFeatures.energy,
-                vocals: song.audioFeatures.speechiness,
                 danceability: song.audioFeatures.danceability,
                 mood: song.audioFeatures.valence,
               }}

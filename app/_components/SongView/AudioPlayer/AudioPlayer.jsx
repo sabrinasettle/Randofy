@@ -54,7 +54,7 @@ export default function AudioPlayer({
   const eyeIconHeight = isMobile ? 32 : 24;
 
   return (
-    <div className={`${areDrawersOpen ? "flex-1 pt-0" : "pt-4 w-full"}`}>
+    <div className={`flex-1 pt-0`}>
       {preview ? (
         <div className="w-full pb-3">
           <ProgressBar
@@ -68,10 +68,10 @@ export default function AudioPlayer({
         </div>
       ) : (
         <div
-          className={`flex flex-row justify-between ${areDrawersOpen ? "flex-1 pt-0" : "w-full"} text-gray-600`}
+          className={`flex flex-row justify-between flex-1 pt-0 text-gray-600`}
         >
-          <p className="pb-2">No Preview Available</p>
-          <a id="open-spotify" href="/">
+          {/* <p className="pb-2">No Preview Available</p> */}
+          <a className="pt-2 pb-2" id="open-spotify" href={song.href}>
             Open in Spotify
           </a>
         </div>

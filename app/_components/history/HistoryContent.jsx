@@ -271,7 +271,7 @@ export default function HistoryContent() {
             {selectedSong && isDrawerOpen && (
               <div
                 id="drawer"
-                className={`${!isMobile && isDrawerOpen ? `md:w-96 xl:w-1/4 flex-shrink-0` : ``}`}
+                className={`${!isMobile && isDrawerOpen ? `lg:w-7/24 flex-shrink-0` : ``}`}
               >
                 <SongViewController />
               </div>

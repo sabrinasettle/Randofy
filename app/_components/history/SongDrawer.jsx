@@ -67,7 +67,7 @@ export default function SongDrawer() {
       className={`w-full border rounded-sm text-gray-600 border-gray-200 z-10`}
       // id={isOpen ? "" : ""}
       style={{
-        height: "calc(100vh - 98px)",
+        height: "calc(100vh - 99px)",
         backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha} , #0A0A0A 80%)`,
       }}
     >
@@ -85,7 +85,7 @@ export default function SongDrawer() {
           <div className="">
             <div className="">
               <h1
-                className="text-heading-4 md:text-heading-5 text-semibold text-gray-700"
+                className="text-heading-4 md:text-heading-5 text-semibold text-gray-700 truncate"
                 id="song-title"
               >
                 {song.track_name}
@@ -106,20 +106,25 @@ export default function SongDrawer() {
         </div>
 
         <div
-          className={`flex ${
-            activeSection
-              ? "flex-row items-start gap-4"
-              : "flex-col items-center"
-          } w-full ${activeSection ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
+          className={`flex flex-row items-start gap-4
+               w-full  pt-3 xl:py-4 transition-all duration-500 min-h-min`}
+          // className={`flex ${
+          //   activeSection
+          //     ? "flex-row items-start gap-4"
+          //     : "flex-col items-center"
+          // } w-full ${activeSection ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
         >
           {/* Album Image Wrapper */}
           <div
-            className={`flex ${
-              activeSection ? "justify-start" : "justify-center items-center"
-            } transition-all duration-500`}
+            // className={`flex ${
+            //   activeSection ? "justify-start" : "justify-center items-center"
+            // } transition-all duration-500`}
+            className={`flex justify-start transition-all duration-500`}
             style={{
-              width: activeSection ? "88px" : "240px", // Animate actual size
-              height: activeSection ? "88px" : "240px",
+              width: "120px", // Animate actual size
+              height: "120px",
+              // width: activeSection ? "120px" : "240px", // Animate actual size
+              // height: activeSection ? "120px" : "240px",
               transition: "width 0.5s ease, height 0.5s ease",
               overflow: "hidden", // Prevent layout jank during resize
             }}

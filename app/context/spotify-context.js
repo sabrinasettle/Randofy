@@ -335,19 +335,7 @@ export function SpotifyClientProvider({ children }) {
     const res = await fetch("/api/random?" + params.toString());
 
     if (!res.ok) {
-      let errorMessage = "An error occurred";
-
-      let body;
-      try {
-        body = await res.text(); // ✅ read once
-        const errorData = JSON.parse(body);
-        errorMessage = errorData?.message || JSON.stringify(errorData);
-      } catch (e) {
-        // if parsing fails, use raw text or status
-        errorMessage = body || `Request failed with status ${res.status}`;
-      }
-
-      setError(errorMessage);
+      setError(await res.json());
       setIsLoading(false);
     } else {
       const data = await res.json();

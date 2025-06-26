@@ -31,7 +31,7 @@ export default {
         "heading-3": ["clamp(1.5rem, 3vw, 1.75rem)", { lineHeight: "1.3" }],
         "heading-4": ["clamp(1.25rem, 2.5vw, 1.5rem)", { lineHeight: "1.4" }],
         "heading-5": ["clamp(1.125rem, 2vw, 1.25rem)", { lineHeight: "1.4" }],
-        "heading-6": ["1rem", { lineHeight: "1.4" }],
+        "heading-6": ["clamp(1.120rem, 1.5vw, 1.20rem)", { lineHeight: "1.4" }],
 
         // Body text - Responsive scaling
         "body-lg": ["clamp(1.125rem, 1.5vw, 1.2rem)", { lineHeight: "1.6" }],

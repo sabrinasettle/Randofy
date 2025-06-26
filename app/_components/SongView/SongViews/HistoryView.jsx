@@ -42,7 +42,7 @@ export default function HistoryView() {
     <>
       <div>
         <h1
-          className="text-heading-4 md:text-heading-5 text-semibold text-gray-700"
+          className="text-heading-4 md:text-heading-6 text-semibold text-gray-700"
           id="song-title"
         >
           {song.track_name}
@@ -61,20 +61,14 @@ export default function HistoryView() {
       </div>
 
       <div
-        className={`flex ${
-          areDrawersOpen
-            ? "flex-row items-start gap-4"
-            : "flex-col items-center"
-        } w-full ${areDrawersOpen ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
+        className={`flex flex-row items-start gap-4 w-full ${areDrawersOpen ? "pt-3 xl:py-4" : "pt-5 xl:py-6"} transition-all duration-500 min-h-min`}
       >
         {/* Album Image Wrapper */}
         <div
-          className={`flex ${
-            areDrawersOpen ? "justify-start" : "justify-center items-center"
-          } transition-all duration-500`}
+          className={`flex justify-start transition-all duration-500`}
           style={{
-            width: areDrawersOpen ? "88px" : "240px",
-            height: areDrawersOpen ? "88px" : "240px",
+            width: "120px",
+            height: "120px",
             transition: "width 0.5s ease, height 0.5s ease",
             overflow: "hidden",
           }}
@@ -116,22 +110,26 @@ export default function HistoryView() {
               {song.album_name}
             </p>
           </div>
-          <div className="flex flex-row gap-1">
-            <p className="text-body-md md:text-body-sm text-gray-600">
-              Length:
-            </p>
-            <p className="text-body-sm text-gray-700" id="song-length">
-              {millisToMinutesAndSeconds(song.song_length)}
-            </p>
-          </div>
-          <div className="flex flex-row gap-1">
-            <p className="text-body-md md:text-body-sm text-gray-600">Year:</p>
-            <p
-              className="text-body-md md:text-body-sm text-gray-700"
-              id="release_year"
-            >
-              {formatYear()}
-            </p>
+          <div className="flex flex-row flex-1 justify-between">
+            <div className="flex flex-row gap-1">
+              <p className="text-body-md md:text-body-sm text-gray-600">
+                Length:
+              </p>
+              <p className="text-body-sm text-gray-700" id="song-length">
+                {millisToMinutesAndSeconds(song.song_length)}
+              </p>
+            </div>
+            <div className="flex flex-row gap-1">
+              <p className="text-body-md md:text-body-sm text-gray-600">
+                Year:
+              </p>
+              <p
+                className="text-body-md md:text-body-sm text-gray-700"
+                id="release_year"
+              >
+                {formatYear()}
+              </p>
+            </div>
           </div>
         </div>
       </div>
