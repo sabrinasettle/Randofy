@@ -8,8 +8,8 @@ export default function Nav() {
   const pathname = usePathname();
   const styleClass =
     pathname === "/" || "/information"
-      ? `static w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000`
-      : `sticky top-0 left-0 w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000 z-20">
+      ? `font-body static w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000`
+      : `font-body sticky top-0 left-0 w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000 z-20">
 `;
   return (
     <nav className={styleClass}>
@@ -30,7 +30,7 @@ export default function Nav() {
       {/* <div className="flex flex-row items-center gap-2"> */}
       <Link
         href="/history"
-        className="text-gray-700 text-body-md hover:underline transition-all duration-400 ease-in"
+        className="font-body text-gray-700 text-body-md hover:underline transition-all duration-400 ease-in"
       >
         History
       </Link>

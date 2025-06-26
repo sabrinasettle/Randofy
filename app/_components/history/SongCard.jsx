@@ -41,24 +41,23 @@ export default function SongCard({ song, index }) {
 
   const listItem = (
     <li
-      className={`group w-full transition-colors duration-100 flex flex-row items-center justify-start md:justify-between px-1 md:px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
+      className={`font-body group w-full transition-colors duration-100 flex flex-row items-center justify-start md:justify-between px-1 md:px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
       id={`${song.track_name}-${song.album_name}`}
       key={keyString}
       onClick={moveOrNot}
     >
       {/* Mobile: smaller image */}
-      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 flex-shrink-0">
+      <div className="relative aspect-square w-12 sm:w-16 bg-gray-100 flex-shrink-0 overflow-hidden">
         <Image
           src={song.album_image.url}
-          width={imageSize}
-          height={imageSize}
+          fill
           alt={alt}
-          className="w-full h-full object-cover rounded"
+          className="object-cover"
         />
       </div>
 
-      {/* Mobile: reduced left padding and adjusted layout */}
-      <div className="flex flex-col md:flex-1 pl-3 sm:pl-4 md:pl-20 gap-0 md:gap-1 min-w-0">
+      {/* Track and artist info */}
+      <div className="flex flex-col md:flex-1 pl-3 sm:pl-4 lg:pl-20 gap-0 md:gap-1 min-w-0">
         <p className="text-body-md text-gray-700 font-semibold truncate">
           {song.track_name}
         </p>
@@ -72,25 +71,19 @@ export default function SongCard({ song, index }) {
         </span>
       </div>
 
-      {/* Mobile: hide album name on very small screens, show on sm+ */}
-      <div
-        className={`hidden md:flex md:flex-1 text-body-sm md:text-body-md font-normal ${activeTextStyle} min-w-0`}
-      >
-        <p className="truncate">{song.album_name}</p>
-      </div>
+      {/* Optional album name on md+ screens */}
+      {/* <div
+          className={`hidden md:flex md:flex-1 text-body-sm md:text-body-md font-normal ${activeTextStyle} min-w-0`}
+        >
+          <p className="truncate">{song.album_name}</p>
+        </div> */}
     </li>
   );
 
   const squareItem = (
-    <li onClick={moveOrNot} className="w-full">
+    <li onClick={moveOrNot} className="font-body w-full cursor-pointer">
       {/* Mobile: responsive square sizing - 2 columns on mobile, maintains desktop size on larger screens */}
-      <div
-        className={`relative bg-gray-100 border border-gray-100 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 sm:aspect-auto`}
-        style={{
-          width: "100%",
-          aspectRatio: "1 / 1",
-        }}
-      >
+      <div className="relative bg-gray-100 borderborder-gray-100 aspect-square min-w-[120px]">
         <Image
           src={song.album_image.url}
           fill

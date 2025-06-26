@@ -7,7 +7,7 @@ const FilterButton = ({ handleOpen, isSmall }) => {
 
   return (
     <button
-      className={`rounded-sm text-gray-700 border border-transparent hover:border-gray-200 transition-all duration-700 ease-in-out w-full md:w-auto ${
+      className={`font-body rounded-sm text-gray-700 border border-transparent hover:border-gray-300 transition-all duration-700 ease-in-out w-full md:w-auto ${
         isSmall ? "text-heading-6" : "text-heading-5"
       } ${classString}`}
       onClick={handleOpen}

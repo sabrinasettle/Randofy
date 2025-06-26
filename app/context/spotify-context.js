@@ -309,8 +309,8 @@ export function SpotifyClientProvider({ children }) {
 
     params.set("limit", songLimit);
 
-    params.set("min_popularity", songDetails.popularity.min);
-    params.set("max_popularity", songDetails.popularity.max);
+    params.set("min_popularity", songDetails.popularity.min * 100);
+    params.set("max_popularity", songDetails.popularity.max * 100);
 
     params.set("min_energy", songDetails.energy.min);
     params.set("max_energy", songDetails.energy.max);

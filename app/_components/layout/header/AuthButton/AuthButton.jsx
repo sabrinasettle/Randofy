@@ -9,7 +9,7 @@ export default function AuthButton() {
   //   "bg-gray-100 text-gray-700 px-2 py-1 rounded-sm border border-transparent hover:border-gray-200 transition-all duration-400 ease-in-out";
 
   const buttonCn =
-    "bg-gray-100 text-body-sm text-gray-700 px-2 py-1 rounded-sm border border-transparent hover:border-gray-400 transition-all duration-400 ease-in-out";
+    "font-body bg-gray-100 text-body-md text-gray-700 px-2 py-1 rounded-sm border border-transparent hover:border-gray-400 transition-all duration-400 ease-in-out";
 
   if (spotifyUser) {
     return (

@@ -27,7 +27,7 @@ const GenerateButton = ({ spotifyClient, isSmall }) => {
 const FilterButton = ({ handleOpen, isSmall }) => {
   return (
     <button
-      className={`bg-gray-100 px-4 py-3 rounded-sm text-gray-700 border border-transparent hover:border-gray-200 transition-all duration-700 ease-in-out ${
+      className={`font-body bg-gray-100 px-4 py-3 rounded-sm text-gray-700 border border-transparent hover:border-gray-200 transition-all duration-700 ease-in-out ${
         isSmall ? "text-sm" : "text-heading-5"
       }`}
       onClick={handleOpen}
@@ -67,7 +67,7 @@ export default function RandofyContent() {
       {/* Default state - centered text */}
       {!hasContent && (
         <div className="flex-1 flex flex-col items-center justify-center max-w-[600px] px-4">
-          <h1 className="text-display-1 text-gray-700 pb-16 text-center">
+          <h1 className="font-display text-display-1 text-gray-700 pb-16 text-center">
             5 totally random songs from Spotify
           </h1>
           {/* Spacer for buttons on larger screens */}

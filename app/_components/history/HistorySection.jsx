@@ -45,7 +45,7 @@ export default function HistorySection({ date, songs, idIndex, isActive }) {
   };
 
   return (
-    <li id={idIndex} className="">
+    <li id={idIndex} className="font-body">
       <div id={`${idIndex}-header`} className={styled}>
         {/* <div className="">
           <h2>{isToday() ? "Today" : `${date}`}</h2>
