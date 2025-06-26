@@ -73,11 +73,11 @@ export default function SongCard({ song, index }) {
       </div>
 
       {/* Mobile: hide album name on very small screens, show on sm+ */}
-      <div
+      {/* <div
         className={`hidden md:flex md:flex-1 text-body-sm md:text-body-md font-normal ${activeTextStyle} min-w-0`}
       >
         <p className="truncate">{song.album_name}</p>
-      </div>
+      </div> */}
     </li>
   );
 

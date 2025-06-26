@@ -15,58 +15,53 @@ const RadarChart = ({ data, size = 200 }) => {
   ];
 
   const getPoint = (angle, distance) => {
-    const radian = (angle - 90) * (Math.PI / 180);
+    const rad = (angle - 90) * (Math.PI / 180);
     return {
-      x: center + Math.cos(radian) * distance,
-      y: center + Math.sin(radian) * distance,
+      x: center + Math.cos(rad) * distance,
+      y: center + Math.sin(rad) * distance,
     };
   };
 
-  // Create hexagon points for grid lines
   const createHexagon = (radiusMultiplier) => {
     return attributes
       .map((attr) => getPoint(attr.angle, radius * radiusMultiplier))
-      .map((point) => `${point.x},${point.y}`)
+      .map((pt) => `${pt.x},${pt.y}`)
       .join(" ");
   };
 
-  // Create data polygon
   const dataPoints = attributes.map((attr) => {
-    const value = data[attr.key] || 0;
+    const rawValue = data[attr.key] || 0;
+    const value = attr.key === "popularity" ? rawValue / 100 : rawValue;
     return getPoint(attr.angle, radius * value);
   });
 
-  const dataPolygon = dataPoints
-    .map((point) => `${point.x},${point.y}`)
-    .join(" ");
+  const dataPolygon = dataPoints.map((pt) => `${pt.x},${pt.y}`).join(" ");
 
   return (
     <div className="flex justify-center items-center py-8">
-      <div className="relative">
-        <svg width={size} height={size} className="overflow-visible">
-          {/* Grid lines */}
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg width={size} height={size} className="absolute left-0 top-0">
+          {/* Grid lines and axes */}
           <g className="opacity-30">
-            {[0.25, 0.5, 0.75, 1.0].map((multiplier) => (
+            {[0.25, 0.5, 0.75, 1].map((multiplier) => (
               <polygon
                 key={multiplier}
                 points={createHexagon(multiplier)}
                 fill="none"
-                stroke="rgba(255,255,255,0.3)"
+                stroke="#E5E5E5"
                 strokeWidth="1"
               />
             ))}
-
-            {/* Axis lines */}
             {attributes.map((attr) => {
-              const endPoint = getPoint(attr.angle, radius);
+              const end = getPoint(attr.angle, radius);
               return (
                 <line
                   key={attr.key}
                   x1={center}
                   y1={center}
-                  x2={endPoint.x}
-                  y2={endPoint.y}
-                  stroke="rgba(255,255,255,0.3)"
+                  x2={end.x}
+                  y2={end.y}
+                  stroke="#E5E5E5"
                   strokeWidth="1"
                 />
               );
@@ -76,34 +71,43 @@ const RadarChart = ({ data, size = 200 }) => {
           {/* Data polygon */}
           <polygon
             points={dataPolygon}
-            fill="rgba(210, 80, 107, 0.3)"
-            stroke="rgba(210, 80, 107, 0.8)"
+            fill="rgba(229, 229, 229, 0.3)"
+            stroke="#E5E5E5"
             strokeWidth="2"
           />
 
           {/* Data points */}
-          {dataPoints.map((point, index) => (
-            <circle
-              key={index}
-              cx={point.x}
-              cy={point.y}
-              r="3"
-              fill="rgba(210, 80, 107, 1)"
-            />
+          {dataPoints.map((pt, i) => (
+            <circle key={i} cx={pt.x} cy={pt.y} r="3" fill="#E5E5E5" />
           ))}
         </svg>
 
         {/* Labels */}
         {attributes.map((attr) => {
-          const labelPoint = getPoint(attr.angle, radius + 25);
+          const labelDistance = radius + 20;
+          const labelPoint = getPoint(attr.angle, labelDistance);
+          const alignment =
+            attr.angle === 0
+              ? "center"
+              : attr.angle < 180
+                ? "left"
+                : attr.angle === 180
+                  ? "center"
+                  : "right";
+
           return (
             <div
               key={attr.key}
-              className="absolute text-xs text-gray-300 transform -translate-x-1/2 -translate-y-1/2"
+              className="absolute text-xs text-gray-600 whitespace-nowrap"
               style={{
                 left: labelPoint.x,
                 top: labelPoint.y,
-                transform: `translate(-50%, -50%) rotate(${attr.angle > 90 && attr.angle < 270 ? attr.angle + 180 : attr.angle}deg)`,
+                transform:
+                  alignment === "center"
+                    ? "translate(-50%, -50%)"
+                    : alignment === "left"
+                      ? "translateY(-50%)"
+                      : "translate(-100%, -50%)",
               }}
             >
               {attr.label}
@@ -210,11 +214,11 @@ export default function AudioFeatureDrawers({
             <RadarChart
               data={{
                 popularity: song.popularity,
-                acoustics: song.acoustics,
-                energy: song.energy,
-                vocals: song.vocals,
-                danceability: song.danceability,
-                mood: song.mood,
+                acoustics: song.audioFeatures.acousticness,
+                energy: song.audioFeatures.energy,
+                vocals: song.audioFeatures.speechiness,
+                danceability: song.audioFeatures.danceability,
+                mood: song.audioFeatures.valence,
               }}
               size={280}
             />

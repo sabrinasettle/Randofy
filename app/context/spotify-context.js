@@ -309,8 +309,8 @@ export function SpotifyClientProvider({ children }) {
 
     params.set("limit", songLimit);
 
-    params.set("min_popularity", songDetails.popularity.min);
-    params.set("max_popularity", songDetails.popularity.max);
+    params.set("min_popularity", songDetails.popularity.min * 100);
+    params.set("max_popularity", songDetails.popularity.max * 100);
 
     params.set("min_energy", songDetails.energy.min);
     params.set("max_energy", songDetails.energy.max);
@@ -335,7 +335,19 @@ export function SpotifyClientProvider({ children }) {
     const res = await fetch("/api/random?" + params.toString());
 
     if (!res.ok) {
-      setError(await res.json());
+      let errorMessage = "An error occurred";
+
+      let body;
+      try {
+        body = await res.text(); // ✅ read once
+        const errorData = JSON.parse(body);
+        errorMessage = errorData?.message || JSON.stringify(errorData);
+      } catch (e) {
+        // if parsing fails, use raw text or status
+        errorMessage = body || `Request failed with status ${res.status}`;
+      }
+
+      setError(errorMessage);
       setIsLoading(false);
     } else {
       const data = await res.json();

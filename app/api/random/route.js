@@ -81,8 +81,11 @@ const getData = async (req, max) => {
   async function retry() {
     let randomOffset = Math.floor(Math.random() * 10);
     // add Market to the query
-    const reccomendations = await spotifyApi.getReccomendations(search, query);
+    const reccomendations = await spotifyApi.getRecommendations(search, query);
     const data = await reccomendations.json();
+    if (!data || !data.tracks) {
+      throw new Error("Spotify API returned no tracks");
+    }
     // console.log("retry", data);
     const tracks = data.tracks;
 
@@ -113,6 +116,7 @@ const getData = async (req, max) => {
         generated_at: new Date(),
         is_playable: item.is_playable,
         href: `https://open.spotify.com/track/${item.id}`,
+        popularity: item.popularity,
 
         audioFeatures: {
           acousticness: trackAudiofeatures.acousticness,
