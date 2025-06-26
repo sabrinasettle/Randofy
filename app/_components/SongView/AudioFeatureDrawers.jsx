@@ -98,7 +98,7 @@ const RadarChart = ({ data, size = 200 }) => {
           return (
             <div
               key={attr.key}
-              className="absolute text-xs text-gray-600 whitespace-nowrap"
+              className="absolute font-body text-xs text-gray-600 whitespace-nowrap"
               style={{
                 left: labelPoint.x,
                 top: labelPoint.y,
@@ -143,7 +143,7 @@ export default function AudioFeatureDrawers({
             }}
             className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
           >
-            <span className="text-body-md md:text-body-sm text-gray-700">
+            <span className="font-body text-body-md md:text-body-sm text-gray-700">
               Genres
             </span>
             <ArrowUp
@@ -166,7 +166,7 @@ export default function AudioFeatureDrawers({
                 {song.genres.map((genre, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-gray-200 text-white text-body-sm rounded-full"
+                    className="font-body px-3 py-1 bg-gray-200 text-white text-body-sm rounded-full"
                   >
                     {genre}
                   </span>
@@ -191,7 +191,7 @@ export default function AudioFeatureDrawers({
           }}
           className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
         >
-          <span className="text-body-md md:text-body-sm text-gray-700">
+          <span className="font-bodytext-body-md md:text-body-sm text-gray-700">
             Audio Details
           </span>
           <ArrowUp

@@ -41,7 +41,7 @@ export default function SongCard({ song, index }) {
 
   const listItem = (
     <li
-      className={`group w-full transition-colors duration-100 flex flex-row items-center justify-start md:justify-between px-1 md:px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
+      className={`font-body group w-full transition-colors duration-100 flex flex-row items-center justify-start md:justify-between px-1 md:px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
       id={`${song.track_name}-${song.album_name}`}
       key={keyString}
       onClick={moveOrNot}
@@ -81,7 +81,7 @@ export default function SongCard({ song, index }) {
   );
 
   const squareItem = (
-    <li onClick={moveOrNot} className="w-full cursor-pointer">
+    <li onClick={moveOrNot} className="font-body w-full cursor-pointer">
       {/* Mobile: responsive square sizing - 2 columns on mobile, maintains desktop size on larger screens */}
       <div className="relative bg-gray-100 borderborder-gray-100 aspect-square min-w-[120px]">
         <Image

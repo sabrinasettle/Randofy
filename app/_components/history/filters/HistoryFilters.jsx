@@ -24,7 +24,7 @@ export default function HistoryFilters({ updateFilter, historyFilter }) {
   }
 
   return (
-    <div className="bg-gray-100 flex flex-row w-full md:max-w-max rounded-sm justify-evenly items-center">
+    <div className="font-body bg-gray-100 flex flex-row w-full md:max-w-max rounded-sm justify-evenly items-center">
       <FilterButton
         handleActivation={handleActivation}
         string={"All"}

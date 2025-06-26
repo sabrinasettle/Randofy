@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ["var(--font-sono)"],
-        display: ["var(--font-sono)"],
+        body: ["var(--font-dm-sans)"],
+        display: ["var(--font-dm-sans)"],
         mono: ["var(--font-dm-mono)"],
       },
       fontSize: {

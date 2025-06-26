@@ -1,5 +1,11 @@
 import "./global.css";
-import { dm_mono, sono } from "./utils/fonts.js";
+import {
+  dm_mono,
+  dm_sans,
+  sono,
+  ibm_plex_sans,
+  ibm_plex_mono,
+} from "./lib/fonts.js";
 import Nav from "./_components/layout/header/Header";
 import { SpotifyClientProvider } from "./context/spotify-context";
 import { SongViewProvider } from "./context/song-view-context";
@@ -11,7 +17,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${dm_mono} ${sono}`}>
+    <html
+      lang="en"
+      className={`${dm_mono} ${dm_sans} ${sono} ${ibm_plex_sans} ${ibm_plex_mono}`}
+    >
       <SpotifyClientProvider>
         <SongViewProvider>
           <body className="overscroll-none">

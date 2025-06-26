@@ -40,7 +40,7 @@ export default function HistoryView() {
 
   return (
     <>
-      <div>
+      <div className="font-body">
         <h1
           className="text-heading-4 md:text-heading-6 text-semibold text-gray-700"
           id="song-title"
@@ -98,13 +98,13 @@ export default function HistoryView() {
         <div className="justify-start flex flex-col">
           <div className="flex flex-row gap-1">
             <p
-              className="text-body-md md:text-body-sm text-gray-600"
+              className="font-body text-body-md md:text-body-sm text-gray-600"
               id="information-label"
             >
               Album:
             </p>
             <p
-              className="text-body-md md:text-body-sm text-gray-700"
+              className="font-body text-body-md md:text-body-sm text-gray-700"
               id="song-album"
             >
               {song.album_name}
@@ -112,19 +112,22 @@ export default function HistoryView() {
           </div>
           <div className="flex flex-row flex-1 justify-between">
             <div className="flex flex-row gap-1">
-              <p className="text-body-md md:text-body-sm text-gray-600">
+              <p className="font-body text-body-md md:text-body-sm text-gray-600">
                 Length:
               </p>
-              <p className="text-body-sm text-gray-700" id="song-length">
+              <p
+                className="font-body text-body-sm text-gray-700"
+                id="song-length"
+              >
                 {millisToMinutesAndSeconds(song.song_length)}
               </p>
             </div>
             <div className="flex flex-row gap-1">
-              <p className="text-body-md md:text-body-sm text-gray-600">
+              <p className="font-body text-body-md md:text-body-sm text-gray-600">
                 Year:
               </p>
               <p
-                className="text-body-md md:text-body-sm text-gray-700"
+                className="font-body text-body-md md:text-body-sm text-gray-700"
                 id="release_year"
               >
                 {formatYear()}
