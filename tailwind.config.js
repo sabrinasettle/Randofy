@@ -10,9 +10,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ["var(--font-inclusive_sans)"],
-        display: ["var(--font-hanken_grotesk)"],
-        mono: ["var(--font-ibm_plex_mono)"],
+        body: ["var(--font-sono)"],
+        display: ["var(--font-sono)"],
+        mono: ["var(--font-dm-mono)"],
       },
       fontSize: {
         "display-1": [

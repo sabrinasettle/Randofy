@@ -1,16 +1,16 @@
-import { Inclusive_Sans, Hanken_Grotesk } from "next/font/google";
+import { DM_Mono, Sono } from "next/font/google";
 
-export const inclusive_sans_init = Inclusive_Sans({
-  weight: ["300", "400", "500", "600", "700"],
+export const dm_mono_init = DM_Mono({
+  weight: ["300", "400", "500"],
   subsets: ["latin"],
-  variable: "--font-inclusive_sans",
+  variable: "--font-dm-mono",
 });
 
-export const hanken_grotesk_init = Hanken_Grotesk({
-  weight: ["300", "400", "500", "600", "700"],
+export const sono_init = Sono({
+  weight: ["200", "300", "400", "500", "600", "700"],
   subsets: ["latin"],
-  variable: "--font-hanken_grotesk",
+  variable: "--font-sono",
 });
 
-export const inclusive_sans = inclusive_sans_init.variable;
-export const hanken_grotesk = hanken_grotesk_init.variable;
+export const dm_mono = dm_mono_init.variable;
+export const sono = sono_init.variable;

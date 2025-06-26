@@ -8,8 +8,8 @@ export default function Nav() {
   const pathname = usePathname();
   const styleClass =
     pathname === "/" || "/information"
-      ? `static w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000`
-      : `sticky top-0 left-0 w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000 z-20">
+      ? `font-body static w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000`
+      : `font-body sticky top-0 left-0 w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000 z-20">
 `;
   return (
     <nav className={styleClass}>
