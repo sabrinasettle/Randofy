@@ -61,6 +61,21 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     let wheelAccum = 0;
     const wheelThreshold = 18;
 
+    const clampIndex = (index) =>
+      Math.max(0, Math.min(songs.length - 1, index));
+
+    const onKeyDown = (e) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        targetIndex = clampIndex(targetIndex - 1);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        targetIndex = clampIndex(targetIndex + 1);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
     const onWheel = (e) => {
       e.preventDefault();
       const delta = e.deltaY + e.deltaX * 0.4;
@@ -141,6 +156,35 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     };
     window.addEventListener("resize", onResize);
 
+    const onPointerMoveCursor = (e) => {
+      if (isDragging) {
+        renderer.domElement.style.cursor = "grabbing";
+        return;
+      }
+
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(planes);
+
+      if (intersects.length > 0) {
+        const hoveredPlane = intersects[0].object;
+        const hoveredIndex = planes.indexOf(hoveredPlane);
+
+        if (hoveredIndex === Math.round(scrollIndex)) {
+          renderer.domElement.style.cursor = "default"; // Active plane
+        } else {
+          renderer.domElement.style.cursor = "pointer"; // Inactive plane
+        }
+      } else {
+        renderer.domElement.style.cursor = "default";
+      }
+    };
+
+    renderer.domElement.addEventListener("mousemove", onPointerMoveCursor);
+
     const speed = 0.07;
     let lastReportedIndex = -1;
 
@@ -218,7 +262,9 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       ) {
         mountRef.current.removeChild(renderer.domElement);
       }
+      window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("resize", onResize);
+      renderer.domElement.removeEventListener("mousemove", onPointerMoveCursor);
     };
   }, [songs, isMobile, onIndexChange]);
 
