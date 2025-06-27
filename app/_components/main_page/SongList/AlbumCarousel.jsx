@@ -29,21 +29,14 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
     const loader = new THREE.TextureLoader();
     const planes = [];
+    const planeScales = [];
 
-    // const baseSpacing = 0.9; // tight stack
     const planeSize = isMobile ? 1.3 : 2.8;
     const unActivePlaneSize = isMobile ? 1.2 : 2.4;
-    const baseSpacing = planeSize * 0.3; // proportional spacing to prevent overlap
+    const baseSpacing = planeSize * 0.3;
     const extraGap = isMobile ? 1 : 2;
     const halfGap = extraGap / 2;
     const maxAngle = 1.5;
-
-    // === YOUR preferred sizes ===
-    // const planeSize = isMobile ? 1.8 : 4;
-    // const baseSpacing = planeSize * 0.65; // proportional spacing to prevent overlap
-    // const extraGap = isMobile ? 0.8 : 1.4;
-    // const halfGap = extraGap / 2;
-    // const maxAngle = 1.5;
 
     songs.forEach((song) => {
       const texture = loader.load(song.album_image.url);
@@ -56,6 +49,7 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       const plane = new THREE.Mesh(geometry, material);
       scene.add(plane);
       planes.push(plane);
+      planeScales.push(1); // default full scale
     });
 
     let scrollIndex = 0;
@@ -108,7 +102,6 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       dragOffset = 0;
     };
 
-    // === Raycaster for click ===
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
@@ -160,7 +153,6 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       const floorIndex = Math.floor(scrollIndex);
       const blend = scrollIndex - floorIndex;
 
-      // === Report index up if changed ===
       const currentIndex = Math.round(scrollIndex);
       if (currentIndex !== lastReportedIndex) {
         lastReportedIndex = currentIndex;
@@ -193,28 +185,26 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
         const offset = i - scrollIndex;
         const sign = offset < 0 ? 1 : -1;
         const t = THREE.MathUtils.clamp(Math.abs(offset), 0, 1);
-        plane.rotation.y = THREE.MathUtils.lerp(0, sign * maxAngle, t);
 
-        if (Math.abs(offset) < 0.01) {
-          plane.rotation.y = 0;
-        }
+        const targetRotation =
+          Math.abs(offset) < 0.01
+            ? 0
+            : THREE.MathUtils.lerp(0, sign * maxAngle, t);
+        plane.rotation.y = THREE.MathUtils.lerp(
+          plane.rotation.y,
+          targetRotation,
+          0.1,
+        );
 
-        // === NEW: Scale inactive images ===
         const distance = Math.abs(offset);
         const scaleRatio = unActivePlaneSize / planeSize;
+        const targetScale =
+          distance < 0.1
+            ? 1
+            : THREE.MathUtils.lerp(1, scaleRatio, Math.min(distance, 1));
 
-        if (distance < 0.1) {
-          // Active image - full size
-          plane.scale.setScalar(1);
-        } else {
-          // Inactive image - smaller size with smooth transition
-          const scaleFactor = THREE.MathUtils.lerp(
-            1,
-            scaleRatio,
-            Math.min(distance, 1),
-          );
-          plane.scale.setScalar(scaleFactor);
-        }
+        planeScales[i] = THREE.MathUtils.lerp(planeScales[i], targetScale, 0.1);
+        plane.scale.setScalar(planeScales[i]);
       });
 
       renderer.render(scene, camera);

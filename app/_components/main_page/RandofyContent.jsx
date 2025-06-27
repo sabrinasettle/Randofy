@@ -11,7 +11,6 @@ import SongListController from "./SongList/SongListController";
 import LoadingBall from "../ui/loading/LoadingBall";
 import ButtonsContainer from "./ButtonsContainer";
 
-<<<<<<< HEAD
 // Have a cancel button that abandons the search?? if isLoading
 const GenerateButton = ({ spotifyClient, isSmall }) => {
   return (
@@ -39,9 +38,6 @@ const FilterButton = ({ handleOpen, isSmall }) => {
     </button>
   );
 };
-
-=======
->>>>>>> fbb34e8 (feat(AlbumCarousel): created and tweaking)
 export default function RandofyContent() {
   const { spotifyClient } = useSpotifyContext();
   const [filtersOpen, setFilterOpen] = useState(false);

@@ -13,6 +13,9 @@ export function hexToRGBA(hex, opacity) {
 }
 
 function hexToRgb(hex) {
+  if (!hex) {
+    return { r: 0, g: 0, b: 0 };
+  }
   const clean = hex.replace("#", "");
   const bigint = parseInt(clean, 16);
   return {
@@ -41,16 +44,15 @@ function contrast(hex1, hex2) {
  * with gray-600 or gray-700. Use this to set the opacity of your radial center color.
  */
 export function useAccessibleAlpha(promColor) {
-  return useMemo(() => {
-    const gray700 = "#E5E5E5";
-    const gray600 = "#B2B2B2";
+  // return useMemo(() => {
+  const gray700 = "#E5E5E5";
+  const gray600 = "#B2B2B2";
 
-    const meetsContrast =
-      contrast(promColor, gray700) >= 4.5 ||
-      contrast(promColor, gray600) >= 4.5;
+  const meetsContrast =
+    contrast(promColor, gray700) >= 4.5 || contrast(promColor, gray600) >= 4.5;
 
-    return meetsContrast ? "cc" : "33"; // 80% or 30%
-  }, [promColor]);
+  return meetsContrast ? "cc" : "33"; // 80% or 30%
+  // }, [promColor]);
 }
 
 // | Opacity | Hex Suffix |

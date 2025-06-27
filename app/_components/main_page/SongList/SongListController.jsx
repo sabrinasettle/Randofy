@@ -1,17 +1,21 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import AlbumCarousel from "./AlbumCarousel";
 import SongViewController from "../../SongView/SongViewController";
 import { useSongViewContext } from "../../../context/song-view-context";
 import { useSpotifyContext } from "../../../context/spotify-context";
 
 export default function SongListController({ songs, len }) {
-  const { spotifyClient } = useSpotifyContext;
+  const { spotifyClient } = useSpotifyContext();
   const { songViewContext } = useSongViewContext();
+  const { setSelectedSong } = songViewContext;
   const [currentIndex, setCurrentIndex] = useState(0);
-  songViewContext.setSelectedSong({
-    index: currentIndex,
-    song: songs[currentIndex],
-  });
+
+  React.useEffect(() => {
+    songViewContext.setSelectedSong({
+      index: currentIndex,
+      song: songs[currentIndex],
+    });
+  }, [setSelectedSong, currentIndex]);
   // const songs = spotifyClient.currentSongs;
 
   return (
