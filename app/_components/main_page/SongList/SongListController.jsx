@@ -21,7 +21,7 @@ export default function SongListController({ songs, len }) {
   return (
     <div className="flex flex-col items-center">
       {/* Index number */}
-      <div className="text-white text-body-md font-normal mb-2">
+      <div className="text-gray-600 font-mono text-body-md font-normal mb-1">
         {currentIndex + 1} / {songs.length}
       </div>
 

@@ -76,7 +76,7 @@ export default function DefaultView() {
     //   // Minimal view (home page, not detailed)
     return {
       className:
-        "w-full lg:min-w-[564px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
+        "w-full lg:min-w-[564px] lg:min-h-[160px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
       style: {
         backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
       },
@@ -85,6 +85,7 @@ export default function DefaultView() {
   };
 
   const containerStyles = getContainerStyles();
+  const preview = song.preview_url;
 
   return (
     <div className={containerStyles.className} style={containerStyles.style}>
@@ -112,7 +113,7 @@ export default function DefaultView() {
         </div>
       </div>
 
-      <div>
+      <div className={`${preview && "pt-3"}`}>
         <AudioPlayer song={song} />
       </div>
 
