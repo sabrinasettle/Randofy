@@ -78,7 +78,7 @@ export default function AudioPlayer({
       )}
       {/* Controls Component */}
       <div
-        className={`w-full pb-5 flex flex-row items-center ${isDefault ? `justify-between` : ``}`}
+        className={`w-full flex flex-row items-center ${isDefault ? `justify-between` : `pb-5`}`}
       >
         <div
           className={`flex flex-row items-center ${isDefault ? `gap-2` : `justify-between w-full gap-0`}`}
