@@ -93,7 +93,7 @@ export default function DefaultView() {
         <div className="">
           <div className="">
             <h1
-              className="text-heading-4 md:text-heading-5 text-semibold text-gray-700"
+              className="font-body text-heading-4 md:text-heading-5 text-semibold text-gray-700"
               id="song-title"
             >
               {song.track_name}
@@ -101,13 +101,13 @@ export default function DefaultView() {
             <div className="flex flex-row items-center gap-2">
               {song.is_explicit && (
                 <div
-                  className="w-4 h-[18px] flex justify-center items-center text-gray-000 bg-gray-700 rounded-sm"
+                  className="font-mono w-4 h-[18px] flex justify-center items-center text-gray-000 bg-gray-700 rounded-sm"
                   id="explicit-flag"
                 >
                   E
                 </div>
               )}
-              <h2 className="text-gray-600">{artists}</h2>
+              <h2 className="text-gray-600 font-body">{artists}</h2>
             </div>
           </div>
         </div>
