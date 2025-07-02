@@ -94,30 +94,26 @@ export default function AudioPlayer({
               <button
                 id="add-song"
                 className={`${buttonStyle}`}
-                disabled={true}
+                disabled={spotifyUser ? false : true}
+                onClick={() => {
+                  if (spotifyUser) {
+                    spotifyClient.addToPlaylist(song.id);
+                  } else {
+                    console.log("User is not logged in");
+                    toast("Please log in to add songs to your playlist");
+                  }
+                }}
               >
                 {/* 44px at mobile */}
                 <Plus width={addIconHeight} height={addIconHeight} />
               </button>
             </Tooltip>
-            {/* <div className="relative inline-block">
-            <button
-              id="share-song"
-              className="group hover:bg-gray-200 hover:text-gray-700 text-gray-600 p-2"
-            >
-              <Share2 width={28} height={28} />
-            </button>
-            <div className="absolute top-full mt-4 left-1/2 transform -translate-x-1/2 bg-gray-200 text-white px-2 py-1 rounded text-sm whitespace-nowrap transition-opacity duration-200 pointer-events-none z-40">
-              Share song
-            </div>
-          </div> */}
-            <div>
-              <Tooltip text="Share song">
-                <button id="share-song" className={`${buttonStyle}`}>
-                  <Share2 width={shareIconHeight} height={shareIconHeight} />
-                </button>
-              </Tooltip>
-            </div>
+
+            <Tooltip text="Share song">
+              <button id="share-song" className={`${buttonStyle}`}>
+                <Share2 width={shareIconHeight} height={shareIconHeight} />
+              </button>
+            </Tooltip>
           </div>
         </div>
         {isDefault && (

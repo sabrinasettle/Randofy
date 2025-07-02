@@ -11,13 +11,14 @@ export function SpotifyClientProvider({ children }) {
   const [auth, setAuth] = useState(null);
   const [playlist, setPlaylist] = useState(null);
   const [songIds, setSongIds] = useState(null);
-  const [error, setError] = useState(null);
+  const [playlistSongs, setPlaylistSongs] = useState(null);
   // const [filters, setFilters] = useState({}); //set default filters here
   const [currentSongs, setCurrentSongs] = useState([]);
   const [selectedSong, setSelectedSong] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [generationHistory, setGenerationHistory] = useState({});
   const [isMobile, setIsMobile] = useState();
+  const [error, setError] = useState(null);
 
   // Filters
   const [songLimit, setSongLimit] = useState(5);
@@ -59,24 +60,6 @@ export function SpotifyClientProvider({ children }) {
     }
   }, []);
 
-  // const destroySession = () => {
-  //   // clear the localStorage
-  //   // this is done by updating the state
-  //   // will this work?? I mean does the user even get to login in everytime or is a straight apporal of the app in the first place?
-  //   localStorage.removeItem("spotifyUser");
-  //   localStorage.removeItem("auth");
-  //   localStorage.removeItem("playlist");
-  //   setSpotifyUser(null);
-  //   setAuth(null);
-  //   setPlaylist(null);
-  //   setSongIds(null);
-  //   setError(null);
-  // };
-  async function onSuccessCode(code) {
-    await tokenCall(code);
-    await checkForPlaylist();
-  }
-
   const checkTokenTime = async () => {
     // checks if auth is present and if a new time is greater than the time for auth
     if (auth && auth.expires_at && new Date() > auth.expires_at) {
@@ -98,47 +81,6 @@ export function SpotifyClientProvider({ children }) {
         setError(res);
       }
     }
-  };
-
-  const getSpotifyUser = async () => {
-    // console.log("getUser", auth);
-    if (!auth) return;
-
-    const res = await fetch("https://api.spotify.com/v1/me", {
-      headers: {
-        Authorization: `Bearer ${auth.access_token}`,
-      },
-    });
-    const data = await res.json();
-    // console.log(data);
-    setSpotifyUser(data);
-    localStorage.setItem("spotifyUser", JSON.stringify(data));
-    window.history.pushState(
-      "",
-      "",
-      window.location.host.includes("localhost")
-        ? "http://" + window.location.host
-        : "https://" + window.location.host,
-    );
-  };
-
-  const getPlaylist = async (playlistId) => {
-    await checkTokenTime();
-    const temp = await fetch(
-      `https://api.spotify.com/v1/playlists/${playlistId}`,
-      {
-        headers: { Authorization: `Bearer ${auth.access_token}` },
-      },
-    );
-    const response = await temp.json();
-
-    const playlist = {
-      id: response.id,
-      tracks: response.tracks.items,
-      link: response.href,
-    };
-    setPlaylist(playlist);
-    localStorage.setItem("playlist", JSON.stringify(playlist));
   };
 
   const tokenCall = async (code) => {
@@ -167,6 +109,70 @@ export function SpotifyClientProvider({ children }) {
       getSpotifyUser();
     }
     // needs error handling;
+  };
+
+  const getSpotifyUser = async () => {
+    if (!auth) return;
+
+    const res = await fetch("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: `Bearer ${auth.access_token}`,
+      },
+    });
+    const data = await res.json();
+    // console.log(data);
+    setSpotifyUser(data);
+    localStorage.setItem("spotifyUser", JSON.stringify(data));
+    window.history.pushState(
+      "",
+      "",
+      window.location.host.includes("localhost")
+        ? "http://" + window.location.host
+        : "https://" + window.location.host,
+    );
+  };
+
+  async function onSuccessCode(code) {
+    await tokenCall(code);
+    await checkForPlaylist();
+  }
+
+  const checkForPlaylist = async () => {
+    // looks for the playlist 'Randofy' in user playlists to see if its available
+    await checkTokenTime();
+    // recursive because can only get 50 items at a time
+    await findPlaylist(0, -1);
+  };
+
+  const getPlaylist = async (playlistId) => {
+    await checkTokenTime();
+    const temp = await fetch(
+      `https://api.spotify.com/v1/playlists/${playlistId}`,
+      {
+        headers: { Authorization: `Bearer ${auth.access_token}` },
+      },
+    );
+    const response = await temp.json();
+
+    const playlist = {
+      id: response.id,
+      tracks: response.tracks.items,
+      link: response.href,
+    };
+    setPlaylist(playlist);
+    localStorage.setItem("playlist", JSON.stringify(playlist));
+  };
+
+  const getPlaylistItems = async () => {
+    if (playlist) {
+      return 1;
+    }
+    await checkTime();
+    let ids = [];
+    playlist.tracks.map((track) => {
+      return ids.push(track.track.id);
+    });
+    setPlaylistSongs(ids);
   };
 
   const findPlaylist = async (offset, total) => {
@@ -206,13 +212,6 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
-  const checkForPlaylist = async () => {
-    // looks for the playlist 'Randofy' in user playlists to see if its available
-    await checkTokenTime();
-    // recursive because can only get 50 items at a time
-    await findPlaylist(0, -1);
-  };
-
   const createPlaylist = async () => {
     // check token status first, always.
     // (this is probably not needed but i did it always previously);
@@ -249,6 +248,48 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
+  const addToPlaylist = async (songId) => {
+    await checkTokenTime();
+    // creates playlist if there is none
+    await checkForPlaylist();
+
+    if (playlist && playlistSongs.includes(songId)) {
+      return 0;
+    } else {
+      const songUri = "spotify:track:" + songId;
+      return await axios
+        .post(
+          `https://api.spotify.com/v1/playlists/${this.state.playlist.id}/tracks?uris=${songUri}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${this.state.auth.access_token}`,
+              Accept: "application/json",
+            },
+          },
+        )
+        .then(() => {
+          let ids = this.state.songIds ? this.state.songIds : [];
+          ids.push(songId);
+          this.setState({
+            songIds: ids,
+          });
+        })
+        .catch((error) => {
+          // console.log("error in addSong")
+          this.setState(
+            {
+              error: error,
+            },
+            () => {
+              // console.log(this.state.error)
+            },
+          );
+          // what happens????
+        });
+    }
+  };
+
   const updateSongHistory = (songs) => {
     // localStorage.removeItem("history");
     // check if local storage can be reached else return
@@ -276,12 +317,14 @@ export function SpotifyClientProvider({ children }) {
 
   const logoutRequest = () => {
     // Clear localStorage/sessionStorage/cookies
-    localStorage.removeItem("auth");
     localStorage.removeItem("spotifyUser");
-
-    // Optionally: clear from state/context too
-    setAuth(null);
+    localStorage.removeItem("auth");
+    localStorage.removeItem("playlist");
     setSpotifyUser(null);
+    setAuth(null);
+    setPlaylist(null);
+    setSongIds(null);
+    setError(null);
 
     // Optional: Show a toast or message if needed
     console.log("Logged out.");
@@ -352,18 +395,6 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
-  // const generateSongs = async () => {
-  //   setIsLoading(!isLoading);
-  //   const songs = await getSongs();
-  //   if (songs && songs.length !== 0) {
-  //     setCurrentSongs(songs.recommendedTracks);
-  //     // setSonglist(songs.recommendedTracks);
-  //   }
-  //   setIsLoading(!isLoading);
-
-  //   //isLoading
-  // };
-
   const spotifyClient = {
     spotifyUser,
     loginRequest,
@@ -384,6 +415,9 @@ export function SpotifyClientProvider({ children }) {
     setSongDetails,
     genres,
     setGenres,
+    //playlist
+    addToPlaylist,
+    removeFromPlaylist,
   };
 
   const context = {
@@ -404,19 +438,3 @@ export function useSpotifyContext() {
   }
   return context;
 }
-
-// first attempt
-// const ContextProvider = (props) => {
-//     const [isLoading, setIsLoading] = useState(true);
-
-//     return (
-//         <Context.Provider value={{
-//                 isLoading,
-//                 // setIsLoading,
-//             }}>
-//             {props.children}
-//         </Context.Provider>
-//     );
-// };
-
-// export default ContextProvider;
