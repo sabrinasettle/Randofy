@@ -23,6 +23,7 @@ export default function Nav() {
             unoptimized
             width={24}
             height={24}
+            alt="Randofy Logo"
           />
         </Link>
         <AuthButton />

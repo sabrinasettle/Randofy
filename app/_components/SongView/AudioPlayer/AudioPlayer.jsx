@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-// import { createArtists } from "../../../utils/createArtists.js";
+import { useSongViewContext } from "../../../context/song-view-context.js";
+import { useSpotifyContext } from "../../../context/spotify-context";
 import Controls from "./Controls/Controls.jsx";
 import ProgressBar from "./ProgressBar.jsx";
 import { Share2, Plus, Eye } from "lucide-react";
-import { useSongViewContext } from "../../../context/song-view-context.js";
 import Tooltip from "../../ui/ToolTip.jsx";
 
 export default function AudioPlayer({
@@ -12,6 +12,8 @@ export default function AudioPlayer({
   // setOpenInformation: _setOpenInfoermation = null,
 }) {
   const { songViewContext } = useSongViewContext();
+  const { spotifyClient } = useSpotifyContext();
+  const { spotifyUser } = spotifyClient;
   const [isPlaying, setIsPlaying] = useState(false);
   const [openInformation, setOpenInformation] = useState(false);
   const audioRef = useRef(null);
@@ -53,6 +55,7 @@ export default function AudioPlayer({
   const addIconHeight = isMobile ? 32 : 24;
   const eyeIconHeight = isMobile ? 32 : 24;
 
+  const addTooltipString = spotifyUser ? "Add to Playlist" : "Login to Add";
   return (
     <div className={`flex-1 pt-0`}>
       {preview ? (
@@ -87,7 +90,7 @@ export default function AudioPlayer({
           <div className="flex flex-row gap-1">
             {/* If Logged in have the button available */}
             {/* toast suggesting to be logged in iif not? */}
-            <Tooltip text="Login to Add">
+            <Tooltip text={addTooltipString}>
               <button
                 id="add-song"
                 className={`${buttonStyle}`}
