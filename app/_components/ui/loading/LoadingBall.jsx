@@ -7,6 +7,32 @@ export default function LoadingBall({ isLoading }) {
   const mountRef = useRef();
   const [readyToHide, setReadyToHide] = useState(false);
 
+  function createCircleTexture() {
+    const size = 64;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+
+    const ctx = canvas.getContext("2d");
+    const gradient = ctx.createRadialGradient(
+      size / 2,
+      size / 2,
+      0,
+      size / 2,
+      size / 2,
+      size / 2,
+    );
+    gradient.addColorStop(0, "white");
+    gradient.addColorStop(1, "transparent");
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    return new THREE.CanvasTexture(canvas);
+  }
+
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
@@ -15,21 +41,21 @@ export default function LoadingBall({ isLoading }) {
     const height = mount.clientHeight;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-    camera.position.z = 100;
+    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+    camera.position.z = 150;
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(width, height);
     mount.appendChild(renderer.domElement);
 
     // Central sphere
-    const sphereGeom = new THREE.SphereGeometry(10, 64, 64);
+    const sphereGeom = new THREE.SphereGeometry(15, 64, 64);
     const sphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const sphereMesh = new THREE.Mesh(sphereGeom, sphereMat);
     scene.add(sphereMesh);
 
     // Particles
-    const maxParticles = 100;
+    const maxParticles = 120;
     const particleGeom = new THREE.BufferGeometry();
     const positions = new Float32Array(maxParticles * 3);
     const sizes = new Float32Array(maxParticles);
@@ -41,8 +67,12 @@ export default function LoadingBall({ isLoading }) {
 
     const particleMat = new THREE.PointsMaterial({
       color: 0xffffff,
-      size: 5,
+      size: 6,
       sizeAttenuation: true,
+      transparent: true,
+      alphaTest: 0.1,
+      map: createCircleTexture(),
+      depthWrite: false,
     });
 
     const particles = new THREE.Points(particleGeom, particleMat);
@@ -58,7 +88,8 @@ export default function LoadingBall({ isLoading }) {
     let t = 0;
     let wasLoading = false;
     let gatherStart = null;
-    const spread = 40;
+    let regroupTimer = 0;
+    const spread = 60;
 
     const onResize = () => {
       const w = mount.clientWidth;
@@ -77,13 +108,14 @@ export default function LoadingBall({ isLoading }) {
           Math.random() - 0.5,
           Math.random() - 0.5,
         ).normalize();
-        const speed = Math.random() * 20 + 10;
+        const speed = Math.random() * 25 + 15;
         a.vel.copy(dir.multiplyScalar(speed));
       });
     };
 
     const animate = () => {
       t += 0.016;
+      regroupTimer += 0.016;
 
       if (mode === "idle") {
         sphereMesh.visible = true;
@@ -93,15 +125,21 @@ export default function LoadingBall({ isLoading }) {
           explode();
           mode = "explode";
           t = 0;
+          regroupTimer = 0;
         }
       } else {
         sphereMesh.visible = false;
         particles.visible = true;
 
-        // Switch to gather if loading is ending
         if (wasLoading && !isLoading && mode === "float") {
           mode = "gather";
           gatherStart = performance.now();
+        }
+
+        if (mode === "float" && regroupTimer > 4) {
+          mode = "gather";
+          gatherStart = performance.now();
+          regroupTimer = 0;
         }
 
         attrs.forEach((a, i) => {
@@ -126,10 +164,9 @@ export default function LoadingBall({ isLoading }) {
 
         particleGeom.attributes.position.needsUpdate = true;
 
-        // Finish gather and reset to idle
         if (mode === "gather" && performance.now() - gatherStart > 1000) {
-          mode = "idle";
-          setReadyToHide(true);
+          mode = isLoading ? "float" : "idle";
+          if (!isLoading) setReadyToHide(true);
         }
       }
 
@@ -153,8 +190,8 @@ export default function LoadingBall({ isLoading }) {
     <div
       ref={mountRef}
       style={{
-        width: readyToHide && !isLoading ? 0 : "200px",
-        height: readyToHide && !isLoading ? 0 : "200px",
+        width: readyToHide && !isLoading ? 0 : "300px",
+        height: readyToHide && !isLoading ? 0 : "300px",
         transition: "all 0.4s ease",
         overflow: "hidden",
         borderRadius: "100%",

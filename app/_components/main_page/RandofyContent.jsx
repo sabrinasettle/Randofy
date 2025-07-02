@@ -1,12 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
-// import Loading from "../layout/Loading";
-// import DoubleEndedSlider from "../ui/DoubleEndedSlider";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
-// import GetSongsButton from "./GetSongsButton";
-import AlbumStack from "./SongList/AlbumStack";
-import AlbumCarousel from "./SongList/AlbumCarousel";
 import SongListController from "./SongList/SongListController";
 import LoadingBall from "../ui/loading/LoadingBall";
 import ButtonsContainer from "./ButtonsContainer";
@@ -14,6 +9,7 @@ import ButtonsContainer from "./ButtonsContainer";
 export default function RandofyContent() {
   const { spotifyClient } = useSpotifyContext();
   const [filtersOpen, setFilterOpen] = useState(false);
+  const { spotifyUser } = spotifyClient;
 
   const hasContent =
     spotifyClient.isLoading || spotifyClient.currentSongs.length !== 0;
@@ -48,7 +44,10 @@ export default function RandofyContent() {
       {!hasContent && (
         <div className="flex flex-col items-center justify-center max-w-[600px] px-4 h-min">
           {/* Add codtional text here for showing the username */}
-          <h1 className="text-display-1 text-gray-700 pb-16 text-center">
+          {spotifyUser && (
+            <p className="font-body text-heading-2 text-gray-700 pb-7">{`Hi, ${spotifyUser?.display_name} `}</p>
+          )}
+          <h1 className="font-body text-display-1 text-gray-700 pb-16 text-center">
             5 totally random songs from Spotify
           </h1>
         </div>
