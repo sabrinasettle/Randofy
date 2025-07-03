@@ -7,10 +7,7 @@ import { usePathname } from "next/navigation";
 
 export default function Nav() {
   const pathname = usePathname();
-  const styleClass =
-    // pathname === "/" || "/information"
-    `font-body absolute top-0 left-0 w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000 z-40`;
-  // `font-body sticky top-0 left-0 w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000 z-30`
+  const styleClass = `font-body absolute top-0 left-0 w-full px-3 md:px-4 py-3 md:py-4 flex flex-row justify-between items-center bg-gray-000 z-40`;
   return (
     <nav className={styleClass}>
       <div className="flex flex-row items-center gap-2 md:gap-5">
