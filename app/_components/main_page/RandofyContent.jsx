@@ -64,6 +64,11 @@ export default function RandofyContent() {
           {showItem()}
         </div>
       )}
+      <div
+        className={`fixed top-4 right-4 z-50 px-4 py-2 rounded shadow-lg text-white ${"bg-green-600"}`}
+      >
+        Message
+      </div>
 
       <ButtonsContainer
         hasContent={hasContent}

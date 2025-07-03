@@ -1,7 +1,9 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 const SpotifyContext = React.createContext(null);
+import { useToast } from "./toast-context";
+
 export default SpotifyContext;
 // import { useColor } from "color-thief-react";
 
@@ -10,8 +12,8 @@ export function SpotifyClientProvider({ children }) {
   const [_code, setCode] = useState(null);
   const [auth, setAuth] = useState(null);
   const [playlist, setPlaylist] = useState(null);
-  const [songIds, setSongIds] = useState(null);
   const [playlistSongs, setPlaylistSongs] = useState(null);
+  // const [songIds, setSongIds] = useState(null);
   // const [filters, setFilters] = useState({}); //set default filters here
   const [currentSongs, setCurrentSongs] = useState([]);
   const [selectedSong, setSelectedSong] = useState({});
@@ -19,6 +21,7 @@ export function SpotifyClientProvider({ children }) {
   const [generationHistory, setGenerationHistory] = useState({});
   const [isMobile, setIsMobile] = useState();
   const [error, setError] = useState(null);
+  const { showToast } = useToast();
 
   // Filters
   const [songLimit, setSongLimit] = useState(5);
@@ -161,13 +164,14 @@ export function SpotifyClientProvider({ children }) {
     };
     setPlaylist(playlist);
     localStorage.setItem("playlist", JSON.stringify(playlist));
+    await getPlaylistItems();
   };
 
   const getPlaylistItems = async () => {
-    if (playlist) {
+    if (playlistSongs) {
       return 1;
     }
-    await checkTime();
+    await checkTokenTime();
     let ids = [];
     playlist.tracks.map((track) => {
       return ids.push(track.track.id);
@@ -187,11 +191,12 @@ export function SpotifyClientProvider({ children }) {
       },
     );
 
+    const data = await res.json();
     //Testing this for non 200 status... new on 10/7/24
     if (res.status !== 200) {
-      setError(res.json());
+      setError(data);
+      return;
     }
-    const data = await res.json();
     const items = data.items;
     if (total === -1) {
       total = data.total;
@@ -253,39 +258,32 @@ export function SpotifyClientProvider({ children }) {
     // creates playlist if there is none
     await checkForPlaylist();
 
-    if (playlist && playlistSongs.includes(songId)) {
+    if (playlistSongs && playlistSongs.includes(songId)) {
+      showToast("Song already in playlist", "info");
       return 0;
     } else {
       const songUri = "spotify:track:" + songId;
       return await axios
         .post(
-          `https://api.spotify.com/v1/playlists/${this.state.playlist.id}/tracks?uris=${songUri}`,
+          `https://api.spotify.com/v1/playlists/${playlist.id}/tracks?uris=${songUri}`,
           {},
           {
             headers: {
-              Authorization: `Bearer ${this.state.auth.access_token}`,
+              Authorization: `Bearer ${auth.access_token}`,
               Accept: "application/json",
             },
           },
         )
         .then(() => {
-          let ids = this.state.songIds ? this.state.songIds : [];
+          let ids = playlistSongs ? playlistSongs : [];
           ids.push(songId);
-          this.setState({
-            songIds: ids,
-          });
+          setPlaylistSongs(ids);
+          showToast("Song added to playlist", "success");
         })
         .catch((error) => {
           // console.log("error in addSong")
-          this.setState(
-            {
-              error: error,
-            },
-            () => {
-              // console.log(this.state.error)
-            },
-          );
-          // what happens????
+          setError(error);
+          showToast("Error adding song to playlist", "error");
         });
     }
   };
@@ -323,11 +321,39 @@ export function SpotifyClientProvider({ children }) {
     setSpotifyUser(null);
     setAuth(null);
     setPlaylist(null);
-    setSongIds(null);
+    setPlaylistSongs(null);
     setError(null);
 
     // Optional: Show a toast or message if needed
     console.log("Logged out.");
+  };
+
+  const removeFromPlaylist = async (songId) => {
+    await checkTokenTime();
+    if (!playlistSongs.includes(songId)) {
+      return 0;
+    } else {
+      const songUri = "spotify:track:" + songId;
+      return await axios
+        .delete(`https://api.spotify.com/v1/playlists/${playlist.id}/tracks`, {
+          headers: {
+            Authorization: `Bearer ${auth.access_token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          data: {
+            tracks: [{ uri: songUri }],
+          },
+        })
+        .then(() => {
+          let ids = playlistSongs;
+          const i = ids.indexOf(songId);
+          // looks for item in array, and removes it
+          ids.splice(i, 1);
+          setPlaylistSongs(ids);
+        })
+        .catch((error) => {});
+    }
   };
 
   React.useMemo(async () => {

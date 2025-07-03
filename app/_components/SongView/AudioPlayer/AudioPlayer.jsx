@@ -2,18 +2,21 @@
 import { useState, useEffect, useRef } from "react";
 import { useSongViewContext } from "../../../context/song-view-context.js";
 import { useSpotifyContext } from "../../../context/spotify-context";
+import { useToast } from "../../../context/toast-context";
+
 import Controls from "./Controls/Controls.jsx";
 import ProgressBar from "./ProgressBar.jsx";
 import { Share2, Plus, Eye } from "lucide-react";
 import Tooltip from "../../ui/ToolTip.jsx";
+import AddSongButton from "./AddSongButton.jsx";
+import ShareButton from "./ShareButton.jsx";
 
-export default function AudioPlayer({
-  song,
-  // setOpenInformation: _setOpenInfoermation = null,
-}) {
+export default function AudioPlayer({ song }) {
   const { songViewContext } = useSongViewContext();
   const { spotifyClient } = useSpotifyContext();
+  const { showToast } = useToast();
   const { spotifyUser } = spotifyClient;
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [openInformation, setOpenInformation] = useState(false);
   const audioRef = useRef(null);
@@ -51,11 +54,11 @@ export default function AudioPlayer({
   const preview = song.preview_url;
 
   const buttonStyle = `hover:bg-gray-100 border border-transparent hover:border-gray-200 hover:text-gray-700 text-gray-600 p-2 rounded-sm ${!isMobile ? "h-[42px] w-[42px]" : "h-[48px] w-[48px]"}`;
-  const shareIconHeight = isMobile ? 28 : 20;
-  const addIconHeight = isMobile ? 32 : 24;
+  // const shareIconHeight = isMobile ? 28 : 20;
+  // const addIconHeight = isMobile ? 32 : 24;
   const eyeIconHeight = isMobile ? 32 : 24;
 
-  const addTooltipString = spotifyUser ? "Add to Playlist" : "Login to Add";
+  // const addTooltipString = spotifyUser ? "Add to Playlist" : "Login to Add";
   return (
     <div className={`flex-1 pt-0`}>
       {preview ? (
@@ -74,7 +77,11 @@ export default function AudioPlayer({
           className={`flex flex-row justify-between flex-1 pt-0 text-gray-600`}
         >
           {/* <p className="pb-2">No Preview Available</p> */}
-          <a className="pt-2 pb-2" id="open-spotify" href={song.href}>
+          <a
+            className="font-body text-body-md pt-2 pb-2 hover:text-gray-700"
+            id="open-spotify"
+            href={song.href}
+          >
             Open in Spotify
           </a>
         </div>
@@ -90,30 +97,9 @@ export default function AudioPlayer({
           <div className="flex flex-row gap-1">
             {/* If Logged in have the button available */}
             {/* toast suggesting to be logged in iif not? */}
-            <Tooltip text={addTooltipString}>
-              <button
-                id="add-song"
-                className={`${buttonStyle}`}
-                disabled={spotifyUser ? false : true}
-                onClick={() => {
-                  if (spotifyUser) {
-                    spotifyClient.addToPlaylist(song.id);
-                  } else {
-                    console.log("User is not logged in");
-                    toast("Please log in to add songs to your playlist");
-                  }
-                }}
-              >
-                {/* 44px at mobile */}
-                <Plus width={addIconHeight} height={addIconHeight} />
-              </button>
-            </Tooltip>
+            <AddSongButton song={song} />
 
-            <Tooltip text="Share song">
-              <button id="share-song" className={`${buttonStyle}`}>
-                <Share2 width={shareIconHeight} height={shareIconHeight} />
-              </button>
-            </Tooltip>
+            <ShareButton song={song} />
           </div>
         </div>
         {isDefault && (
