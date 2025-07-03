@@ -37,39 +37,41 @@ export default function RandofyContent() {
 
   return (
     // overflow-hidden
-    <div className="flex h-screen w-full flex-col justify-center items-center relative pb-16 md:pb-6 overflow-hidden z-20">
-      {/* Buttons Container - responsive behavior */}
+    <div>
+      <div className="flex h-screen w-full flex-col justify-center items-center relative pb-16 md:pb-6 overflow-hidden z-0">
+        {/* Buttons Container - responsive behavior */}
 
-      {/* Default state - centered text */}
-      {!hasContent && (
-        <div className="flex flex-col items-center justify-center max-w-[600px] px-4 h-min">
-          {/* Add codtional text here for showing the username */}
-          {spotifyUser && (
-            <p className="font-body text-heading-2 text-gray-700 pb-7">{`Hi, ${spotifyUser?.display_name} `}</p>
-          )}
-          <h1 className="font-body text-display-1 text-gray-700 pb-16 text-center">
-            5 totally random songs from Spotify
-          </h1>
-        </div>
-      )}
+        {/* Default state - centered text */}
+        {!hasContent && (
+          <div className="flex flex-col items-center justify-center max-w-[600px] px-4 h-min">
+            {/* Add codtional text here for showing the username */}
+            {spotifyUser && (
+              <p className="font-body text-heading-2 text-gray-700 pb-7">{`Hi, ${spotifyUser?.display_name} `}</p>
+            )}
+            <h1 className="font-body text-display-1 text-gray-700 pb-16 text-center">
+              5 totally random songs from Spotify
+            </h1>
+          </div>
+        )}
 
-      {/* Content Container - shows when loading or has songs */}
-      {hasContent && (
-        <div
-          className={`h-full w-full flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-1 ${
-            hasContent ? "md:mt-5" : ""
-          }`}
-          id="content-container"
-        >
-          {showItem()}
-        </div>
-      )}
+        {/* Content Container - shows when loading or has songs */}
+        {hasContent && (
+          <div
+            className={`h-full w-full flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-1 ${
+              hasContent ? "md:mt-5" : ""
+            }`}
+            id="content-container"
+          >
+            {showItem()}
+          </div>
+        )}
 
-      <ButtonsContainer
-        hasContent={hasContent}
-        filtersOpen={filtersOpen}
-        setFilterOpen={setFilterOpen}
-      />
+        <ButtonsContainer
+          hasContent={hasContent}
+          filtersOpen={filtersOpen}
+          setFilterOpen={setFilterOpen}
+        />
+      </div>
 
       <FilterDrawer
         isOpen={filtersOpen}

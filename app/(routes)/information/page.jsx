@@ -1,6 +1,6 @@
 export default function Information() {
   return (
-    <div className="w-full px-3 md:px-4 py-4 md:py-4 flex flex-col lg:flex-row justify-between gap-28">
+    <div className="w-full px-3 md:px-4 pt-[72px] flex flex-col lg:flex-row justify-between gap-28">
       <section className="text-gray-700 w-full">
         <p className="text-display-2 pb-6">
           Built by{" "}

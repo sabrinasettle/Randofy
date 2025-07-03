@@ -17,7 +17,6 @@ import {
 
 export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
-  // const { layoutContext } = useGridContext();
   const { songViewContext } = useSongViewContext();
   const isMobile = songViewContext.isMobile;
 
@@ -120,8 +119,6 @@ export default function HistoryContent() {
     const startOfDay = new Date(now.setHours(0, 0, 0, 0));
     const endOfDay = new Date(now.setHours(23, 59, 59, 59));
 
-    // let dateString = today.toLocaleDateString();
-    // console.log("today", dateString, historyFilter);
     if (historyFilter === "Today") {
       return filterObjectByDateRange(history, startOfDay, endOfDay);
     } else if (historyFilter === "This Week") {
@@ -158,27 +155,6 @@ export default function HistoryContent() {
         filteredObj[key] = obj[key];
       });
 
-    // Object.keys(obj).map((key) => {
-    //   var [month, day, year] = key.split("/");
-    //   // this can be new Date(key) as key is a locale date string (defaults to start of day)
-    //   let date = new Date(year, month - 1, day, 0, 0, 0, 0);
-    //   // console.log("start", startDate, "end", endDate);
-    //   // console.log(date, year, month - 1, day);
-
-    //   const startDateString = startDate.toLocaleDateString();
-    //   const endDateString = endDate.toLocaleDateString();
-
-    //   // 4/22/2024 which is werid
-
-    //   // if the start and the end are the same, its today
-    //   if (startDateString === key && endDateString === key) {
-    //     filteredObj[key] = obj[key];
-    //     return filteredObj;
-    //   }
-    //   if (date >= startDate && date <= endDate) {
-    //     filteredObj[key] = obj[key];
-    //   }
-    // });
     return filteredObj;
   }
 
@@ -198,14 +174,13 @@ export default function HistoryContent() {
   }
 
   const filteredHistory = filteredSongHistory();
-  // console.log(filteredHistory);
   const isEmptyObject = (obj) => Object.keys(obj).length === 0;
 
   return (
     // h-screen
     <div
-      id="hisotry-content"
-      className="px-3 md:px-4 pb-2 h-[calc(100vh-71px)] flex flex-col"
+      id="history-content"
+      className="h-screen flex flex-col px-3 pt-[72px] md:px-4 pb-2"
     >
       <section className="flex flex-row flex-1 md:overflow-hidden">
         {!history || isEmptyObject(history) ? (
@@ -222,7 +197,7 @@ export default function HistoryContent() {
               }`}
             >
               {/* Your existing header with filters */}
-              <div className="w-full flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between flex-shrink-0 pb-4">
+              <div className="w-full flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between flex-shrink-0 pb-2">
                 {history && (
                   <HistoryFilters
                     updateFilter={updateFilter}
