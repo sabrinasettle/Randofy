@@ -35,6 +35,20 @@ export function SpotifyClientProvider({ children }) {
   });
   const [genres, setGenres] = useState(new Set());
 
+  const valueStrings = {
+    popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
+    acoustics: [
+      "All Electric",
+      "Mostly Electric",
+      "Some Acoustic",
+      "All Acoustic",
+    ],
+    energy: ["Super Chill", "Kinda Chill", "Kinda Hype", "Super Hype"],
+    vocals: ["No Vocals", "Some Vocals", "Lots of Vocals", "All Vocals"],
+    danceability: ["No Groove", "Almost a Bop", "Bop", "Dance Party"],
+    mood: ["Real Low", "Kinda Low", "Kinda High", "Real High"],
+  };
+
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const spotifyUser = JSON.parse(localStorage.getItem("spotifyUser"));
@@ -441,6 +455,7 @@ export function SpotifyClientProvider({ children }) {
     setSongDetails,
     genres,
     setGenres,
+    valueStrings,
     //playlist
     addToPlaylist,
     removeFromPlaylist,

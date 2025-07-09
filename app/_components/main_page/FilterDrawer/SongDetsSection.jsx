@@ -2,6 +2,7 @@
 import {} from "react";
 import DoubleEndedSlider from "../../ui/DoubleEndedSlider";
 import { ArrowLeft } from "lucide-react";
+import { useSpotifyContext } from "../../../context/spotify-context";
 
 export default function SongDetailsSection({
   navigateBack,
@@ -9,7 +10,10 @@ export default function SongDetailsSection({
   onFilterChange,
   changed,
 }) {
-  const handleSongDetailsFilterChange = (filterName: string, range) => {
+  const { spotifyClient } = useSpotifyContext();
+  const valueStrings = spotifyClient?.valueStrings;
+
+  const handleSongDetailsFilterChange = (filterName, range) => {
     onFilterChange(filterName, range);
   };
 
@@ -32,25 +36,6 @@ export default function SongDetailsSection({
         )}
       </div>
 
-      {/* <div className="p-4 flex flex-row justify-between">
-        <button
-          onClick={navigateBack}
-          className="flex items-center gap-4 text-gray-400 hover:text-white"
-        >
-          <ArrowLeft size={20} />
-          <h1 className="text-white text-lg font-medium">Genres</h1>
-        </button>
-        {selectedGenres.size === 0 ? (
-          <span className="text-lg font-normal text-gray-600">
-            [{selectedGenres.size}]
-          </span>
-        ) : (
-          <span className="font-semibold text-gray-700">
-            [{selectedGenres.size}]
-          </span>
-        )}
-      </div> */}
-
       {/* Content */}
       <div className="flex-1 p-4 overflow-y-auto">
         <div className="flex flex-col gap-6">
@@ -62,6 +47,7 @@ export default function SongDetailsSection({
               onChange={(newRange) =>
                 handleSongDetailsFilterChange(key, newRange)
               } // Pass key to handler
+              valueStrings={valueStrings}
             />
           ))}
         </div>

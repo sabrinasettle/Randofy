@@ -5,9 +5,11 @@ import SongDetailsSection from "./SongDetsSection";
 import { useSpotifyContext } from "../../../context/spotify-context";
 
 // Reusable TagList component
-function TagList({ items, onRemove, className = "" }) {
+// Needs logic for handling string tags from Song Dets
+function TagList({ items, onRemove, className = "", valueStrings = null }) {
   if (!items || items.size === 0) return null;
 
+  console.log(valueStrings, items);
   const tagElements = Array.from(items, (item, index) => (
     <div
       key={index}
@@ -38,7 +40,6 @@ function TagList({ items, onRemove, className = "" }) {
 
 export default function FilterDrawer({ isOpen, onClose }) {
   const [activePanel, setActivePanel] = useState("main");
-  // const [sliderValue, setSliderValue] = useState(5);
   const [isVisible, setIsVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
 
@@ -58,6 +59,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const songDetailsFilters = spotifyClient.songDetails;
   const selectedGenres = spotifyClient.genres;
   const sliderValue = spotifyClient.songLimit;
+  const valueStrings = spotifyClient?.valueStrings;
 
   // Remove functions for TagList
   const removeGenre = (genre) => {
@@ -298,6 +300,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
                 <TagList
                   items={changedSongDetailFilters}
                   onRemove={removeSongDetailFilter}
+                  valueStrings={valueStrings}
                 />
               </div>
             )}

@@ -5,6 +5,8 @@ const FilterButton = ({ handleOpen, isSmall }) => {
     ? `bg-gray-100 px-3 py-2 md:w-auto`
     : `bg-gray-100 px-4 py-3 md:w-auto`;
 
+  //values changed
+
   return (
     <button
       className={`font-body rounded-sm text-gray-700 border border-transparent hover:border-gray-300 transition-all duration-700 ease-in-out w-full md:w-auto ${
