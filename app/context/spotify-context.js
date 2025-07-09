@@ -26,7 +26,7 @@ export function SpotifyClientProvider({ children }) {
   // Filters
   const [songLimit, setSongLimit] = useState(5);
   const [songDetails, setSongDetails] = useState({
-    popularity: { min: 0, max: 100 },
+    popularity: { min: 0, max: 1.0 },
     acoustics: { min: 0.0, max: 1.0 },
     energy: { min: 0.0, max: 1.0 },
     vocals: { min: 0.0, max: 1.0 },

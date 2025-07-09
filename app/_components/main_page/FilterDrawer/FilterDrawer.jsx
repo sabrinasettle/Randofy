@@ -122,7 +122,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
         break;
       case "songDetails":
         spotifyClient.setSongDetails({
-          popularity: { min: 0, max: 100 },
+          popularity: { min: 0, max: 1.0 },
           acoustics: { min: 0.0, max: 1.0 },
           energy: { min: 0.0, max: 1.0 },
           vocals: { min: 0.0, max: 1.0 },
@@ -135,7 +135,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
         // Clear all filters
         spotifyClient.setGenres(new Set());
         spotifyClient.setSongDetails({
-          popularity: { min: 0, max: 100 },
+          popularity: { min: 0, max: 1.0 },
           acoustics: { min: 0.0, max: 1.0 },
           energy: { min: 0.0, max: 1.0 },
           vocals: { min: 0.0, max: 1.0 },
@@ -156,7 +156,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   const changedSongDetailsCount = useMemo(() => {
     const defaultFilters = {
-      popularity: { min: 0, max: 100 },
+      popularity: { min: 0, max: 1.0 },
       acoustics: { min: 0.0, max: 1.0 },
       energy: { min: 0.0, max: 1.0 },
       vocals: { min: 0.0, max: 1.0 },
@@ -176,7 +176,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   // Get changed song detail filters for TagList
   const changedSongDetailFilters = useMemo(() => {
     const defaultFilters = {
-      popularity: { min: 0, max: 100 },
+      popularity: { min: 0, max: 1.0 },
       acoustics: { min: 0.0, max: 1.0 },
       energy: { min: 0.0, max: 1.0 },
       vocals: { min: 0.0, max: 1.0 },
