@@ -12,7 +12,7 @@ export function CardLayoutProvider({ children }) {
     setLayoutType(element.id);
   }
 
-  function openSongDetails(song) {
+  function openSongDetails() {
     setIsDrawerOpen(true);
   }
 

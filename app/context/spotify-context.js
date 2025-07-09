@@ -1,40 +1,46 @@
 "use client";
-
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 const SpotifyContext = React.createContext(null);
+import { useToast } from "./toast-context";
+
 export default SpotifyContext;
-import { useColor } from "color-thief-react";
+// import { useColor } from "color-thief-react";
 
 export function SpotifyClientProvider({ children }) {
-  const [spotifyUser, setSpotifyUser] = React.useState(null);
-  const [auth, setAuth] = React.useState(null);
-  const [playlist, setPlaylist] = React.useState(null);
-  const [songIds, setSongIds] = React.useState(null);
-  const [error, setError] = React.useState(null);
-  const [filters, setFilters] = React.useState({}); //set default filters here
-  const [currentSongs, setCurrentSongs] = React.useState([]);
-  const [selectedSong, setSelectedSong] = React.useState({});
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [generationHistory, setGenerationHistory] = React.useState({});
-  //setGenerationHistory = { key: song[]} where song is {title,...}
+  const [spotifyUser, setSpotifyUser] = useState(null);
+  const [_code, setCode] = useState(null);
+  const [auth, setAuth] = useState(null);
+  const [playlist, setPlaylist] = useState(null);
+  const [playlistSongs, setPlaylistSongs] = useState(null);
+  // const [songIds, setSongIds] = useState(null);
+  // const [filters, setFilters] = useState({}); //set default filters here
+  const [currentSongs, setCurrentSongs] = useState([]);
+  const [selectedSong, setSelectedSong] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [generationHistory, setGenerationHistory] = useState({});
+  const [isMobile, setIsMobile] = useState();
+  const [error, setError] = useState(null);
+  const { showToast } = useToast();
 
-  let defaultFilters = {
-    numberOfSongs: 5,
-    popularity: [0, 100],
-    acousticness: [0.0, 1.0], //float range from 0.0 to 1.0
-    danceability: [0.0, 1.0], //float range from 0.0 to 1.0
-    energy: [0.0, 1.0], //float range from 0.0 to 1.0
-    tempo: [0.0, 1.0], //float range from 0.0 to 1.0
-    valence: [0.0, 1.0], //float range from 0.0 to 1.0
-    speechiness: [0.0, 1.0], //float range from 0.0 to 1.0
-    market: "",
-  };
+  // Filters
+  const [songLimit, setSongLimit] = useState(5);
+  const [songDetails, setSongDetails] = useState({
+    popularity: { min: 0, max: 100 },
+    acoustics: { min: 0.0, max: 1.0 },
+    energy: { min: 0.0, max: 1.0 },
+    vocals: { min: 0.0, max: 1.0 },
+    danceability: { min: 0.0, max: 1.0 },
+    mood: { min: 0.0, max: 1.0 },
+  });
+  const [genres, setGenres] = useState(new Set());
 
-  React.useEffect(() => {
+  useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const spotifyUser = JSON.parse(localStorage.getItem("spotifyUser"));
     const playlist = JSON.parse(localStorage.getItem("playlist"));
     const history = JSON.parse(localStorage.getItem("history"));
+
     if (auth) {
       setAuth(auth);
     }
@@ -47,33 +53,15 @@ export function SpotifyClientProvider({ children }) {
     if (history) {
       setGenerationHistory(history);
     }
-    setFilters(defaultFilters);
+    // setFilters(defaultFilters);
 
     const params = new URLSearchParams(window.location.search.substring(1));
     const code = params.get("code");
 
     if (code) {
-      onSuccessCode(code);
+      setCode(code);
     }
   }, []);
-
-  // const destroySession = () => {
-  //   // clear the localStorage
-  //   // this is done by updating the state
-  //   // will this work?? I mean does the user even get to login in everytime or is a straight apporal of the app in the first place?
-  //   localStorage.removeItem("spotifyUser");
-  //   localStorage.removeItem("auth");
-  //   localStorage.removeItem("playlist");
-  //   setSpotifyUser(null);
-  //   setAuth(null);
-  //   setPlaylist(null);
-  //   setSongIds(null);
-  //   setError(null);
-  // };
-  async function onSuccessCode(code) {
-    tokenCall(code);
-    checkForPlaylist();
-  }
 
   const checkTokenTime = async () => {
     // checks if auth is present and if a new time is greater than the time for auth
@@ -98,13 +86,44 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
+  const tokenCall = async (code) => {
+    // console.log("tokenCall", _code);
+    if (!_code) return;
+    // gets the user https://api.spotify.com/v1/me
+    // https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
+    // needs the access_token and token_type in the request
+    const res = await fetch(`/api/token?code=${_code}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch token");
+    } else {
+      const data = await res.json();
+      const seconds = data.expires_in;
+      data.created_at = new Date();
+      data.expires_at = new Date().setSeconds(
+        data.created_at.getSeconds() + seconds,
+      );
+      localStorage.setItem("auth", JSON.stringify(data));
+      setAuth(data);
+      getSpotifyUser();
+    }
+    // needs error handling;
+  };
+
   const getSpotifyUser = async () => {
+    if (!auth) return;
+
     const res = await fetch("https://api.spotify.com/v1/me", {
       headers: {
         Authorization: `Bearer ${auth.access_token}`,
       },
     });
     const data = await res.json();
+    // console.log(data);
     setSpotifyUser(data);
     localStorage.setItem("spotifyUser", JSON.stringify(data));
     window.history.pushState(
@@ -114,6 +133,18 @@ export function SpotifyClientProvider({ children }) {
         ? "http://" + window.location.host
         : "https://" + window.location.host,
     );
+  };
+
+  async function onSuccessCode(code) {
+    await tokenCall(code);
+    await checkForPlaylist();
+  }
+
+  const checkForPlaylist = async () => {
+    // looks for the playlist 'Randofy' in user playlists to see if its available
+    await checkTokenTime();
+    // recursive because can only get 50 items at a time
+    await findPlaylist(0, -1);
   };
 
   const getPlaylist = async (playlistId) => {
@@ -133,34 +164,24 @@ export function SpotifyClientProvider({ children }) {
     };
     setPlaylist(playlist);
     localStorage.setItem("playlist", JSON.stringify(playlist));
+    await getPlaylistItems();
   };
 
-  const tokenCall = async (code) => {
-    // gets the user https://api.spotify.com/v1/me
-    // https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
-    // needs the access_token and token_type in the request
-    const res = await fetch("/api/token", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      params: {
-        code,
-      },
+  const getPlaylistItems = async () => {
+    if (playlistSongs) {
+      return 1;
+    }
+    await checkTokenTime();
+    let ids = [];
+    playlist.tracks.map((track) => {
+      return ids.push(track.track.id);
     });
-    const data = await res.json();
-    const seconds = data.expires_in;
-    data.created_at = new Date();
-    data.expires_at = new Date().setSeconds(
-      data.created_at.getSeconds() + seconds,
-    );
-    localStorage.setItem("auth", JSON.stringify(data));
-    setAuth(data);
-    getSpotifyUser();
-    // needs error handling;
+    setPlaylistSongs(ids);
   };
 
   const findPlaylist = async (offset, total) => {
+    console.log("findPlaylist", auth);
+    if (!auth) return;
     const res = await fetch(
       `https://api.spotify.com/v1/me/playlists?limit=50&offset=${offset}`,
       {
@@ -170,11 +191,12 @@ export function SpotifyClientProvider({ children }) {
       },
     );
 
+    const data = await res.json();
     //Testing this for non 200 status... new on 10/7/24
     if (res.status !== 200) {
-      setError(res.json());
+      setError(data);
+      return;
     }
-    const data = await res.json();
     const items = data.items;
     if (total === -1) {
       total = data.total;
@@ -193,13 +215,6 @@ export function SpotifyClientProvider({ children }) {
     } else {
       findPlaylist(offset + 50, total);
     }
-  };
-
-  const checkForPlaylist = async () => {
-    // looks for the playlist 'Randofy' in user playlists to see if its available
-    await checkTokenTime();
-    // recursive because can only get 50 items at a time
-    await findPlaylist(0, -1);
   };
 
   const createPlaylist = async () => {
@@ -238,6 +253,41 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
+  const addToPlaylist = async (songId) => {
+    await checkTokenTime();
+    // creates playlist if there is none
+    await checkForPlaylist();
+
+    if (playlistSongs && playlistSongs.includes(songId)) {
+      showToast("Song already in playlist", "info");
+      return 0;
+    } else {
+      const songUri = "spotify:track:" + songId;
+      return await axios
+        .post(
+          `https://api.spotify.com/v1/playlists/${playlist.id}/tracks?uris=${songUri}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${auth.access_token}`,
+              Accept: "application/json",
+            },
+          },
+        )
+        .then(() => {
+          let ids = playlistSongs ? playlistSongs : [];
+          ids.push(songId);
+          setPlaylistSongs(ids);
+          showToast("Song added to playlist", "success");
+        })
+        .catch((error) => {
+          // console.log("error in addSong")
+          setError(error);
+          showToast("Error adding song to playlist", "error");
+        });
+    }
+  };
+
   const updateSongHistory = (songs) => {
     // localStorage.removeItem("history");
     // check if local storage can be reached else return
@@ -259,11 +309,98 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
+  const loginRequest = async () => {
+    window.location.href = "/api/login";
+  };
+
+  const logoutRequest = () => {
+    // Clear localStorage/sessionStorage/cookies
+    localStorage.removeItem("spotifyUser");
+    localStorage.removeItem("auth");
+    localStorage.removeItem("playlist");
+    setSpotifyUser(null);
+    setAuth(null);
+    setPlaylist(null);
+    setPlaylistSongs(null);
+    setError(null);
+
+    // Optional: Show a toast or message if needed
+    console.log("Logged out.");
+  };
+
+  const removeFromPlaylist = async (songId) => {
+    await checkTokenTime();
+    if (!playlistSongs.includes(songId)) {
+      return 0;
+    } else {
+      const songUri = "spotify:track:" + songId;
+      return await axios
+        .delete(`https://api.spotify.com/v1/playlists/${playlist.id}/tracks`, {
+          headers: {
+            Authorization: `Bearer ${auth.access_token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          data: {
+            tracks: [{ uri: songUri }],
+          },
+        })
+        .then(() => {
+          let ids = playlistSongs;
+          const i = ids.indexOf(songId);
+          // looks for item in array, and removes it
+          ids.splice(i, 1);
+          setPlaylistSongs(ids);
+        })
+        .catch((error) => {});
+    }
+  };
+
+  React.useMemo(async () => {
+    if (_code) {
+      await onSuccessCode(_code);
+    }
+  }, [_code]);
+
   const getSongs = async () => {
     setIsLoading(true);
-    // await checkTokenTime();
+
     const params = new URLSearchParams();
-    params.set("filters", JSON.stringify(filters));
+
+    // const [songDetails, setSongDetails] = useState({
+    //   popularity: { min: 0, max: 100 },
+    //   acoustics: { min: 0.0, max: 1.0 },
+    //   energy: { min: 0.0, max: 1.0 },
+    //   vocals: { min: 0.0, max: 1.0 },
+    //   danceability: { min: 0.0, max: 1.0 },
+    //   mood: { min: 0.0, max: 1.0 },
+    // });
+
+    params.set("limit", songLimit);
+
+    params.set("min_popularity", songDetails.popularity.min * 100);
+    params.set("max_popularity", songDetails.popularity.max * 100);
+
+    params.set("min_energy", songDetails.energy.min);
+    params.set("max_energy", songDetails.energy.max);
+
+    params.set("min_danceability", songDetails.danceability.min);
+    params.set("max_danceability", songDetails.danceability.max);
+
+    params.set("min_acousticness", songDetails.acoustics.min);
+    params.set("max_acousticness", songDetails.acoustics.max);
+
+    params.set("min_speechiness", songDetails.vocals.min);
+    params.set("max_speechiness", songDetails.vocals.max);
+
+    params.set("min_valence", songDetails.mood.min);
+    params.set("max_valence", songDetails.mood.max);
+
+    if (!genres.size === 0) {
+      const fiveGenres = genres.size > 5 ? genres.slice(0, 5) : genres;
+      params.set("genres", Array.from(fiveGenres));
+    }
+
     const res = await fetch("/api/random?" + params.toString());
 
     if (!res.ok) {
@@ -271,7 +408,10 @@ export function SpotifyClientProvider({ children }) {
       setIsLoading(false);
     } else {
       const data = await res.json();
+      // console.log(data);
+
       let song = data.recommendedTracks[0];
+      // console.log(song);
       setCurrentSongs(data.recommendedTracks);
       setSelectedSong({ index: 0, song });
 
@@ -281,21 +421,11 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
-  // const generateSongs = async () => {
-  //   setIsLoading(!isLoading);
-  //   const songs = await getSongs();
-  //   if (songs && songs.length !== 0) {
-  //     setCurrentSongs(songs.recommendedTracks);
-  //     // setSonglist(songs.recommendedTracks);
-  //   }
-  //   setIsLoading(!isLoading);
-
-  //   //isLoading
-  // };
-
   const spotifyClient = {
+    spotifyUser,
+    loginRequest,
+    logoutRequest,
     getPlaylist,
-    setFilters,
     getSongs,
     currentSongs,
     setCurrentSongs,
@@ -303,6 +433,17 @@ export function SpotifyClientProvider({ children }) {
     setSelectedSong,
     selectedSong,
     generationHistory,
+    isMobile,
+    // Filters
+    songLimit,
+    setSongLimit,
+    songDetails,
+    setSongDetails,
+    genres,
+    setGenres,
+    //playlist
+    addToPlaylist,
+    removeFromPlaylist,
   };
 
   const context = {
@@ -323,19 +464,3 @@ export function useSpotifyContext() {
   }
   return context;
 }
-
-// first attempt
-// const ContextProvider = (props) => {
-//     const [isLoading, setIsLoading] = useState(true);
-
-//     return (
-//         <Context.Provider value={{
-//                 isLoading,
-//                 // setIsLoading,
-//             }}>
-//             {props.children}
-//         </Context.Provider>
-//     );
-// };
-
-// export default ContextProvider;

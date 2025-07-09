@@ -1,5 +1,15 @@
 import "./global.css";
-import { hanken_grotesk } from "./utils/fonts.js";
+import {
+  dm_mono,
+  dm_sans,
+  sono,
+  ibm_plex_sans,
+  ibm_plex_mono,
+} from "./lib/fonts.js";
+import Nav from "./_components/layout/header/Header";
+import { SpotifyClientProvider } from "./context/spotify-context";
+import { SongViewProvider } from "./context/song-view-context";
+import { ToastProvider } from "./context/toast-context";
 
 export const metadata = {
   title: "Randofy",
@@ -8,10 +18,24 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html>
-      <body className={`${hanken_grotesk}`}>
-        <main>{children}</main>
-      </body>
+    <html
+      lang="en"
+      className={`${dm_mono} ${dm_sans} ${sono} ${ibm_plex_sans} ${ibm_plex_mono}`}
+    >
+      <ToastProvider>
+        <SpotifyClientProvider>
+          <SongViewProvider>
+            <body className="overscroll-none">
+              <div className="h-screen">
+                {/* AuthProvider */}
+                <Nav />
+                {children}
+              </div>
+              {/* Auth Provider */}
+            </body>
+          </SongViewProvider>
+        </SpotifyClientProvider>
+      </ToastProvider>
     </html>
   );
 }
