@@ -1,0 +1,11 @@
+.empty-card {
+    background-color: var(--transparent-background-gray);
+    border: #5D5D5D 1px solid;
+    width: 240px;
+    height: 240px;
+    border-radius: 20px;
+}
+
+.hover {
+ border: var(--gray-500) 1px solid;
+}

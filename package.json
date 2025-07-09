@@ -1,26 +1,41 @@
 {
-	"name": "spot-song-randomize",
-	"version": "0.1.0",
-	"private": true,
-	"scripts": {
-		"dev": "next dev",
-		"build": "next build",
-		"start": "next start"
-	},
-	"engines": {
-		"node": ">=18"
-	},
-	"dependencies": {
-		"@emotion/react": "^11.11.1",
-		"@emotion/styled": "^11.11.0",
-		"@mui/icons-material": "^5.14.14",
-		"@mui/material": "^5.14.14",
-		"axios": "^0.21.4",
-		"color-thief-react": "^2.1.0",
-		"dotenv": "^16.3.1",
-		"image-to-base64": "^2.2.0",
-		"next": "latest",
-		"react": "^18.2.0",
-		"sass": "^1.69.4"
-	}
+  "name": "spot-song-randomize",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.14",
+    "@mui/material": "^5.14.14",
+    "@tailwindcss/cli": "^4.1.4",
+    "@tailwindcss/postcss": "^4.1.4",
+    "axios": "^0.21.4",
+    "color-thief-react": "^2.1.0",
+    "colorthief": "^2.6.0",
+    "dotenv": "^16.3.1",
+    "image-to-base64": "^2.2.0",
+    "lucide-react": "^0.453.0",
+    "motion": "^12.16.0",
+    "next": "latest",
+    "postcss": "^8.5.3",
+    "rc-slider": "^11.1.7",
+    "react": "^18.2.0",
+    "sass": "^1.69.4",
+    "tailwindcss": "^4.1.4",
+    "three": "^0.177.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.7.5",
+    "autoprefixer": "^10.4.21",
+    "typescript": "5.6.2",
+    "vite": "^6.3.5"
+  }
 }
