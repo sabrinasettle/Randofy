@@ -27,7 +27,7 @@ export default function AddSongButton({ song }) {
           if (spotifyUser) {
             spotifyClient.addToPlaylist(song.track_id);
           } else {
-            toast("Please log in to add songs to your playlist");
+            showToast("Please log in to add songs to your playlist");
           }
         }}
       >
