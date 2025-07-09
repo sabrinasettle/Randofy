@@ -13,8 +13,6 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.14",
-    "@mui/material": "^5.14.14",
     "@tailwindcss/cli": "^4.1.4",
     "@tailwindcss/postcss": "^4.1.4",
     "axios": "^0.21.4",
@@ -28,13 +26,15 @@
     "postcss": "^8.5.3",
     "rc-slider": "^11.1.7",
     "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "sass": "^1.69.4",
+    "sharp": "^0.33.5",
     "tailwindcss": "^4.1.4",
-    "three": "^0.177.0",
-    "sharp": "^0.33.5"
+    "three": "^0.177.0"
   },
   "devDependencies": {
     "@types/node": "22.7.5",
+    "@types/react": "19.1.8",
     "autoprefixer": "^10.4.21",
     "typescript": "5.6.2",
     "vite": "^6.3.5"
