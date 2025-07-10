@@ -71,7 +71,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   const removeSongDetailFilter = (filterName) => {
     spotifyClient.setSongDetails((prev) => ({
-      // add the if statement back for logicing the popularity value
       ...prev,
       [filterName]: { min: 0.0, max: 1.0 },
     }));
@@ -174,6 +173,23 @@ export default function FilterDrawer({ isOpen, onClose }) {
       );
     }).length;
   }, [songDetailsFilters]);
+
+  const totalChangedFilters = useMemo(() => {
+    return (
+      changedSongDetailsCount +
+      selectedGenres.size +
+      (sliderValue !== 5 ? 1 : 0)
+    );
+  }, [changedSongDetailsCount, selectedGenres, sliderValue]);
+
+  useEffect(() => {
+    spotifyClient.setFiltersTotal(totalChangedFilters);
+    // spotifyClient.setFiltersTotal((prev) => ({
+    //   ...prev,
+    //   totalFilters: totalChangedFilters,
+    // }));
+    console.log("filtersTotal", spotifyClient.filtersTotal);
+  }, [totalChangedFilters]);
 
   // Get changed song detail filters for TagList
   const changedSongDetailFilters = useMemo(() => {

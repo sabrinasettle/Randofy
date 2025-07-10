@@ -1,11 +1,18 @@
 import GetSongsButton from "./GetSongsButton";
+import { useSpotifyContext } from "../../context/spotify-context";
 
 const FilterButton = ({ handleOpen, isSmall }) => {
+  const { spotifyClient } = useSpotifyContext();
+
   const classString = isSmall
     ? `bg-gray-100 px-3 py-2 md:w-auto`
     : `bg-gray-100 px-4 py-3 md:w-auto`;
 
   //values changed
+  const string =
+    spotifyClient.filtersTotal > 0
+      ? `Filter Songs [${spotifyClient.filtersTotal}]`
+      : "Filter Songs";
 
   return (
     <button
@@ -14,7 +21,7 @@ const FilterButton = ({ handleOpen, isSmall }) => {
       } ${classString}`}
       onClick={handleOpen}
     >
-      Filter Songs
+      {string}
     </button>
   );
 };

@@ -53,6 +53,7 @@ const getData = async (req, max) => {
     const dominantColor = await getColor(buf);
 
     // console.log(dominantColor);
+    // error here
     function rgbToHex(rgbArray) {
       if (!rgbArray) return "#0000";
       return (
