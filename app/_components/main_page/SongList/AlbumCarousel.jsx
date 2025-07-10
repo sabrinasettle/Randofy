@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useSongViewContext } from "../../../context/song-view-context";
 
@@ -9,8 +9,17 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
   const { songViewContext } = useSongViewContext();
   const isMobile = songViewContext.isMobile;
 
+  // ✅ Prevent running setup on the first Strict Mode cycle
+  const [hasMounted, setHasMounted] = useState(false);
+
   useEffect(() => {
-    if (!mountRef.current) return;
+    setHasMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasMounted || !mountRef.current) return;
+
+    let isMounted = true;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
@@ -23,7 +32,11 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    mountRef.current.appendChild(renderer.domElement);
+
+    // ✅ Prevent duplicate canvas
+    if (!mountRef.current.contains(renderer.domElement)) {
+      mountRef.current.appendChild(renderer.domElement);
+    }
 
     scene.add(new THREE.AmbientLight(0xffffff, 1));
 
@@ -31,25 +44,34 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     const planes = [];
     const planeScales = [];
 
-    const planeSize = isMobile ? 1.3 : 2.8;
-    const unActivePlaneSize = isMobile ? 1.2 : 2.4;
+    const planeSize = isMobile ? 2.4 : 2.8;
+    const unActivePlaneSize = isMobile ? 2.3 : 2.4;
     const baseSpacing = planeSize * 0.3;
-    const extraGap = isMobile ? 1 : 2;
+    const extraGap = isMobile ? 1.8 : 2;
     const halfGap = extraGap / 2;
     const maxAngle = 1.5;
 
-    songs.forEach((song) => {
-      const texture = loader.load(song.album_image.url);
-      const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
-      const material = new THREE.MeshBasicMaterial({
-        map: texture,
-        side: THREE.DoubleSide,
-        transparent: true,
-      });
-      const plane = new THREE.Mesh(geometry, material);
-      scene.add(plane);
-      planes.push(plane);
-      planeScales.push(1); // default full scale
+    songs.forEach((song, index) => {
+      loader.load(
+        song.album_image.url,
+        (texture) => {
+          if (!isMounted) return;
+
+          const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
+          const material = new THREE.MeshBasicMaterial({
+            map: texture,
+            side: THREE.DoubleSide,
+            transparent: true,
+          });
+
+          const plane = new THREE.Mesh(geometry, material);
+          scene.add(plane);
+          planes[index] = plane;
+          planeScales[index] = 1;
+        },
+        undefined,
+        (err) => console.warn("Texture load error:", err),
+      );
     });
 
     let scrollIndex = 0;
@@ -57,7 +79,6 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     let isDragging = false;
     let startX = 0;
     let dragOffset = 0;
-
     let wheelAccum = 0;
     const wheelThreshold = 18;
 
@@ -73,7 +94,6 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
         targetIndex = clampIndex(targetIndex + 1);
       }
     };
-
     window.addEventListener("keydown", onKeyDown);
 
     const onWheel = (e) => {
@@ -89,7 +109,7 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
         wheelAccum = 0;
       }
 
-      targetIndex = Math.max(0, Math.min(songs.length - 1, targetIndex));
+      targetIndex = clampIndex(targetIndex);
     };
 
     const onPointerDown = (e) => {
@@ -137,18 +157,6 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       }
     };
 
-    renderer.domElement.addEventListener("mousedown", onPointerDown);
-    renderer.domElement.addEventListener("mousemove", onPointerMove);
-    renderer.domElement.addEventListener("mouseup", onPointerUp);
-    renderer.domElement.addEventListener("mouseleave", onPointerUp);
-
-    renderer.domElement.addEventListener("touchstart", onPointerDown);
-    renderer.domElement.addEventListener("touchmove", onPointerMove);
-    renderer.domElement.addEventListener("touchend", onPointerUp);
-
-    renderer.domElement.addEventListener("wheel", onWheel, { passive: false });
-    renderer.domElement.addEventListener("click", onClick);
-
     const onResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -169,26 +177,29 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(planes);
 
-      if (intersects.length > 0) {
-        const hoveredPlane = intersects[0].object;
-        const hoveredIndex = planes.indexOf(hoveredPlane);
-
-        if (hoveredIndex === Math.round(scrollIndex)) {
-          renderer.domElement.style.cursor = "default"; // Active plane
-        } else {
-          renderer.domElement.style.cursor = "pointer"; // Inactive plane
-        }
-      } else {
-        renderer.domElement.style.cursor = "default";
-      }
+      renderer.domElement.style.cursor =
+        intersects.length > 0 &&
+        planes.indexOf(intersects[0].object) !== Math.round(scrollIndex)
+          ? "pointer"
+          : "default";
     };
 
+    renderer.domElement.addEventListener("mousedown", onPointerDown);
+    renderer.domElement.addEventListener("mousemove", onPointerMove);
+    renderer.domElement.addEventListener("mouseup", onPointerUp);
+    renderer.domElement.addEventListener("mouseleave", onPointerUp);
+    renderer.domElement.addEventListener("touchstart", onPointerDown);
+    renderer.domElement.addEventListener("touchmove", onPointerMove);
+    renderer.domElement.addEventListener("touchend", onPointerUp);
+    renderer.domElement.addEventListener("wheel", onWheel, { passive: false });
+    renderer.domElement.addEventListener("click", onClick);
     renderer.domElement.addEventListener("mousemove", onPointerMoveCursor);
 
     const speed = 0.07;
     let lastReportedIndex = -1;
 
     const animate = () => {
+      if (!isMounted) return;
       requestAnimationFrame(animate);
 
       const desiredIndex = targetIndex + dragOffset;
@@ -210,19 +221,13 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       }
 
       planes.forEach((plane, i) => {
+        if (!plane) return;
+
         let pos = i * baseSpacing;
-
-        if (i < floorIndex) {
-          pos -= halfGap;
-        } else if (i > floorIndex + 1) {
-          pos += halfGap;
-        }
-
-        if (i === floorIndex) {
-          pos -= halfGap * blend;
-        } else if (i === floorIndex + 1) {
-          pos += halfGap * (1 - blend);
-        }
+        if (i < floorIndex) pos -= halfGap;
+        else if (i > floorIndex + 1) pos += halfGap;
+        if (i === floorIndex) pos -= halfGap * blend;
+        else if (i === floorIndex + 1) pos += halfGap * (1 - blend);
 
         plane.position.x = pos - scrollIndex * baseSpacing;
 
@@ -246,7 +251,6 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
           distance < 0.1
             ? 1
             : THREE.MathUtils.lerp(1, scaleRatio, Math.min(distance, 1));
-
         planeScales[i] = THREE.MathUtils.lerp(planeScales[i], targetScale, 0.1);
         plane.scale.setScalar(planeScales[i]);
       });
@@ -256,17 +260,38 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     animate();
 
     return () => {
+      isMounted = false;
+
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", onResize);
+      renderer.domElement.removeEventListener("mousedown", onPointerDown);
+      renderer.domElement.removeEventListener("mousemove", onPointerMove);
+      renderer.domElement.removeEventListener("mouseup", onPointerUp);
+      renderer.domElement.removeEventListener("mouseleave", onPointerUp);
+      renderer.domElement.removeEventListener("touchstart", onPointerDown);
+      renderer.domElement.removeEventListener("touchmove", onPointerMove);
+      renderer.domElement.removeEventListener("touchend", onPointerUp);
+      renderer.domElement.removeEventListener("wheel", onWheel);
+      renderer.domElement.removeEventListener("click", onClick);
+      renderer.domElement.removeEventListener("mousemove", onPointerMoveCursor);
+
       if (
         mountRef.current &&
         renderer.domElement.parentNode === mountRef.current
       ) {
         mountRef.current.removeChild(renderer.domElement);
       }
-      window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("resize", onResize);
-      renderer.domElement.removeEventListener("mousemove", onPointerMoveCursor);
+
+      planes.forEach((plane) => {
+        if (plane?.geometry) plane.geometry.dispose();
+        if (plane?.material?.map) plane.material.map.dispose();
+        if (plane?.material) plane.material.dispose();
+        scene.remove(plane);
+      });
+
+      renderer.dispose();
     };
-  }, [songs, isMobile, onIndexChange]);
+  }, [hasMounted, songs, isMobile, onIndexChange]);
 
   return (
     <div className="flex justify-center">

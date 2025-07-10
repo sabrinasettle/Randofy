@@ -5,10 +5,10 @@ import { useSongViewContext } from "../../../context/song-view-context";
 import { useSpotifyContext } from "../../../context/spotify-context";
 
 export default function SongListController({ songs, len }) {
-  const { spotifyClient } = useSpotifyContext();
   const { songViewContext } = useSongViewContext();
   const { setSelectedSong } = songViewContext;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const isMobile = songViewContext.isMobile;
 
   React.useEffect(() => {
     songViewContext.setSelectedSong({
@@ -16,10 +16,9 @@ export default function SongListController({ songs, len }) {
       song: songs[currentIndex],
     });
   }, [setSelectedSong, currentIndex]);
-  // const songs = spotifyClient.currentSongs;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center h-full">
       {/* Index number */}
       <div className="text-gray-600 font-mono text-body-md font-normal mb-1">
         {currentIndex + 1} / {songs.length}

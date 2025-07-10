@@ -23,7 +23,7 @@ export default function RandofyContent() {
       );
     else if (spotifyClient.currentSongs.length !== 0)
       return (
-        <div className="w-full flex justify-end items-center">
+        <div className="w-full flex justify-end items-center mt-6 md:mt-0">
           {/* <LoadingBall isLoading={true} /> */}
           {/* <AlbumCarousel songs={spotifyClient.currentSongs} /> */}
           <SongListController
@@ -38,7 +38,9 @@ export default function RandofyContent() {
   return (
     // overflow-hidden
     <div>
-      <div className="flex h-screen w-full flex-col justify-center items-center relative pb-16 md:pb-6 overflow-hidden z-0">
+      <div
+        className={`flex h-screen ${spotifyClient.isLoading ? "w-screen" : "w-full"} md:pt-0 flex-col justify-center items-center relative pb-4 md:pb-6 overflow-hidden z-0`}
+      >
         {/* Buttons Container - responsive behavior */}
 
         {/* Default state - centered text */}

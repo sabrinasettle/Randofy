@@ -104,7 +104,9 @@ export default function SongViewController() {
   const iconSize = isMobile ? 32 : 24;
 
   return (
-    <div className={containerStyles.className}>
+    <div
+      className={`${isMobile ? "w-screen" : ""} ${containerStyles.className}`}
+    >
       {isFullScreenOverlay && (
         <>
           <div className="absolute inset-0 bg-gray-000/90 backdrop-blur-sm"></div>
@@ -126,7 +128,9 @@ export default function SongViewController() {
         ></div>
       )}
 
-      <div className="relative z-10 h-full flex flex-col px-4 pt-3 pb-1 box-border">
+      <div
+        className={`${isMobile ? "w-full" : ""} relative z-10 h-full flex flex-col px-4 pt-3 pb-1 box-border`}
+      >
         {isOpen && (
           <div className="w-full flex flex-row justify-end">
             <button
