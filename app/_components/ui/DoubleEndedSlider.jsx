@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 
-export default function DoubleEndedSlider({ label, value, onChange }) {
+export default function DoubleEndedSlider({
+  label,
+  value,
+  onChange,
+  valueStrings,
+}) {
   const [localMin, setLocalMin] = useState(value.min);
   const [localMax, setLocalMax] = useState(value.max);
 
@@ -28,15 +33,19 @@ export default function DoubleEndedSlider({ label, value, onChange }) {
   const leftPercent = `${localMin * 100}%`;
   const widthPercent = `${(localMax - localMin) * 100}%`;
 
+  const minIndex = localMin <= 0.25 ? 0 : 1;
+  const maxIndex = localMax <= 0.75 ? 2 : 3;
+
+  // console.log(value, minIndex);
+
   return (
     <div className="flex flex-col w-full">
-      <label className="font-normal text-body-small text-gray-600">
-        {label}
-      </label>
+      <label className="font-normal text-body-sm text-gray-600">{label}</label>
 
-      <div className="flex justify-between text-body-lg text-gray-700">
-        <span>{localMin.toFixed(2)}</span>
-        <span>{localMax.toFixed(2)}</span>
+      {/* Slider text values */}
+      <div className="flex justify-between font-body text-body-md text-gray-700 pb-2">
+        <span>from {valueStrings[label.toLowerCase()][minIndex]}</span>
+        <span>to {valueStrings[label.toLowerCase()][maxIndex]}</span>
       </div>
 
       <div className="relative w-full h-6">
