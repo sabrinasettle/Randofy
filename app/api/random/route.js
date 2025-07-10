@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import getRandomSearch from "../../../lib/js/helpers/randomLib.mjs";
 import { spotifyApi } from "../../../lib/js/spotify-api/SpotifyClient.mjs";
-import { getColor } from "colorthief";
+import getColor from "colorthief";
 
 const getData = async (req, max) => {
   let search = getRandomSearch();
@@ -54,6 +54,7 @@ const getData = async (req, max) => {
 
     // console.log(dominantColor);
     function rgbToHex(rgbArray) {
+      if (!rgbArray) return "#0000";
       return (
         "#" +
         rgbArray
