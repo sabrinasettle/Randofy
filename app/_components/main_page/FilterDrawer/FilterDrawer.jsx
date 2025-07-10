@@ -2,58 +2,13 @@ import { useState, useEffect, useMemo } from "react";
 import { ArrowRight, X } from "lucide-react";
 import GenresSection from "./GenresSection";
 import SongDetailsSection from "./SongDetsSection";
+import TagList from "./TagList";
 import { useSpotifyContext } from "../../../context/spotify-context";
-
-// Reusable TagList component
-// Needs logic for handling string tags from Song Dets
-function TagList({ items, onRemove, className = "", valueStrings = null }) {
-  if (!items || items.size === 0) return null;
-
-  console.log(valueStrings, items);
-  const tagElements = Array.from(items, (item, index) => (
-    <div
-      key={index}
-      className="group inline-flex items-center gap-2 pl-2 pr-1 py-1 border border-gray-300 hover:border-gray-700 rounded-md text-sm"
-    >
-      <span className="text-body-md text-gray-600 group-hover:text-gray-700">
-        {item
-          .split("-")
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ")}
-      </span>
-      <button
-        onClick={() => onRemove(item)}
-        className="text-gray-600 group-hover:text-gray-700 rounded-full transition-colors"
-        aria-label={`Remove ${item}`}
-      >
-        <X size={20} />
-      </button>
-    </div>
-  ));
-
-  return (
-    <div className={`flex flex-wrap gap-2 mt-2 ${className}`}>
-      {tagElements}
-    </div>
-  );
-}
 
 export default function FilterDrawer({ isOpen, onClose }) {
   const [activePanel, setActivePanel] = useState("main");
   const [isVisible, setIsVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
-
-  // Filter states
-  // const [selectedGenres, setSelectedGenres] = useState(new Set());
-
-  // const [songDetailsFilters, setSongDetailsFilters] = useState({
-  //   popularity: { min: 0.0, max: 1.0 },
-  //   acoustics: { min: 0.0, max: 1.0 },
-  //   energy: { min: 0.0, max: 1.0 },
-  //   vocals: { min: 0.0, max: 1.0 },
-  //   danceability: { min: 0.0, max: 1.0 },
-  //   mood: { min: 0.0, max: 1.0 },
-  // });
 
   const { spotifyClient } = useSpotifyContext();
   const songDetailsFilters = spotifyClient.songDetails;
@@ -173,6 +128,23 @@ export default function FilterDrawer({ isOpen, onClose }) {
       );
     }).length;
   }, [songDetailsFilters]);
+
+  function getChangedFilters(currentFilters) {
+    const defaultFilters = {
+      popularity: { min: 0, max: 1.0 },
+      acoustics: { min: 0.0, max: 1.0 },
+      energy: { min: 0.0, max: 1.0 },
+      vocals: { min: 0.0, max: 1.0 },
+      danceability: { min: 0.0, max: 1.0 },
+      mood: { min: 0.0, max: 1.0 },
+    };
+    return Object.fromEntries(
+      Object.entries(currentFilters).filter(([key, val]) => {
+        const def = defaultFilters[key];
+        return !def || val.min !== def.min || val.max !== def.max;
+      }),
+    );
+  }
 
   const totalChangedFilters = useMemo(() => {
     return (
@@ -314,7 +286,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
                 </p>
 
                 <TagList
-                  items={changedSongDetailFilters}
+                  items={getChangedFilters(songDetailsFilters)}
                   onRemove={removeSongDetailFilter}
                   valueStrings={valueStrings}
                 />
