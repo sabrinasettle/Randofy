@@ -86,7 +86,7 @@ export default function ProgressBar({
       id="progress-bar-container"
       className="flex items-center gap-3 text-gray-600 w-full"
     >
-      <span className="text-xs font-mono min-w-[32px]">
+      <span className="text-sm md:text-xs font-mono min-w-[32px]">
         0:{String(currentTime).padStart(2, "0")}
       </span>
 
@@ -116,7 +116,7 @@ export default function ProgressBar({
         />
       </div>
 
-      <span className="text-xs font-mono min-w-[32px]">0:30</span>
+      <span className="text-sm md:text-xs font-mono min-w-[32px]">0:30</span>
     </div>
   );
 }

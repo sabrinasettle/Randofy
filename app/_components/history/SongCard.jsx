@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useSongViewContext } from "../../context/song-view-context";
 import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists";
+import ScrollingTitle from "../ui/ScrollingTitle";
 
 export default function SongCard({ song, index }) {
   const { songViewContext } = useSongViewContext();
@@ -58,14 +59,20 @@ export default function SongCard({ song, index }) {
 
       {/* Track and artist info */}
       <div className="flex flex-col md:flex-1 pl-3 sm:pl-4 lg:pl-20 gap-0 md:gap-1 min-w-0">
-        <p className="text-body-md text-gray-700 font-semibold truncate">
+        <ScrollingTitle
+          title={song.track_name}
+          className="text-body-lg md:text-body-md text-gray-700 font-semibold"
+        />
+        {/* <p className="text-body-md text-gray-700 font-semibold truncate">
           {song.track_name}
-        </p>
+        </p> */}
         <span
           className={`flex flex-row gap-1 text-body-sm md:text-body-md font-normal ${activeTextStyle}`}
         >
           {song.is_explicit && <div className="explicit-flag">E</div>}
-          <p className={`text-body-sm md:text-body-md ${activeTextStyle}`}>
+          <p
+            className={`text-body-sm md:text-body-md ${activeTextStyle} truncate`}
+          >
             {artists}
           </p>
         </span>

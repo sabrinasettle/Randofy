@@ -5,6 +5,7 @@ import { millisToMinutesAndSeconds } from "../../../utils/convertMilliseconds.js
 import AudioPlayer from "../AudioPlayer/AudioPlayer.jsx";
 import AudioFeatureDrawers from "../AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../../context/song-view-context.js";
+import ScrollingTitle from "../../ui/ScrollingTitle.jsx";
 
 export default function DefaultView() {
   const { songViewContext } = useSongViewContext();
@@ -76,7 +77,7 @@ export default function DefaultView() {
     //   // Minimal view (home page, not detailed)
     return {
       className:
-        "w-full lg:min-w-[564px] lg:min-h-[160px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
+        "w-full flex flex-col justify-between min-h-[180px] lg:min-w-[564px] lg:min-h-[160px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
       style: {
         backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
       },
@@ -89,26 +90,24 @@ export default function DefaultView() {
 
   return (
     <div className={containerStyles.className} style={containerStyles.style}>
-      <div>
+      <div className="">
         <div className="">
-          <div className="">
-            <h1
-              className="font-body text-heading-4 md:text-heading-5 text-semibold text-gray-700"
-              id="song-title"
-            >
-              {song.track_name}
-            </h1>
-            <div className="flex flex-row items-center gap-2">
-              {song.is_explicit && (
-                <div
-                  className="font-mono w-4 h-[18px] flex justify-center items-center text-gray-000 bg-gray-700 rounded-sm"
-                  id="explicit-flag"
-                >
-                  E
-                </div>
-              )}
-              <h2 className="text-gray-600 font-body">{artists}</h2>
-            </div>
+          <ScrollingTitle
+            text={song.track_name}
+            className={"text-body-lg md:text-body-md"}
+          />
+          <div className="flex flex-row items-center gap-2">
+            {song.is_explicit && (
+              <div
+                className="font-mono w-4 h-[18px] flex justify-center items-center text-gray-000 bg-gray-700 rounded-sm"
+                id="explicit-flag"
+              >
+                E
+              </div>
+            )}
+            <h2 className="text-gray-600 font-body text-heading-5 md:text-body-sm">
+              {artists}
+            </h2>
           </div>
         </div>
       </div>
@@ -116,48 +115,6 @@ export default function DefaultView() {
       <div className={`${preview && "pt-3"}`}>
         <AudioPlayer song={song} />
       </div>
-
-      {/* Song Info - Only shows when section is collapsed */}
-      {/* <div
-        className={`${activeSection ? "hidden" : "block"} space-y-2 transition-all duration-500 ease-in-out`}
-        id="information-container"
-      >
-        <div className="justify-start flex flex-col">
-          <div className="flex flex-row gap-1">
-            <p
-              className="text-body-md md:text-body-sm text-gray-600"
-              id="information-label"
-            >
-              Album:
-            </p>
-            <p
-              className="text-body-md md:text-body-sm text-gray-700"
-              id="song-album"
-            >
-              {song.album_name}
-            </p>
-          </div>
-          <div className="flex flex-row gap-1">
-            <p className="text-body-md md:text-body-sm text-gray-600">
-              Length:
-            </p>
-            <p className="text-body-sm text-gray-700" id="song-length">
-              {millisToMinutesAndSeconds(song.song_length)}
-            </p>
-          </div>
-          <div className="flex flex-row gap-1">
-            <p className="text-body-md md:text-body-sm text-gray-600">Year:</p>
-            <p
-              className="text-body-md md:text-body-sm text-gray-700"
-              id="release_year"
-            >
-              {formatYear()}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex-1"></div> */}
 
       {/* AudioFeatureDrawers - only show in detailed views */}
       {isOpen && (
@@ -169,4 +126,50 @@ export default function DefaultView() {
       )}
     </div>
   );
+}
+
+{
+  /* Song Info - Only shows when section is collapsed */
+}
+{
+  /* <div
+  className={`${activeSection ? "hidden" : "block"} space-y-2 transition-all duration-500 ease-in-out`}
+  id="information-container"
+>
+  <div className="justify-start flex flex-col">
+    <div className="flex flex-row gap-1">
+      <p
+        className="text-body-md md:text-body-sm text-gray-600"
+        id="information-label"
+      >
+        Album:
+      </p>
+      <p
+        className="text-body-md md:text-body-sm text-gray-700"
+        id="song-album"
+      >
+        {song.album_name}
+      </p>
+    </div>
+    <div className="flex flex-row gap-1">
+      <p className="text-body-md md:text-body-sm text-gray-600">
+        Length:
+      </p>
+      <p className="text-body-sm text-gray-700" id="song-length">
+        {millisToMinutesAndSeconds(song.song_length)}
+      </p>
+    </div>
+    <div className="flex flex-row gap-1">
+      <p className="text-body-md md:text-body-sm text-gray-600">Year:</p>
+      <p
+        className="text-body-md md:text-body-sm text-gray-700"
+        id="release_year"
+      >
+        {formatYear()}
+      </p>
+    </div>
+  </div>
+</div>
+
+<div className="flex-1"></div> */
 }

@@ -62,7 +62,7 @@ export default function AudioPlayer({ song }) {
   return (
     <div className={`flex-1 pt-0`}>
       {preview ? (
-        <div className="w-full pb-3">
+        <div className="w-full pb-4 md:pb-3">
           <ProgressBar
             isPlaying={isPlaying}
             onSongEnd={onSongEnd}
@@ -78,7 +78,7 @@ export default function AudioPlayer({ song }) {
         >
           {/* <p className="pb-2">No Preview Available</p> */}
           <a
-            className="font-body text-body-md pt-2 pb-2 hover:text-gray-700"
+            className="font-body text-body-lg md:text-body-md pt-2 pb-2 hover:text-gray-700"
             id="open-spotify"
             href={song.href}
           >
