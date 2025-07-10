@@ -34,6 +34,21 @@ export function SpotifyClientProvider({ children }) {
     mood: { min: 0.0, max: 1.0 },
   });
   const [genres, setGenres] = useState(new Set());
+  const [filtersTotal, setFiltersTotal] = useState(0);
+
+  const valueStrings = {
+    popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
+    acoustics: [
+      "All Electric",
+      "Mostly Electric",
+      "Some Acoustic",
+      "All Acoustic",
+    ],
+    energy: ["Super Chill", "Kinda Chill", "Kinda Hype", "Super Hype"],
+    vocals: ["No Vocals", "Some Vocals", "Lots of Vocals", "All Vocals"],
+    danceability: ["No Groove", "Almost a Bop", "Bop", "Dance Party"],
+    mood: ["Real Low", "Kinda Low", "Kinda High", "Real High"],
+  };
 
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
@@ -378,8 +393,8 @@ export function SpotifyClientProvider({ children }) {
 
     params.set("limit", songLimit);
 
-    params.set("min_popularity", songDetails.popularity.min * 100);
-    params.set("max_popularity", songDetails.popularity.max * 100);
+    params.set("min_popularity", Math.ceil(songDetails.popularity.min * 100));
+    params.set("max_popularity", Math.ceil(songDetails.popularity.max * 100));
 
     params.set("min_energy", songDetails.energy.min);
     params.set("max_energy", songDetails.energy.max);
@@ -441,6 +456,9 @@ export function SpotifyClientProvider({ children }) {
     setSongDetails,
     genres,
     setGenres,
+    valueStrings,
+    filtersTotal,
+    setFiltersTotal,
     //playlist
     addToPlaylist,
     removeFromPlaylist,
