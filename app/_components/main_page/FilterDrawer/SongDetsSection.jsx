@@ -25,7 +25,7 @@ export default function SongDetailsSection({
           className="flex items-center gap-4 text-gray-400 hover:text-white"
         >
           <ArrowLeft size={20} />
-          <h1 className="text-white text-lg font-medium">Song Details</h1>
+          <h1 className="text-white text-body-lg font-body">Song Details</h1>
         </button>
         {changed === 0 ? (
           <span className="text-lg font-normal text-gray-600">[{changed}]</span>

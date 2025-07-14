@@ -190,7 +190,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
     <div className="h-full flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center p-4">
-        <h1 className="text-gray-700 text-lg font-body">Filter Songs</h1>
+        <h1 className="text-gray-700 text-body-lg font-body">Filter Songs</h1>
         <button onClick={onClose} className="text-gray-400 hover:text-white">
           <X size={24} />
         </button>

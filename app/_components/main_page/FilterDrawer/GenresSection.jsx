@@ -206,26 +206,26 @@ export default function GenresSection({ navigateBack, selectedGenres }) {
             [{selectedGenres.size}]
           </span>
         ) : (
-          <span className="text-lg font-semibold text-gray-700">
+          <span className="text-body-lg font-body font-semibold text-gray-700">
             [{selectedGenres.size}]
           </span>
         )}
       </div>
       {/* Content */}
       <div className="flex-1 px-4">
-        <p className="text-body-sm text-gray-500 text-balance">
-          Disclaimer: *While Spotify identifies and works with thousands of
-          subgenres these are the available genres to search against
+        <p className="w-full text-body-sm text-gray-600 text-balance font-body">
+          Disclaimer: While Spotify identifies and works with thousands of
+          subgenres these are the available genres to search against.
         </p>
         {/* Alpha lists of the genres */}
         <div className="space-y-6">
           {sortedLetters.map((letter) => (
             <div key={letter} className="pt-4">
               <div className="flex items-center justify-between pb-1 mb-3 border-b border-gray-500">
-                <h2 className="text-body-sm font-normal text-gray-800 flex items-center pl-2">
+                <h2 className="text-body-sm font-body text-gray-600 flex items-center pl-2">
                   {letter.toUpperCase()}
                 </h2>
-                <div className="text-gray-700 text-sm font-medium">
+                <div className="text-gray-700 text-body-sm font-body font-medium">
                   [{sectionSelectedCounts[letter]}]
                 </div>
               </div>
@@ -236,7 +236,7 @@ export default function GenresSection({ navigateBack, selectedGenres }) {
                     key={genre}
                     onClick={() => toggleGenre(genre)}
                     className={`
-                              px-3 py-2 rounded-sm text-sm transition-all duration-200 text-left
+                              px-3 py-2 rounded-sm text-sm transition-all duration-200 text-left font-body
                               ${
                                 selectedGenres.has(genre)
                                   ? "font-semibold bg-gray-100 hover:bg-gray-200 text-white shadow-md transform scale-101"

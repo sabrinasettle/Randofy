@@ -94,7 +94,9 @@ export default function DefaultView() {
         <div className="">
           <ScrollingTitle
             text={song.track_name}
-            className={"text-body-lg md:text-body-md"}
+            className={
+              "text-gray-700 font-medium text-heading-5 md:text-body-md"
+            }
           />
           <div className="flex flex-row items-center gap-2">
             {song.is_explicit && (
@@ -105,7 +107,7 @@ export default function DefaultView() {
                 E
               </div>
             )}
-            <h2 className="text-gray-600 font-body text-heading-5 md:text-body-sm">
+            <h2 className="text-gray-600 font-body text-heading-6 md:text-body-sm">
               {artists}
             </h2>
           </div>

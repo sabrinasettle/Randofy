@@ -48,7 +48,7 @@ export default function SongCard({ song, index }) {
       onClick={moveOrNot}
     >
       {/* Mobile: smaller image */}
-      <div className="relative aspect-square w-12 sm:w-16 bg-gray-100 flex-shrink-0 overflow-hidden">
+      <div className="relative aspect-square w-14 sm:w-16 lg:w-20 bg-gray-100 flex-shrink-0 overflow-hidden">
         <Image
           src={song.album_image.url}
           fill
@@ -59,13 +59,16 @@ export default function SongCard({ song, index }) {
 
       {/* Track and artist info */}
       <div className="flex flex-col md:flex-1 pl-3 sm:pl-4 lg:pl-20 gap-0 md:gap-1 min-w-0">
-        <ScrollingTitle
-          title={song.track_name}
-          className="text-body-lg md:text-body-md text-gray-700 font-semibold"
-        />
-        {/* <p className="text-body-md text-gray-700 font-semibold truncate">
-          {song.track_name}
-        </p> */}
+        {isMobile ? (
+          <ScrollingTitle
+            text={song.track_name}
+            className="text-body-lg text-gray-700 font-medium"
+          />
+        ) : (
+          <p className="text-body-md text-gray-700 font-semibold truncate">
+            {song.track_name}
+          </p>
+        )}
         <span
           className={`flex flex-row gap-1 text-body-sm md:text-body-md font-normal ${activeTextStyle}`}
         >
@@ -80,10 +83,16 @@ export default function SongCard({ song, index }) {
 
       {/* Optional album name on md+ screens */}
       {/* <div
-          className={`hidden md:flex md:flex-1 text-body-sm md:text-body-md font-normal ${activeTextStyle} min-w-0`}
-        >
-          <p className="truncate">{song.album_name}</p>
-        </div> */}
+        className={`hidden md:flex md:flex-1 text-body-sm md:text-body-md font-normal ${activeTextStyle} min-w-0`}
+      >
+        <p className="truncate">{song.album_name}</p>
+      </div> */}
+
+      <div className={`hidden md:group-hover:block pr-5`}>
+        <p className="text-body-sm md:text-body-md font-normal text-gray-500">
+          Click to see details
+        </p>
+      </div>
     </li>
   );
 
