@@ -19,8 +19,9 @@ export default function FilterDrawer({ isOpen, onClose }) {
   // Remove functions for TagList
   const removeGenre = (genre) => {
     spotifyClient.setGenres((prev) => {
-      prev.delete(genre);
-      return prev;
+      const newSet = new Set(prev);
+      newSet.delete(genre);
+      return newSet;
     });
   };
 
@@ -103,6 +104,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
     }
   };
 
+  // changes the state in the context
   const handleSongDetailsFilterChange = (filterName, range) => {
     spotifyClient.setSongDetails((prev) => ({
       ...prev,
@@ -110,6 +112,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
     }));
   };
 
+  //count of the changed Song details
   const changedSongDetailsCount = useMemo(() => {
     const defaultFilters = {
       popularity: { min: 0, max: 1.0 },
@@ -129,6 +132,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
     }).length;
   }, [songDetailsFilters]);
 
+  // gets the labels of the changed Song details
   function getChangedFilters(currentFilters) {
     const defaultFilters = {
       popularity: { min: 0, max: 1.0 },
@@ -146,6 +150,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
     );
   }
 
+  //get a total of filters changed
   const totalChangedFilters = useMemo(() => {
     return (
       changedSongDetailsCount +
@@ -156,11 +161,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   useEffect(() => {
     spotifyClient.setFiltersTotal(totalChangedFilters);
-    // spotifyClient.setFiltersTotal((prev) => ({
-    //   ...prev,
-    //   totalFilters: totalChangedFilters,
-    // }));
-    console.log("filtersTotal", spotifyClient.filtersTotal);
+    // console.log("filtersTotal", spotifyClient.filtersTotal);
   }, [totalChangedFilters]);
 
   // Get changed song detail filters for TagList
