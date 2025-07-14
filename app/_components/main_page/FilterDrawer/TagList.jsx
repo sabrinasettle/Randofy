@@ -5,31 +5,35 @@ export default function TagList({
   onRemove,
   valueStrings = {},
   className = "",
+  defaultFilters = {}, // Add defaultFilters prop for song details
 }) {
-  if (
-    !items ||
-    (items instanceof Set && items.size === 0) ||
-    (typeof items === "object" &&
-      !(items instanceof Set) &&
-      Object.keys(items).length === 0)
-  ) {
+  if (!items) {
     return null;
   }
 
   const tagEntries = [];
 
-  // Handle Set<string>
+  // Handle Set<string> (genres)
   if (items instanceof Set) {
     for (const tag of items) {
       tagEntries.push({
         key: tag,
         label: prettify(tag),
-        raw: tag,
+        removeValue: tag, // Pass the string directly
       });
     }
   } else {
-    // Handle Record<string, { min, max }>
+    // Handle Record<string, { min, max }> (song details)
+    // Only show filters that have changed from defaults
     for (const [key, { min, max }] of Object.entries(items)) {
+      // Skip if this filter hasn't changed from default
+      if (defaultFilters[key]) {
+        const defaultRange = defaultFilters[key];
+        if (min === defaultRange.min && max === defaultRange.max) {
+          continue; // Skip unchanged filters
+        }
+      }
+
       const rangeLabels = valueStrings[key];
       let label;
 
@@ -47,23 +51,28 @@ export default function TagList({
       tagEntries.push({
         key,
         label,
-        raw: { [key]: { min, max } },
+        removeValue: key, // Pass the key (filter name) for song details
       });
     }
   }
 
+  // Return null if no tags to show after filtering
+  if (tagEntries.length === 0) {
+    return null;
+  }
+
   return (
     <div className={`flex flex-wrap gap-2 mt-2 ${className}`}>
-      {tagEntries.map(({ key, label, raw }, index) => (
+      {tagEntries.map(({ key, label, removeValue }, index) => (
         <div
           key={index}
-          className="group inline-flex items-center gap-2 pl-2 pr-1 py-1 border border-gray-300 hover:border-gray-700 rounded-md text-sm"
+          className="group inline-flex items-center gap-2 pl-2 pr-1 py-1 border border-gray-300 hover:border-gray-700 rounded-md"
         >
-          <span className="text-body-md text-gray-600 group-hover:text-gray-700">
+          <span className="font-body text-body-md text-gray-600 group-hover:text-gray-700">
             {label}
           </span>
           <button
-            onClick={() => onRemove(raw)}
+            onClick={() => onRemove(removeValue)}
             className="text-gray-600 group-hover:text-gray-700 rounded-full transition-colors"
             aria-label={`Remove ${label}`}
           >
