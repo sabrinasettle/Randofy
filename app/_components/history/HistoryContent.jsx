@@ -5,15 +5,14 @@ import { useGridContext } from "../../context/card-layout-context";
 import { useSongViewContext } from "../../context/song-view-context";
 import HistorySection from "./HistorySection";
 import HistoryFilters from "./filters/HistoryFilters";
-// import SongDrawer from "./SongDrawer";
 import SongViewController from "../SongView/SongViewController";
 import CardLayoutOptions from "./filters/CardLayoutOptions";
+import LoadingBall from "../ui/loading/LoadingBall";
 import {
   getThisWeek,
   getThisMonth,
   getPast6Months,
 } from "../../utils/getDates.js";
-// import useWindowDimensions from "../../_hooks/useWindowDimensions";
 
 export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
@@ -25,7 +24,6 @@ export default function HistoryContent() {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isLoading, setIsloading] = useState(true);
 
-  // const [sortFilter, setSortFilter] = useState("newest");
   let history = spotifyClient.generationHistory;
   let selectedSong = songViewContext.selectedSong.song;
   const isDrawerOpen = songViewContext.isDetailsOpen;
@@ -34,7 +32,14 @@ export default function HistoryContent() {
   // filter Options
   const scrollContainerRef = useRef(null);
 
-  console.log(history);
+  useEffect(() => {
+    // simulate loading or wait for a Spotify API call
+    const timer = setTimeout(() => {
+      setIsloading(false);
+    }, 700); // or however long your data takes to load
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     // history-songlist-container
@@ -183,7 +188,11 @@ export default function HistoryContent() {
       className="h-screen flex flex-col px-3 pt-[72px] md:px-4 pb-2"
     >
       <section className="flex flex-row flex-1 md:overflow-hidden">
-        {!history || isEmptyObject(history) ? (
+        {isLoading ? (
+          <div className="w-full h-full flex justify-center items-center">
+            <LoadingBall isLoading={spotifyClient.isLoading} />
+          </div>
+        ) : !isLoading && (!history || isEmptyObject(history)) ? (
           <div className="w-full flex justify-center items-center text-gray-700">
             <p>No History Yet!</p>
           </div>
