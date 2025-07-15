@@ -40,12 +40,16 @@ export default function DoubleEndedSlider({
 
   return (
     <div className="flex flex-col w-full">
-      <label className="font-normal text-body-sm text-gray-600">{label}</label>
+      <label className="font-body text-body-sm text-gray-600">{label}</label>
 
       {/* Slider text values */}
       <div className="flex justify-between font-body text-body-md text-gray-700 pb-2">
-        <span>from {valueStrings[label.toLowerCase()][minIndex]}</span>
-        <span>to {valueStrings[label.toLowerCase()][maxIndex]}</span>
+        <span className="font-body">
+          {valueStrings[label.toLowerCase()][minIndex]}
+        </span>
+        <span className="font-body">
+          {valueStrings[label.toLowerCase()][maxIndex]}
+        </span>
       </div>
 
       <div className="relative w-full h-6">

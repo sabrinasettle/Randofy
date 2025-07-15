@@ -116,7 +116,7 @@ export default function ScrollingTitle({ text, className = "" }) {
     >
       <div
         ref={textRef}
-        className="inline-block font-body text-heading-4 md:text-heading-5 font-semibold text-gray-700"
+        className="inline-block font-body "
         style={{
           willChange: "transform",
           backfaceVisibility: "hidden",
