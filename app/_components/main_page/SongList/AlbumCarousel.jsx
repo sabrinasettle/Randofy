@@ -297,7 +297,7 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     <div className="flex justify-center">
       <div
         ref={mountRef}
-        className="flex items-center justify-center w-full h-[40vh] lg:h-[45vh] bg-transparent overflow-hidden relative"
+        className="flex items-center justify-center w-full h-[33vh] lg:h-[45vh] bg-transparent overflow-hidden relative"
       />
     </div>
   );
