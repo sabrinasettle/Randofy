@@ -23,7 +23,7 @@ export default function RandofyContent() {
       );
     else if (spotifyClient.currentSongs.length !== 0)
       return (
-        <div className="w-full flex justify-end items-center mt-6 md:mt-0">
+        <div className="w-full flex justify-end items-center mt-1 md:mt-0">
           {/* <LoadingBall isLoading={true} /> */}
           {/* <AlbumCarousel songs={spotifyClient.currentSongs} /> */}
           <SongListController
