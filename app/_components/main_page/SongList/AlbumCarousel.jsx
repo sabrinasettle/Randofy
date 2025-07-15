@@ -44,8 +44,8 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     const planes = [];
     const planeScales = [];
 
-    const planeSize = isMobile ? 2.4 : 2.8;
-    const unActivePlaneSize = isMobile ? 2.3 : 2.4;
+    const planeSize = isMobile ? 2.3 : 2.8;
+    const unActivePlaneSize = isMobile ? 2 : 2.4;
     const baseSpacing = planeSize * 0.3;
     const extraGap = isMobile ? 1.8 : 2;
     const halfGap = extraGap / 2;

@@ -77,7 +77,7 @@ export default function DefaultView() {
     //   // Minimal view (home page, not detailed)
     return {
       className:
-        "w-full flex flex-col justify-between min-h-[180px] lg:min-w-[564px] lg:min-h-[160px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
+        "w-full flex flex-col justify-between min-h-[180px] lg:w-[564px] lg:min-h-[160px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
       style: {
         backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
       },
@@ -107,7 +107,7 @@ export default function DefaultView() {
                 E
               </div>
             )}
-            <h2 className="text-gray-600 font-body text-heading-6 md:text-body-sm">
+            <h2 className="text-gray-600 font-body text-heading-6 md:text-body-sm truncate">
               {artists}
             </h2>
           </div>
