@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 export default function Tooltip({ children, text, className = "" }) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [buttonRect, setButtonRect] = useState(null);
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    const checkIfTouch = () =>
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      navigator.msMaxTouchPoints > 0;
+
+    setIsTouch(checkIfTouch());
+  }, []);
 
   const handleMouseEnter = (e) => {
+    if (isTouch) return;
     const rect = e.currentTarget.getBoundingClientRect();
     setButtonRect(rect);
     setShowTooltip(true);
   };
 
   const handleMouseLeave = () => {
+    if (isTouch) return;
     setShowTooltip(false);
   };
 
@@ -25,7 +37,8 @@ export default function Tooltip({ children, text, className = "" }) {
         {children}
       </div>
 
-      {showTooltip &&
+      {!isTouch &&
+        showTooltip &&
         buttonRect &&
         createPortal(
           <div
