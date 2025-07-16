@@ -18,7 +18,7 @@ export default function SongListController({}) {
       index: currentIndex,
       song: songs[currentIndex],
     });
-  }, [setSelectedSong, currentIndex]);
+  }, [setSelectedSong, currentIndex, songs]);
 
   return (
     <div className="flex flex-col items-center h-full">
