@@ -11,7 +11,10 @@ export default function SongListController({}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   // const isMobile = songViewContext.isMobile;
 
-  const songs = spotifyClient.currentSongs;
+  const songs = React.useMemo(
+    () => spotifyClient.currentSongs,
+    [spotifyClient],
+  );
 
   React.useEffect(() => {
     songViewContext.setSelectedSong({
