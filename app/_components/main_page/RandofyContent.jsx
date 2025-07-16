@@ -56,7 +56,7 @@ export default function RandofyContent() {
         {/* Content Container - shows when loading or has songs */}
         {hasContent && (
           <div
-            className={`h-full w-full flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-1 ${
+            className={`h-full w-screen flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-1 ${
               hasContent ? "md:mt-5" : ""
             }`}
             id="content-container"
