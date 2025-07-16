@@ -4,11 +4,14 @@ import SongViewController from "../../SongView/SongViewController";
 import { useSongViewContext } from "../../../context/song-view-context";
 import { useSpotifyContext } from "../../../context/spotify-context";
 
-export default function SongListController({ songs, len }) {
+export default function SongListController({}) {
+  const { spotifyClient } = useSpotifyContext();
   const { songViewContext } = useSongViewContext();
   const { setSelectedSong } = songViewContext;
   const [currentIndex, setCurrentIndex] = useState(0);
-  const isMobile = songViewContext.isMobile;
+  // const isMobile = songViewContext.isMobile;
+
+  const songs = spotifyClient.currentSongs;
 
   React.useEffect(() => {
     songViewContext.setSelectedSong({

@@ -26,10 +26,7 @@ export default function RandofyContent() {
         <div className="w-full flex justify-end items-center mt-8 md:mt-0">
           {/* <LoadingBall isLoading={true} /> */}
           {/* <AlbumCarousel songs={spotifyClient.currentSongs} /> */}
-          <SongListController
-            songs={spotifyClient.currentSongs}
-            len={spotifyClient.currentSongs.length}
-          />
+          <SongListController />
         </div>
       );
     return null; // Return null when no content to show
