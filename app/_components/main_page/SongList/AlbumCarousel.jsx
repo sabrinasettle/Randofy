@@ -55,7 +55,7 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       loader.load(
         song.album_image.url,
         (texture) => {
-          if (!isMounted) return;
+          // if (!isMounted) return;
 
           const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
           const material = new THREE.MeshBasicMaterial({
@@ -199,7 +199,7 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     let lastReportedIndex = -1;
 
     const animate = () => {
-      if (!isMounted) return;
+      // if (!isMounted) return;
       requestAnimationFrame(animate);
 
       const desiredIndex = targetIndex + dragOffset;
