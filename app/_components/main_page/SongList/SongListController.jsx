@@ -24,7 +24,7 @@ export default function SongListController({}) {
   }, [setSelectedSong, currentIndex, songs]);
 
   return (
-    <div className="flex flex-col items-center h-full">
+    <div className="flex flex-col items-center h-full w-screen">
       {/* Index number */}
       <div className="text-gray-600 font-mono text-body-md font-normal md:mb-1">
         {currentIndex + 1} / {songs.length}
