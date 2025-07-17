@@ -323,9 +323,6 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
   return (
     <div className="flex justify-center">
-      <p className="text-gray-700">
-        {isLoading ? "Loading..." : "not loading"}
-      </p>
       <div
         ref={mountRef}
         className="flex items-center justify-center w-full h-[38vh] lg:h-[45vh] bg-transparent overflow-hidden relative"
