@@ -65,11 +65,11 @@ export default function RandofyContent() {
           </div>
         )}
 
-        <ButtonsContainer
+        {/* <ButtonsContainer
           hasContent={hasContent}
           filtersOpen={filtersOpen}
           setFilterOpen={setFilterOpen}
-        />
+        /> */}
       </div>
 
       <FilterDrawer
