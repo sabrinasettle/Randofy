@@ -8,6 +8,7 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
   const mountRef = useRef(null);
   const { songViewContext } = useSongViewContext();
   const isMobile = songViewContext.isMobile;
+  const [isLoading, setIsLoading] = useState(true);
 
   // ✅ Prevent running setup on the first Strict Mode cycle
   const [hasMounted, setHasMounted] = useState(false);
@@ -53,11 +54,13 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
     songs.forEach((song, index) => {
       const start = performance.now();
+      setIsLoading(true);
 
       loader.load(
         song.album_image.url,
         (texture) => {
           const end = performance.now();
+          setIsLoading(false);
           console.log(`Image ${index} loaded in ${Math.round(end - start)}ms`);
 
           const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
@@ -320,7 +323,9 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
   return (
     <div className="flex justify-center">
-      <p className="text-gray-700">{isMobile ? "Mobile" : "Desktop"}</p>
+      <p className="text-gray-700">
+        {isLoading ? "Loading..." : "not loading"}
+      </p>
       <div
         ref={mountRef}
         className="flex items-center justify-center w-full h-[38vh] lg:h-[45vh] bg-transparent overflow-hidden relative"
