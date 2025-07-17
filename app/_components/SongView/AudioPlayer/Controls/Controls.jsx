@@ -7,7 +7,7 @@ export default function Controls({ isPlaying, playAudio }) {
   const isMobile = songViewContext.isMobile;
 
   const activeStyle = isPlaying ? "bg-gray-700" : "bg-gray-600";
-  const heightStyle = isMobile ? "h-[56px] w-[56px]" : "h-[40px] w-[40px]";
+  const heightStyle = isMobile ? "h-[48px] w-[48px]" : "h-[40px] w-[40px]";
   const iconHeight = isMobile ? 24 : 20;
 
   return (
