@@ -8,6 +8,7 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
   const mountRef = useRef(null);
   const { songViewContext } = useSongViewContext();
   const isMobile = songViewContext.isMobile;
+  const [isLoading, setIsLoading] = useState(true);
 
   // ✅ Prevent running setup on the first Strict Mode cycle
   const [hasMounted, setHasMounted] = useState(false);
@@ -52,10 +53,15 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     const maxAngle = 1.5;
 
     songs.forEach((song, index) => {
+      const start = performance.now();
+      setIsLoading(true);
+
       loader.load(
         song.album_image.url,
         (texture) => {
-          if (!isMounted) return;
+          const end = performance.now();
+          setIsLoading(false);
+          console.log(`Image ${index} loaded in ${Math.round(end - start)}ms`);
 
           const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
           const material = new THREE.MeshBasicMaterial({
@@ -70,8 +76,30 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
           planeScales[index] = 1;
         },
         undefined,
-        (err) => console.warn("Texture load error:", err),
+        (err) => {
+          console.warn(`Texture load error for index ${index}:`, err);
+        },
       );
+      // loader.load(
+      //   song.album_image.url,
+      //   (texture) => {
+      //     // if (!isMounted) return;
+
+      //     const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
+      //     const material = new THREE.MeshBasicMaterial({
+      //       map: texture,
+      //       side: THREE.DoubleSide,
+      //       transparent: true,
+      //     });
+
+      //     const plane = new THREE.Mesh(geometry, material);
+      //     scene.add(plane);
+      //     planes[index] = plane;
+      //     planeScales[index] = 1;
+      //   },
+      //   undefined,
+      //   (err) => console.warn("Texture load error:", err),
+      // );
     });
 
     let scrollIndex = 0;
@@ -199,7 +227,7 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     let lastReportedIndex = -1;
 
     const animate = () => {
-      if (!isMounted) return;
+      // if (!isMounted) return;
       requestAnimationFrame(animate);
 
       const desiredIndex = targetIndex + dragOffset;
@@ -295,9 +323,10 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
   return (
     <div className="flex justify-center">
+      <p className="text-gray-000">{isLoading && "Loading..."}</p>
       <div
         ref={mountRef}
-        className="flex items-center justify-center w-full h-[38vh] lg:h-[45vh] bg-transparent overflow-hidden relative"
+        className="flex items-center justify-center w-full h-[34vh] lg:h-[45vh] bg-transparent overflow-hidden relative"
       />
     </div>
   );

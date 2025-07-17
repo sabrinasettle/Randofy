@@ -23,13 +23,10 @@ export default function RandofyContent() {
       );
     else if (spotifyClient.currentSongs.length !== 0)
       return (
-        <div className="w-full flex justify-end items-center mt-8 md:mt-0">
+        <div className="w-full flex justify-end items-center sm:mt-8 md:mt-0">
           {/* <LoadingBall isLoading={true} /> */}
           {/* <AlbumCarousel songs={spotifyClient.currentSongs} /> */}
-          <SongListController
-            songs={spotifyClient.currentSongs}
-            len={spotifyClient.currentSongs.length}
-          />
+          <SongListController />
         </div>
       );
     return null; // Return null when no content to show
@@ -37,9 +34,9 @@ export default function RandofyContent() {
 
   return (
     // overflow-hidden
-    <div>
+    <div className="overflow-hidden h-full">
       <div
-        className={`flex h-screen ${spotifyClient.isLoading ? "w-screen" : "w-full"} md:pt-0 flex-col justify-center items-center relative pb-4 md:pb-6 overflow-hidden z-0`}
+        className={`flex h-full ${spotifyClient.isLoading ? "w-screen" : "w-full"} pt-4 pb-4 md:pt-0 md:pb-6 flex-col justify-start sm:justify-center items-center relative overflow-hidden z-0`}
       >
         {/* Buttons Container - responsive behavior */}
 
@@ -59,7 +56,7 @@ export default function RandofyContent() {
         {/* Content Container - shows when loading or has songs */}
         {hasContent && (
           <div
-            className={`h-full w-full flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-1 ${
+            className={`h-full w-screen flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-1 ${
               hasContent ? "md:mt-5" : ""
             }`}
             id="content-container"
@@ -68,11 +65,11 @@ export default function RandofyContent() {
           </div>
         )}
 
-        <ButtonsContainer
+        {/* <ButtonsContainer
           hasContent={hasContent}
           filtersOpen={filtersOpen}
           setFilterOpen={setFilterOpen}
-        />
+        /> */}
       </div>
 
       <FilterDrawer
