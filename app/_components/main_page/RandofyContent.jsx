@@ -36,7 +36,7 @@ export default function RandofyContent() {
     // overflow-hidden
     <div className="overflow-hidden">
       <div
-        className={`flex h-screen ${spotifyClient.isLoading ? "w-screen" : "w-full"} pt-8 md:pt-0 flex-col justify-start sm:justify-center items-center relative pb-4 md:pb-6 overflow-hidden z-0`}
+        className={`flex h-full ${spotifyClient.isLoading ? "w-screen" : "w-full"} pt-8 md:pt-0 flex-col justify-start sm:justify-center items-center relative pb-4 md:pb-6 overflow-hidden z-0`}
       >
         {/* Buttons Container - responsive behavior */}
 
