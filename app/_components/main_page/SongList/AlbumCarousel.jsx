@@ -52,10 +52,13 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     const maxAngle = 1.5;
 
     songs.forEach((song, index) => {
+      const start = performance.now();
+
       loader.load(
         song.album_image.url,
         (texture) => {
-          // if (!isMounted) return;
+          const end = performance.now();
+          console.log(`Image ${index} loaded in ${Math.round(end - start)}ms`);
 
           const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
           const material = new THREE.MeshBasicMaterial({
@@ -70,8 +73,30 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
           planeScales[index] = 1;
         },
         undefined,
-        (err) => console.warn("Texture load error:", err),
+        (err) => {
+          console.warn(`Texture load error for index ${index}:`, err);
+        },
       );
+      // loader.load(
+      //   song.album_image.url,
+      //   (texture) => {
+      //     // if (!isMounted) return;
+
+      //     const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
+      //     const material = new THREE.MeshBasicMaterial({
+      //       map: texture,
+      //       side: THREE.DoubleSide,
+      //       transparent: true,
+      //     });
+
+      //     const plane = new THREE.Mesh(geometry, material);
+      //     scene.add(plane);
+      //     planes[index] = plane;
+      //     planeScales[index] = 1;
+      //   },
+      //   undefined,
+      //   (err) => console.warn("Texture load error:", err),
+      // );
     });
 
     let scrollIndex = 0;
