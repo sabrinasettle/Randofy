@@ -4,7 +4,7 @@ import RandofyContent from "./_components/main_page/RandofyContent";
 export default function Main() {
   // min-h-[calc(100vh-80px)]
   return (
-    <main className="flex h-screen flex-col items-center justify-center px-4 overflow-hidden">
+    <main className="flex h-dvh flex-col items-center justify-center px-4 overflow-hidden">
       <RandofyContent />
     </main>
   );
