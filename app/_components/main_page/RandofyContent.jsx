@@ -10,6 +10,7 @@ export default function RandofyContent() {
   const { spotifyClient } = useSpotifyContext();
   const [filtersOpen, setFilterOpen] = useState(false);
   const { spotifyUser } = spotifyClient;
+  const isMobile = spotifyClient.isMobile;
 
   const hasContent =
     spotifyClient.isLoading || spotifyClient.currentSongs.length !== 0;
