@@ -1,20 +1,11 @@
-import RandofyContent from "./_components/RandofyContent/RandofyContent";
-import Bottom from "./_components/Bottom/Bottom";
-import { SpotifyClientProvider } from "./context/spotify-context";
-import { CardLayoutProvider } from "./context/card-layout-context";
-
-import Top from "./_components/Top/Top";
+import RandofyContent from "./_components/main_page/RandofyContent";
+// import InformationLink from "./_components/layout/InformationLink";
 
 export default function Main() {
+  // min-h-[calc(100vh-80px)]
   return (
-    <div>
-      <SpotifyClientProvider>
-        <CardLayoutProvider>
-          <Top />
-          <RandofyContent />
-          <Bottom />
-        </CardLayoutProvider>
-      </SpotifyClientProvider>
-    </div>
+    <main className="flex h-dvh flex-col items-center justify-center px-4 overflow-hidden">
+      <RandofyContent />
+    </main>
   );
 }
