@@ -22,20 +22,20 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${dm_mono} ${dm_sans} ${sono} ${ibm_plex_sans} ${ibm_plex_mono}`}
     >
-      <ToastProvider>
-        <SpotifyClientProvider>
-          <SongViewProvider>
-            <body className="overscroll-none">
+      <body className="overscroll-none">
+        <ToastProvider>
+          <SpotifyClientProvider>
+            <SongViewProvider>
               <div className="h-screen">
                 {/* AuthProvider */}
                 <Nav />
                 {children}
               </div>
               {/* Auth Provider */}
-            </body>
-          </SongViewProvider>
-        </SpotifyClientProvider>
-      </ToastProvider>
+            </SongViewProvider>
+          </SpotifyClientProvider>
+        </ToastProvider>
+      </body>
     </html>
   );
 }

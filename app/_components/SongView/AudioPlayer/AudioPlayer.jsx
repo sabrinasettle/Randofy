@@ -10,6 +10,7 @@ import { Share2, Plus, Eye } from "lucide-react";
 import Tooltip from "../../ui/ToolTip.jsx";
 import AddSongButton from "./AddSongButton.jsx";
 import ShareButton from "./ShareButton.jsx";
+import OpenDetailsButton from "./OpenDetailsButton.jsx";
 
 export default function AudioPlayer({ song }) {
   const { songViewContext } = useSongViewContext();
@@ -102,15 +103,7 @@ export default function AudioPlayer({ song }) {
             <ShareButton song={song} />
           </div>
         </div>
-        {isDefault && (
-          <div className="text-gray-600">
-            <Tooltip text="See Details">
-              <button id="share-song" className={`${buttonStyle}`}>
-                <Eye width={eyeIconHeight} height={eyeIconHeight} />
-              </button>
-            </Tooltip>
-          </div>
-        )}
+        {isDefault && <OpenDetailsButton />}
       </div>
     </div>
   );

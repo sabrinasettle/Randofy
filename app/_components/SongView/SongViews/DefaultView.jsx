@@ -38,11 +38,11 @@ export default function DefaultView() {
   const promColor = song.color;
   const alpha = useAccessibleAlpha(promColor);
 
-  const mainDiv = isDefault
-    ? `border rounded-sm border-gray-200 backdrop-blur-sm`
-    : `relative w-full md:w-lg h-full bg-gray-000  transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)]
-        top-0 right-0 md:static w-full h-full mb-2 md:mb-3 border border-transparent md:border-gray-200 md:rounded-sm z-50 backdrop-blur-sm
-`;
+  //   const mainDiv = isDefault
+  //     ? `border rounded-sm border-gray-200 backdrop-blur-sm h-[800px]`
+  //     : `relative w-full md:w-lg h-full bg-gray-000  transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)]
+  //         top-0 right-0 md:static w-full h-full mb-2 md:mb-3 border border-transparent md:border-gray-200 md:rounded-sm z-50 backdrop-blur-sm
+  // `;
 
   // Determine the view state
   const isFullScreenOverlay = !isDefault && isOpen; // Not default (other pages) + detailed = full-screen overlay
@@ -54,27 +54,15 @@ export default function DefaultView() {
 
   // Determine container styles based on view state
   const getContainerStyles = () => {
-    // if (isFullScreenOverlay) {
-    //   // Full-screen overlay with slide animation (other pages)
-    //   return {
-    //     className: `fixed inset-0 z-50 w-full h-full backdrop-blur-sm transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-    //       animateIn ? "translate-x-0" : "translate-x-full"
-    //     }`,
-    //     style: {
-    //       backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-    //     },
-    //   };
-    // } else if (isContainedDrawer) {
-    //   // Contained within parent drawer (home page, detailed)
-    //   return {
-    //     className:
-    //       "w-full h-full border border-gray-200 rounded-sm backdrop-blur-sm",
-    //     style: {
-    //       backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-    //     },
-    //   };
-    // } else {
-    //   // Minimal view (home page, not detailed)
+    if (isOpen) {
+      return {
+        className: `z-50 w-screen h-full backdrop-blur-sm transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]`,
+        style: {
+          backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
+        },
+      };
+    }
+
     return {
       className:
         "w-full flex flex-col justify-between min-h-[180px] lg:w-[564px] lg:min-h-[160px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
@@ -82,7 +70,6 @@ export default function DefaultView() {
         backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
       },
     };
-    // }
   };
 
   const containerStyles = getContainerStyles();
