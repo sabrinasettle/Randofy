@@ -41,7 +41,7 @@ export default function ButtonsContainer({
 
   return (
     <div
-      className={`flex gap-4 items-center transition-all duration-400 ease-in-out z-50 order-2 md:order-2 mx-auto w-full md:w-auto
+      className={`flex gap-4 items-center transition-all duration-400 ease-in-out z-40 order-2 md:order-2 mx-auto w-full md:w-auto
         ${hasContent ? `flex-row pt-2 px-4` : `flex-col max-w-[80%]`} md:flex-row
         `}
       style={{

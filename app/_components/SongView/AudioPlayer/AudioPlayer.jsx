@@ -25,6 +25,7 @@ export default function AudioPlayer({ song }) {
   const isMobile = songViewContext.isMobile;
   const isDefault = songViewContext.isDefault;
   const areDrawersOpen = songViewContext.drawersOpen;
+  const isOpen = songViewContext.isDetailsOpen; // true = detailed view, false = not detailed
 
   // Reset currentTime and stop playing when song changes
   useEffect(() => {
@@ -54,12 +55,6 @@ export default function AudioPlayer({ song }) {
   //If the audio file is hosted on a different domain than your React app, you may need to configure Cross-Origin Resource Sharing (CORS) on the server serving the audio file.
   const preview = song.preview_url;
 
-  const buttonStyle = `hover:bg-gray-100 border border-transparent hover:border-gray-200 hover:text-gray-700 text-gray-600 p-2 rounded-sm ${!isMobile ? "h-[42px] w-[42px]" : "h-[48px] w-[48px]"}`;
-  // const shareIconHeight = isMobile ? 28 : 20;
-  // const addIconHeight = isMobile ? 32 : 24;
-  const eyeIconHeight = isMobile ? 32 : 24;
-
-  // const addTooltipString = spotifyUser ? "Add to Playlist" : "Login to Add";
   return (
     <div className={`flex-1 pt-0`}>
       {preview ? (
@@ -77,9 +72,8 @@ export default function AudioPlayer({ song }) {
         <div
           className={`flex flex-row justify-between flex-1 pt-0 text-gray-600`}
         >
-          {/* <p className="pb-2">No Preview Available</p> */}
           <a
-            className="font-body text-body-lg md:text-body-md pt-2 pb-2 hover:text-gray-700"
+            className="font-body text-body-lg md:text-body-sm pt-2 pb-2 hover:text-gray-700"
             id="open-spotify"
             href={song.href}
           >
@@ -103,7 +97,7 @@ export default function AudioPlayer({ song }) {
             <ShareButton song={song} />
           </div>
         </div>
-        {isDefault && <OpenDetailsButton />}
+        {isDefault && !isOpen && <OpenDetailsButton />}
       </div>
     </div>
   );
