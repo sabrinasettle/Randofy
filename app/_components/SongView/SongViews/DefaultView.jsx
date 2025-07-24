@@ -9,6 +9,7 @@ import { useSongViewContext } from "../../../context/song-view-context.js";
 import ScrollingTitle from "../../ui/ScrollingTitle.jsx";
 import { ArrowRight, ArrowLeft, X } from "lucide-react";
 import Image from "next/image";
+import AudioFeatureTabs from "../AudioFeatureTabs.jsx";
 
 export default function DefaultView() {
   const { songViewContext } = useSongViewContext();
@@ -25,12 +26,6 @@ export default function DefaultView() {
 
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
 
-  function formatYear() {
-    const yearRegex = /^\d{4}/;
-    const match = song.release_year.match(yearRegex);
-    return match ? match[0] : null;
-  }
-
   const artists = createArtists(song);
   const promColor = song.color;
   const alpha = useAccessibleAlpha(promColor);
@@ -41,10 +36,12 @@ export default function DefaultView() {
       className:
         "w-full flex flex-col justify-between min-h-[180px] lg:w-[564px] lg:min-h-[160px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
       style: {
-        backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
+        // backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
       },
     };
   };
+
+  const iconSize = isMobile ? 32 : 24;
 
   // Full-screen portal component
   const renderFullScreenPlayer = () => {
@@ -62,10 +59,12 @@ export default function DefaultView() {
         // }}
       >
         <div
-          className="fixed inset-0 backdrop-blur-sm md:m-7 lg:m-10 xl:m-12 border md:border-gray-200 md:rounded-sm"
-          style={{
-            backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-          }}
+          className="fixed inset-0 backdrop-blur-sm md:m-7 lg:m-10 xl:m-12 border md:border-gray-200 md:rounded-sm bg-gray-000 md:opacity-95"
+          style={
+            {
+              // backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
+            }
+          }
         >
           <div className="w-full h-full p-4">
             {/* Portal Controls */}
@@ -76,20 +75,20 @@ export default function DefaultView() {
                     onClick={() => songViewContext.setIsDetailsOpen(false)}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
-                    <ArrowLeft size={24} />
+                    <ArrowLeft size={iconSize} />
                   </button>
                   <button
                     onClick={() => songViewContext.setIsDetailsOpen(false)}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
-                    <ArrowRight size={24} />
+                    <ArrowRight size={iconSize} />
                   </button>
                 </div>
                 <button
                   onClick={() => songViewContext.setIsDetailsOpen(false)}
                   className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                 >
-                  <X size={24} />
+                  <X size={iconSize} />
                 </button>
               </div>
             </div>
@@ -123,80 +122,37 @@ export default function DefaultView() {
               </div>
 
               {/* right column */}
-              <div className="w-full md:w-2/3 lg:w-[48%] flex flex-col justify-between md:h-full md:pt-6">
-                <div>
-                  <div className="pt-6">
-                    <ScrollingTitle
-                      text={song.track_name}
-                      className="text-gray-700 font-medium text-heading-5"
-                    />
-                    <div className="flex flex-row items-center gap-2">
-                      {song.is_explicit && (
-                        <div className="font-mono w-4 h-[18px] flex justify-center items-center text-gray-000 bg-gray-700 rounded-sm">
-                          E
-                        </div>
-                      )}
-                      <h2 className="text-gray-600 font-body text-heading-6 truncate">
-                        {artists}
-                      </h2>
-                    </div>
-                  </div>
-                  {/* Audio player centered */}
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="w-full">
-                      <AudioPlayer song={song} />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={`${activeSection ? "hidden" : "block"} space-y-2 transition-all duration-500 ease-in-out`}
-                  id="information-container"
-                >
-                  <div className="justify-start flex flex-col">
-                    <div className="flex flex-row gap-1">
-                      <div className="text-body-md md:text-body-sm text-gray-600">
-                        Album:
+              <div className="w-full md:w-2/3 lg:w-[48%] md:pt-8 md:pb-6">
+                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 px-5">
+                  <div>
+                    <div className="pt-2">
+                      <ScrollingTitle
+                        text={song.track_name}
+                        className="text-gray-700 font-medium text-heading-5"
+                      />
+                      <div className="flex flex-row items-center gap-2">
+                        {song.is_explicit && (
+                          <div className="font-mono w-4 h-[18px] flex justify-center items-center text-gray-000 bg-gray-700 rounded-sm">
+                            E
+                          </div>
+                        )}
+                        <h2 className="text-gray-600 font-body text-heading-6 truncate">
+                          {artists}
+                        </h2>
                       </div>
-                      <p
-                        className="text-body-md md:text-body-sm text-gray-700"
-                        id="song-album"
-                      >
-                        {song.album_name}
-                      </p>
                     </div>
-                    <div className="flex flex-row gap-1">
-                      <div className="information-label">Length:</div>
-                      <p
-                        className="text-body-sm text-gray-700"
-                        id="song-length"
-                      >
-                        {millisToMinutesAndSeconds(song.song_length)}
-                      </p>
-                    </div>
-                    <div className="flex flex-row gap-1">
-                      <div
-                        className="text-body-md md:text-body-sm text-gray-600"
-                        id="information-label"
-                      >
-                        Year:
+                    {/* Audio player centered */}
+                    <div className="flex-1 flex items-center justify-center mt-2">
+                      <div className="w-full">
+                        <AudioPlayer song={song} />
                       </div>
-                      <p
-                        className="text-body-md md:text-body-sm text-gray-700"
-                        id="release_year"
-                      >
-                        {formatYear()}
-                      </p>
                     </div>
                   </div>
-                </div>
 
-                {/* Audio feature drawers at bottom */}
-                <div className="pb-4">
-                  <AudioFeatureDrawers
-                    song={song}
-                    activeSection={activeSection}
-                    setActiveSection={setActiveSection}
-                  />
+                  {/* Audio feature tabs*/}
+                  <div className="pb-4 h-full">
+                    <AudioFeatureTabs song={song} />
+                  </div>
                 </div>
               </div>
             </div>

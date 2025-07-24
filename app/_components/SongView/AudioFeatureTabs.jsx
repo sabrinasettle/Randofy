@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
-import { ArrowUp } from "lucide-react";
-import { useSongViewContext } from "../../context/song-view-context";
+import React, { useState, useRef, useEffect } from "react";
+// import { useSongViewContext } from "../../context/song-view-context";
+import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
+import { formatYear } from "../../utils/formatYear.js";
 
 const RadarChart = ({ data, size = 200 }) => {
   const center = size / 2;
@@ -120,115 +121,163 @@ const RadarChart = ({ data, size = 200 }) => {
   );
 };
 
-export default function AudioFeatureDrawers({ song }) {
-  const { songViewContext } = useSongViewContext();
+export default function AudioFeatureTabs({ song }) {
+  const [activeTab, setActiveTab] = useState(0); // Track which tab is selected
+  const [hoveredTab, setHoveredTab] = useState(null); // Track which tab is hovered
+  const [hoverStyle, setHoverStyle] = useState({ x: 0, width: 0 }); // Style for hover background
+  const [activeStyle, setActiveStyle] = useState({ x: 0, width: 0 }); // Style for active tab underline
 
-  const [activeTab, setActiveTab] = useState(0);
-  const [hoveredTab, setHoveredTab] = useState(null);
-  const [borderStyle, setBorderStyle] = useState({ left: 0, width: 0 });
-  const tabsRef = useRef([]);
-  const containerRef = useRef(null);
+  const tabsRef = useRef([]); // Reference each tab button
+  const containerRef = useRef(null); // Reference the tab container
 
-  return (
-    <>
-      {/* Genres Expandable Section */}
-      {song.genres.length > 0 && (
-        <div className="border-t border-gray-200">
-          <button
-            onClick={() => {
-              if (activeSection === "genres") {
-                // setActiveSection(null);
-                songViewContext.handleDrawerClosed(); // ✅ Closing section
-              } else {
-                // setActiveSection("genres");
-                songViewContext.handleDrawerOpen("genres"); // ✅ Opening section
-              }
-            }}
-            className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
-          >
-            <span className="font-body text-body-md md:text-body-sm text-gray-700">
-              Genres
-            </span>
-            <ArrowUp
-              size={20}
-              className={` group-hover:text-gray-600 transition-all duration-300 ${
-                activeSection === "genres" ? "rotate-180" : ""
-              } ${activeSection === "genres" ? "text-gray-700" : "text-gray-400"}`}
-            />
-          </button>
+  // Define the tab labels and content
+  const tabs = [
+    {
+      label: "Song Details",
+      content: (
+        <div className="py-4 space-y-4">
+          {/* Song metadata */}
+          <div className="flex flex-col gap-2">
+            <span className="text-sm font-medium text-gray-700">General:</span>
 
-          {/* Genres Expandable Content */}
-          <div
-            className="overflow-hidden transition-all duration-500 ease-out"
-            style={{
-              height: activeSection === "genres" ? "120px" : "0px",
-            }}
-          >
-            <div className="py-4">
-              <div className="flex flex-wrap gap-2">
-                {song.genres.map((genre, index) => (
-                  <span
-                    key={index}
-                    className="font-body px-3 py-1 bg-gray-200 text-white text-body-sm rounded-full"
-                  >
-                    {genre}
-                  </span>
-                ))}
+            <div className="space-y-2">
+              <div className="flex gap-2 text-gray-600 text-sm">
+                <span>Album:</span>
+                <span className="text-gray-700">{song.album_name}</span>
+              </div>
+              <div className="flex gap-2 text-gray-600 text-sm">
+                <span>Length:</span>
+                <span className="text-gray-700">
+                  {millisToMinutesAndSeconds(song.song_length)}
+                </span>
+              </div>
+              <div className="flex gap-2 text-gray-600 text-sm">
+                <span>Year:</span>
+                <span className="text-gray-700">{formatYear(song)}</span>
               </div>
             </div>
           </div>
-        </div>
-      )}
-      {/* Song Details Expandable Section */}
-      <div className="justify-end border-t border-gray-200">
-        {/* Song Details Button */}
-        <button
-          onClick={() => {
-            if (activeSection === "details") {
-              // setActiveSection(null);
-              songViewContext.handleDrawerClosed(); // ✅ Closing section
-            } else {
-              // setActiveSection("details");
-              songViewContext.handleDrawerOpen("details"); // ✅ Opening section
-            }
-          }}
-          className="group w-full h-12 hover:text-gray-300 flex items-center justify-between px-0 transition-colors"
-        >
-          <span className="font-bodytext-body-md md:text-body-sm text-gray-700">
-            Audio Details
-          </span>
-          <ArrowUp
-            size={20}
-            className={`group-hover:text-gray-600 transition-all duration-300 ${
-              activeSection === "details" ? "rotate-180" : ""
-            } ${
-              activeSection === "details" ? "text-gray-700" : "text-gray-400"
-            }`}
-          />
-        </button>
-
-        {/* Song Details Expandable Content */}
-        <div
-          className="overflow-hidden transition-all duration-500 ease-out"
-          style={{
-            height: activeSection === "details" ? "min-content" : "0px",
-          }}
-        >
-          <div className="">
-            {/* Radar Chart */}
-            <RadarChart
-              data={{
-                popularity: song.popularity,
-                acoustics: song.audioFeatures.acousticness,
-                energy: song.audioFeatures.energy,
-                danceability: song.audioFeatures.danceability,
-                mood: song.audioFeatures.valence,
-              }}
-              size={280}
-            />
+          {/* Song genres */}
+          <div className="flex flex-col gap-2">
+            <span className="text-sm font-medium text-gray-700">Genres:</span>
+            <div className="flex flex-wrap gap-2">
+              {song.genres.map((g, i) => (
+                <span
+                  key={i}
+                  className="text-sm text-gray-700 bg-gray-200 px-3 py-1 rounded-sm"
+                >
+                  {g}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
+      ),
+    },
+    {
+      label: "Song Features",
+      content: (
+        <div>
+          <RadarChart
+            data={{
+              popularity: song.popularity,
+              acoustics: song.audioFeatures.acousticness,
+              energy: song.audioFeatures.energy,
+              danceability: song.audioFeatures.danceability,
+              mood: song.audioFeatures.valence,
+            }}
+            size={280}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  // Update hover or active style based on tab's position and width
+  const updateStyle = (index, setter) => {
+    const tab = tabsRef.current[index];
+    const container = containerRef.current;
+    if (!tab || !container) return;
+
+    const tabRect = tab.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    const x = tabRect.left - containerRect.left;
+    const width = tabRect.width;
+
+    setter({ x, width });
+  };
+
+  // Update active tab underline style when tab changes
+  useEffect(() => {
+    updateStyle(activeTab, setActiveStyle);
+  }, [activeTab]);
+
+  // Update positions on resize
+  useEffect(() => {
+    const handleResize = () => {
+      updateStyle(activeTab, setActiveStyle);
+      if (hoveredTab != null) updateStyle(hoveredTab, setHoverStyle);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [hoveredTab, activeTab]);
+
+  return (
+    <div className="w-full h-full mt-4 mx-auto">
+      <div className="relative flex w-full pb-2" ref={containerRef}>
+        {/* Overall bottom border */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-300 z-0 pointer-events-none" />
+
+        {/* Hover indicator pill */}
+        <div
+          className={`absolute bg-gray-100 rounded-md transition-all duration-300 ease-out z-10 pointer-events-none ${
+            hoveredTab === null ? "opacity-0" : "opacity-100"
+          }`}
+          style={{
+            top: "0px",
+            bottom: "8px",
+            transform: `translateX(${hoverStyle.x}px)`,
+            width: `${hoverStyle.width}px`,
+          }}
+        />
+
+        {/* Active tab indicator — overrides gray line */}
+        <div
+          className="absolute bottom-0 h-px bg-gray-700 transition-all duration-300 ease-out z-20 pointer-events-none"
+          style={{
+            transform: `translateX(${activeStyle.x}px)`,
+            width: `${activeStyle.width}px`,
+          }}
+        />
+
+        {/* Tab buttons */}
+        {tabs.map((tab, i) => (
+          <button
+            key={i}
+            ref={(el) => (tabsRef.current[i] = el)}
+            className={`relative z-30 px-4 py-2 text-sm font-medium transition-colors duration-150 ${
+              activeTab === i
+                ? "text-gray-700"
+                : "text-gray-600 hover:text-gray-700"
+            }`}
+            onClick={() => {
+              setActiveTab(i);
+              updateStyle(i, setActiveStyle);
+            }}
+            onMouseEnter={() => {
+              setHoveredTab(i);
+              updateStyle(i, setHoverStyle);
+            }}
+            onMouseLeave={() => {
+              setHoveredTab(null);
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
-    </>
+
+      <div className="mt-6 h-full">{tabs[activeTab].content}</div>
+    </div>
   );
 }
