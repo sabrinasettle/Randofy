@@ -42,7 +42,7 @@ export default function Tooltip({ children, text, className = "" }) {
         buttonRect &&
         createPortal(
           <div
-            className="fixed bg-gray-200 text-gray-700 px-2 py-1 rounded text-sm whitespace-nowrap z-50 pointer-events-none"
+            className="fixed bg-gray-200 text-gray-700 px-2 py-1 rounded text-sm whitespace-nowrap z-[9999] pointer-events-none"
             style={{
               left: buttonRect.left + buttonRect.width / 2,
               top: buttonRect.bottom + 12,

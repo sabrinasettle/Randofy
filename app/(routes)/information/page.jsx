@@ -1,7 +1,7 @@
 export default function Information() {
   return (
     <div className="w-full px-3 md:px-4 pt-[72px] flex flex-col lg:flex-row justify-between gap-28">
-      <section className="text-gray-700 w-full">
+      <section className="font-body text-gray-700 w-full">
         <p className="text-display-2 pb-6">
           Built by{" "}
           <a
@@ -38,7 +38,7 @@ export default function Information() {
           {/* OR support us (by sharing) */}
         </div>
       </section>
-      <section className="text-gray-700 w-full md:w-5/8">
+      <section className="font-body text-gray-700 w-full md:w-6/8">
         <h2 className="text-heading-3 pb-4">Data & Privacy Disclaimer</h2>
         <p className="text-body-md pb-4">
           This application uses the Spotify Web API to provide music-related

@@ -21,9 +21,9 @@ export function SongViewProvider({ children }) {
 
   const isMobile = useIsMobile();
 
-  function openDetails() {
+  function handleOpenDetails() {
     // setPageActive(page);
-    setIsDetailsOpen(true);
+    setIsDetailsOpen(!isDetailsOpen);
   }
 
   function closeDetails() {
@@ -45,7 +45,7 @@ export function SongViewProvider({ children }) {
     setSelectedSong,
     selectedSong,
     isMobile,
-    openDetails,
+    handleOpenDetails,
     closeDetails,
     isDetailsOpen,
     setIsDetailsOpen,
