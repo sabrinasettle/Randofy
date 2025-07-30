@@ -1,8 +1,9 @@
 import GetSongsButton from "./GetSongsButton";
 import { useSpotifyContext } from "../../context/spotify-context";
+import { useMusicContext } from "../../context/music-context";
 
 const FilterButton = ({ handleOpen, isSmall }) => {
-  const { spotifyClient } = useSpotifyContext();
+  const { musicContext } = useMusicContext();
 
   const classString = isSmall
     ? `bg-gray-100 px-3 py-2 md:w-auto`
@@ -10,8 +11,8 @@ const FilterButton = ({ handleOpen, isSmall }) => {
 
   //values changed
   const string =
-    spotifyClient.filtersTotal > 0
-      ? `Filter Songs [${spotifyClient.filtersTotal}]`
+    musicContext.filtersTotal > 0
+      ? `Filter Songs [${musicContext.filtersTotal}]`
       : "Filter Songs";
 
   return (

@@ -16,12 +16,12 @@ export default function SongListController({}) {
 
   const songs = React.useMemo(() => musicContext.currentSongs, [musicContext]);
 
-  React.useEffect(() => {
-    musicContext.setSelectedSong({
-      index: currentIndex,
-      song: songs[currentIndex],
-    });
-  }, [setSelectedSong, currentIndex, songs]);
+  // React.useEffect(() => {
+  //   musicContext.setSelectedSong({
+  //     index: currentIndex,
+  //     song: songs[currentIndex],
+  //   });
+  // }, [setSelectedSong, currentIndex, songs]);
 
   return (
     <div className="flex flex-col items-center md:h-full w-screen">
@@ -30,10 +30,7 @@ export default function SongListController({}) {
         {currentIndex + 1} / {songs.length}
       </div>
 
-      <AlbumCarousel
-        songs={songs}
-        onIndexChange={setCurrentIndex} // Make sure AlbumCarousel calls this
-      />
+      <AlbumCarousel />
       <DefaultView />
     </div>
   );

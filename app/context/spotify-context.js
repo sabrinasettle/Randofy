@@ -14,26 +14,10 @@ export function SpotifyClientProvider({ children }) {
   const [auth, setAuth] = useState(null);
   const [playlist, setPlaylist] = useState(null);
   const [playlistSongs, setPlaylistSongs] = useState(null);
-  const [currentSongs, setCurrentSongs] = useState([]);
-  // Is an object = index: number, song: songs[number]
-  const [selectedSong, setSelectedSong] = useState({});
+
   const [isLoading, setIsLoading] = useState(false);
   const [generationHistory, setGenerationHistory] = useState({});
   const [error, setError] = useState(null);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-
-  // Filters
-  const [songLimit, setSongLimit] = useState(5);
-  const [songDetails, setSongDetails] = useState({
-    popularity: { min: 0, max: 1.0 },
-    acoustics: { min: 0.0, max: 1.0 },
-    energy: { min: 0.0, max: 1.0 },
-    vocals: { min: 0.0, max: 1.0 },
-    danceability: { min: 0.0, max: 1.0 },
-    mood: { min: 0.0, max: 1.0 },
-  });
-  const [genres, setGenres] = useState(new Set());
-  const [filtersTotal, setFiltersTotal] = useState(0);
 
   const { showToast } = useToast();
   const isMobile = useIsMobile();
@@ -346,26 +330,26 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
-  const updateSongHistory = (songs) => {
-    // localStorage.removeItem("history");
-    // check if local storage can be reached else return
-    const songHistory = JSON.parse(localStorage.getItem("history"));
-    const date = new Date();
-    const dateKey = date.toLocaleDateString();
+  // const updateSongHistory = (songs) => {
+  //   // localStorage.removeItem("history");
+  //   // check if local storage can be reached else return
+  //   const songHistory = JSON.parse(localStorage.getItem("history"));
+  //   const date = new Date();
+  //   const dateKey = date.toLocaleDateString();
 
-    if (!songHistory) {
-      localStorage.setItem("history", JSON.stringify({ [dateKey]: songs }));
-    } else {
-      if (!songHistory[dateKey]) {
-        songHistory[dateKey] = [];
-      }
-      const songList = [...songHistory[dateKey], ...songs];
-      songHistory[dateKey] = songList;
-      localStorage.setItem("history", JSON.stringify(songHistory));
+  //   if (!songHistory) {
+  //     localStorage.setItem("history", JSON.stringify({ [dateKey]: songs }));
+  //   } else {
+  //     if (!songHistory[dateKey]) {
+  //       songHistory[dateKey] = [];
+  //     }
+  //     const songList = [...songHistory[dateKey], ...songs];
+  //     songHistory[dateKey] = songList;
+  //     localStorage.setItem("history", JSON.stringify(songHistory));
 
-      setGenerationHistory(songHistory);
-    }
-  };
+  //     setGenerationHistory(songHistory);
+  //   }
+  // };
 
   const loginRequest = async () => {
     window.location.href = "/api/login";
@@ -392,109 +376,73 @@ export function SpotifyClientProvider({ children }) {
     }
   }, [_code]);
 
-  const getSongs = async () => {
-    setIsLoading(true);
+  // const getSongs = async () => {
+  //   setIsLoading(true);
 
-    const params = new URLSearchParams();
+  //   const params = new URLSearchParams();
 
-    // const [songDetails, setSongDetails] = useState({
-    //   popularity: { min: 0, max: 100 },
-    //   acoustics: { min: 0.0, max: 1.0 },
-    //   energy: { min: 0.0, max: 1.0 },
-    //   vocals: { min: 0.0, max: 1.0 },
-    //   danceability: { min: 0.0, max: 1.0 },
-    //   mood: { min: 0.0, max: 1.0 },
-    // });
+  //   // const [songDetails, setSongDetails] = useState({
+  //   //   popularity: { min: 0, max: 100 },
+  //   //   acoustics: { min: 0.0, max: 1.0 },
+  //   //   energy: { min: 0.0, max: 1.0 },
+  //   //   vocals: { min: 0.0, max: 1.0 },
+  //   //   danceability: { min: 0.0, max: 1.0 },
+  //   //   mood: { min: 0.0, max: 1.0 },
+  //   // });
 
-    params.set("limit", songLimit);
+  //   params.set("limit", songLimit);
 
-    params.set("min_popularity", Math.ceil(songDetails.popularity.min * 100));
-    params.set("max_popularity", Math.ceil(songDetails.popularity.max * 100));
+  //   params.set("min_popularity", Math.ceil(songDetails.popularity.min * 100));
+  //   params.set("max_popularity", Math.ceil(songDetails.popularity.max * 100));
 
-    params.set("min_energy", songDetails.energy.min);
-    params.set("max_energy", songDetails.energy.max);
+  //   params.set("min_energy", songDetails.energy.min);
+  //   params.set("max_energy", songDetails.energy.max);
 
-    params.set("min_danceability", songDetails.danceability.min);
-    params.set("max_danceability", songDetails.danceability.max);
+  //   params.set("min_danceability", songDetails.danceability.min);
+  //   params.set("max_danceability", songDetails.danceability.max);
 
-    params.set("min_acousticness", songDetails.acoustics.min);
-    params.set("max_acousticness", songDetails.acoustics.max);
+  //   params.set("min_acousticness", songDetails.acoustics.min);
+  //   params.set("max_acousticness", songDetails.acoustics.max);
 
-    params.set("min_speechiness", songDetails.vocals.min);
-    params.set("max_speechiness", songDetails.vocals.max);
+  //   params.set("min_speechiness", songDetails.vocals.min);
+  //   params.set("max_speechiness", songDetails.vocals.max);
 
-    params.set("min_valence", songDetails.mood.min);
-    params.set("max_valence", songDetails.mood.max);
+  //   params.set("min_valence", songDetails.mood.min);
+  //   params.set("max_valence", songDetails.mood.max);
 
-    if (!genres.size === 0) {
-      const fiveGenres = genres.size > 5 ? genres.slice(0, 5) : genres;
-      params.set("genres", Array.from(fiveGenres));
-    }
+  //   if (!genres.size === 0) {
+  //     const fiveGenres = genres.size > 5 ? genres.slice(0, 5) : genres;
+  //     params.set("genres", Array.from(fiveGenres));
+  //   }
 
-    const res = await fetch("/api/random?" + params.toString());
+  //   const res = await fetch("/api/random?" + params.toString());
 
-    if (!res.ok) {
-      setError(await res.json());
-      setIsLoading(false);
-    } else {
-      const data = await res.json();
-      // console.log(data);
+  //   if (!res.ok) {
+  //     setError(await res.json());
+  //     setIsLoading(false);
+  //   } else {
+  //     const data = await res.json();
+  //     // console.log(data);
 
-      let song = data.recommendedTracks[0];
-      // console.log(song);
-      setCurrentSongs(data.recommendedTracks);
-      setSelectedSong({ index: 0, song });
+  //     let song = data.recommendedTracks[0];
+  //     // console.log(song);
+  //     setCurrentSongs(data.recommendedTracks);
+  //     setSelectedSong({ index: 0, song });
 
-      updateSongHistory(data.recommendedTracks);
-      setIsLoading(false);
-      return data;
-    }
-  };
-
-  function moveForward() {
-    setSelectedSong({
-      index: selectedSong.index + 1,
-      song: currentSongs[selectedSong.index + 1],
-    });
-  }
-
-  function moveBackward() {
-    setSelectedSong({
-      index: selectedSong.index - 1,
-      song: currentSongs[selectedSong.index - 1],
-    });
-  }
+  //     updateSongHistory(data.recommendedTracks);
+  //     setIsLoading(false);
+  //     return data;
+  //   }
+  // };
 
   const spotifyClient = {
     // State
     spotifyUser,
-    isDetailsOpen,
-    setIsDetailsOpen,
     isLoading,
-    currentSongs,
-    setCurrentSongs,
-    selectedSong,
-    setSelectedSong,
-    generationHistory,
     // General Functions
     loginRequest,
     logoutRequest,
     getPlaylist,
-    getSongs,
-    moveForward,
-    moveBackward,
-    // Generated Values
-    isMobile,
-    // Filters
-    songLimit,
-    setSongLimit,
-    songDetails,
-    setSongDetails,
-    genres,
-    setGenres,
-    valueStrings,
-    filtersTotal,
-    setFiltersTotal,
     // Playlist functions
     addToPlaylist,
     removeFromPlaylist,

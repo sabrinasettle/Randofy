@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useIsMobile } from "../_hooks/useIsMobile";
 
 const StyleContext = React.createContext();
@@ -8,9 +8,12 @@ export default StyleContext;
 export function StyleProvider({ children }) {
   const isMobile = useIsMobile();
   const styleContext = { isMobile };
+  const [isDefault, setIsDefault] = useState(true);
 
   const context = {
     styleContext,
+    isDefault,
+    setIsDefault,
   };
 
   return (
