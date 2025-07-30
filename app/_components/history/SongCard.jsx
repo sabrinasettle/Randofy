@@ -2,29 +2,31 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSongViewContext } from "../../context/song-view-context";
+import { useMusicContext } from "../../context/music-context";
 import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists";
 import ScrollingTitle from "../ui/ScrollingTitle";
 
 export default function SongCard({ song, index }) {
   const { songViewContext } = useSongViewContext();
+  const { musicContext } = useMusicContext();
   const { layoutContext } = useGridContext();
   const layout = layoutContext.layoutType;
   const isMobile = songViewContext.isMobile;
   const [isActive, setIsActive] = useState(false);
 
   function checkIsActive() {
-    return song.track_name === songViewContext.selectedSong?.song?.track_name;
+    return song.track_name === musicContext.selectedSong?.song?.track_name;
   }
 
   // Update active state when selected song changes
   useEffect(() => {
     setIsActive(checkIsActive());
-  }, [songViewContext.selectedSong, song.track_name]);
+  }, [musicContext.selectedSong, song.track_name]);
 
   function moveOrNot() {
-    songViewContext.setSelectedSong({ index: index, song });
-    songViewContext.openDetails();
+    musicContext.setSelectedSong({ index: index, song });
+    musicContext.openDetails();
   }
 
   let alt = `Album cover for ${song.album_name} by ${createArtists(song)}`;

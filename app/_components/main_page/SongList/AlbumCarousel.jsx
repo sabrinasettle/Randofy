@@ -85,6 +85,7 @@ export default function AlbumCarousel({}) {
       );
     });
 
+    // Simplified interaction variables - like File 2
     let isDragging = false;
     let startX = 0;
     let dragOffset = 0;
@@ -142,7 +143,10 @@ export default function AlbumCarousel({}) {
     const onPointerUp = () => {
       if (!isDragging) return;
       isDragging = false;
+
+      // Simple drag logic like File 2
       targetIndexRef.current = Math.round(targetIndexRef.current + dragOffset);
+      targetIndexRef.current = clampIndex(targetIndexRef.current);
       dragOffset = 0;
     };
 
@@ -161,6 +165,7 @@ export default function AlbumCarousel({}) {
         const clickedPlane = intersects[0].object;
         const clickedIndex = planes.indexOf(clickedPlane);
         if (clickedIndex !== -1) {
+          console.log(`Clicked on plane ${clickedIndex}`);
           targetIndexRef.current = clickedIndex;
         }
       }
@@ -220,6 +225,7 @@ export default function AlbumCarousel({}) {
       const currentIndex = Math.round(scrollIndexRef.current);
       if (currentIndex !== lastReportedIndex) {
         lastReportedIndex = currentIndex;
+        lastSetIndexRef.current = currentIndex; // Track what we're setting
         musicContext.setSelectedSong({
           index: currentIndex,
           song: songs[currentIndex],
@@ -300,11 +306,14 @@ export default function AlbumCarousel({}) {
   }, [hasMounted, songs, isMobile]);
 
   // 🔁 Sync external index and reset scroll position immediately
+  // Only sync if the change came from outside this component
+  const lastSetIndexRef = useRef(-1);
+
   useEffect(() => {
     const index = musicContext.selectedSong.index;
-    if (index !== undefined) {
+    if (index !== undefined && index !== lastSetIndexRef.current) {
+      // This change came from outside, so sync it
       targetIndexRef.current = index;
-      // Remove this line: scrollIndexRef.current = index;
     }
   }, [musicContext.selectedSong.index]);
 

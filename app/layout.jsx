@@ -15,7 +15,7 @@ import { StyleProvider } from "./context/style-context";
 
 export const metadata = {
   title: "Randofy",
-  description: "A musical expeeiment to randomize the Spotify database",
+  description: "Randomize the Spotify database",
 };
 
 export default function RootLayout({ children }) {

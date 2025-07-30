@@ -163,10 +163,11 @@ export function MusicProvider({ children }) {
   }
 
   const musicContext = {
+    valueStrings,
+    isLoading,
     // State
     isDetailsOpen,
     setIsDetailsOpen,
-    isLoading,
     currentSongs,
     setCurrentSongs,
     selectedSong,
@@ -187,7 +188,6 @@ export function MusicProvider({ children }) {
     setSongDetails,
     genres,
     setGenres,
-    valueStrings,
     filtersTotal,
     setFiltersTotal,
   };

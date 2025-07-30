@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
 import { useGridContext } from "../../context/card-layout-context";
 import { useSongViewContext } from "../../context/song-view-context";
+import { useMusicContext } from "../../context/music-context";
 import HistorySection from "./HistorySection";
 import HistoryFilters from "./filters/HistoryFilters";
 import SongViewController from "../SongView/SongViewController";
@@ -17,6 +18,7 @@ import {
 export default function HistoryContent() {
   const { spotifyClient } = useSpotifyContext();
   const { songViewContext } = useSongViewContext();
+  const { musicContext } = useMusicContext();
   const isMobile = songViewContext.isMobile;
 
   const [historyFilter, setHistoryFilter] = useState("All");
@@ -24,9 +26,9 @@ export default function HistoryContent() {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isLoading, setIsloading] = useState(true);
 
-  let history = spotifyClient.generationHistory;
-  let selectedSong = songViewContext.selectedSong.song;
-  const isDrawerOpen = songViewContext.isDetailsOpen;
+  let history = musicContext.generationHistory;
+  let selectedSong = musicContext.selectedSong.song;
+  const isDrawerOpen = musicContext.isDetailsOpen;
 
   // const sortOptions = ["newest to oldest", "oldest to newest"];
   // filter Options

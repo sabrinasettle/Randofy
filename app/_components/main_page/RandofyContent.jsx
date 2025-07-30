@@ -10,8 +10,8 @@ import ButtonsContainer from "./ButtonsContainer";
 export default function RandofyContent() {
   const { spotifyClient } = useSpotifyContext();
   const { musicContext } = useMusicContext();
-  const [filtersOpen, setFilterOpen] = useState(false);
   const { spotifyUser } = spotifyClient;
+  const [filtersOpen, setFilterOpen] = useState(false);
   const isMobile = spotifyClient.isMobile;
 
   const hasContent =

@@ -2,18 +2,21 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import { useAccessibleAlpha } from "../../_hooks/useAccessibleAlpha.js";
 import { useSongViewContext } from "../../context/song-view-context.js";
+import { useMusicContext } from "../../context/music-context.js";
 import { usePathname } from "next/navigation";
 import DefaultView from "./SongViews/DefaultView.jsx";
 import HistoryView from "./SongViews/HistoryView.jsx";
 
 export default function SongViewController() {
   const { songViewContext } = useSongViewContext();
-  if (!songViewContext) return null;
+  const { musicContext } = useMusicContext();
 
-  const song = songViewContext.selectedSong.song;
-  const isMobile = songViewContext.isMobile;
-  const isDefault = songViewContext.isDefault;
-  const isOpen = songViewContext.isDetailsOpen;
+  if (!musicContext) return null;
+
+  const song = musicContext.selectedSong.song;
+  const isMobile = musicContext.isMobile;
+  const isDefault = musicContext.isDefault;
+  const isOpen = musicContext.isDetailsOpen;
   const pathname = usePathname();
 
   const promColor = song?.color;

@@ -7,12 +7,11 @@ import { useSpotifyContext } from "../../../context/spotify-context";
 import { useMusicContext } from "../../../context/music-context";
 
 export default function FilterDrawer({ isOpen, onClose }) {
+  const { musicContext } = useMusicContext();
   const [activePanel, setActivePanel] = useState("main");
   const [isVisible, setIsVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
 
-  const { spotifyClient } = useSpotifyContext();
-  const { musicContext } = useMusicContext();
   const songDetailsFilters = musicContext.songDetails;
   const selectedGenres = musicContext.genres;
   const sliderValue = musicContext.songLimit;
