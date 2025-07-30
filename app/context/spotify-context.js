@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-const SpotifyContext = React.createContext(null);
 import { useToast } from "./toast-context";
+import { useIsMobile } from "../_hooks/useIsMobile";
+
+const SpotifyContext = React.createContext(null);
 
 export default SpotifyContext;
 
@@ -13,12 +15,12 @@ export function SpotifyClientProvider({ children }) {
   const [playlist, setPlaylist] = useState(null);
   const [playlistSongs, setPlaylistSongs] = useState(null);
   const [currentSongs, setCurrentSongs] = useState([]);
+  // Is an object = index: number, song: songs[number]
   const [selectedSong, setSelectedSong] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [generationHistory, setGenerationHistory] = useState({});
-  const [isMobile, setIsMobile] = useState();
   const [error, setError] = useState(null);
-  const { showToast } = useToast();
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   // Filters
   const [songLimit, setSongLimit] = useState(5);
@@ -32,6 +34,9 @@ export function SpotifyClientProvider({ children }) {
   });
   const [genres, setGenres] = useState(new Set());
   const [filtersTotal, setFiltersTotal] = useState(0);
+
+  const { showToast } = useToast();
+  const isMobile = useIsMobile();
 
   const valueStrings = {
     popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
@@ -446,18 +451,39 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
+  function moveForward() {
+    setSelectedSong({
+      index: selectedSong.index + 1,
+      song: currentSongs[selectedSong.index + 1],
+    });
+  }
+
+  function moveBackward() {
+    setSelectedSong({
+      index: selectedSong.index - 1,
+      song: currentSongs[selectedSong.index - 1],
+    });
+  }
+
   const spotifyClient = {
+    // State
     spotifyUser,
+    isDetailsOpen,
+    setIsDetailsOpen,
+    isLoading,
+    currentSongs,
+    setCurrentSongs,
+    selectedSong,
+    setSelectedSong,
+    generationHistory,
+    // General Functions
     loginRequest,
     logoutRequest,
     getPlaylist,
     getSongs,
-    currentSongs,
-    setCurrentSongs,
-    isLoading,
-    setSelectedSong,
-    selectedSong,
-    generationHistory,
+    moveForward,
+    moveBackward,
+    // Generated Values
     isMobile,
     // Filters
     songLimit,
@@ -469,7 +495,7 @@ export function SpotifyClientProvider({ children }) {
     valueStrings,
     filtersTotal,
     setFiltersTotal,
-    //playlist
+    // Playlist functions
     addToPlaylist,
     removeFromPlaylist,
     isInPlaylist,

@@ -7,56 +7,37 @@ const SongViewContext = React.createContext(null);
 export default SongViewContext;
 
 export function SongViewProvider({ children }) {
-  const [selectedSong, setSelectedSong] = useState({});
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  // const [selectedSong, setSelectedSong] = useState({}); // index: currentIndex, song: songs[currentIndex],
+  // const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isDefault, setIsDefault] = useState(true);
-  const [drawersOpen, setDrawersOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState(null);
+  // const [drawersOpen, setDrawersOpen] = useState(false);
+  // const [activeSection, setActiveSection] = useState(null);
+  // const [currentIndex, setCurrentIndex] = useState(0);
 
   //setGenerationHistory = { key: song[]} where song is {title,...}
   //
-  useEffect(() => {
-    console.log("drawersOpen changed to:", drawersOpen);
-  }, [drawersOpen]);
+  // useEffect(() => {
+  //   console.log("drawersOpen changed to:", drawersOpen);
+  // }, [drawersOpen]);
 
   const isMobile = useIsMobile();
 
-  function handleOpenDetails() {
-    // setPageActive(page);
-    setIsDetailsOpen(!isDetailsOpen);
-  }
-
-  function closeDetails() {
-    setIsDetailsOpen(false);
-    setDrawersOpen(false);
-  }
-
-  function handleDrawerOpen(string) {
-    setDrawersOpen(true);
-    setActiveSection(string);
-  }
-
-  function handleDrawerClosed() {
-    setDrawersOpen(false);
-    setActiveSection(null);
-  }
-
   const songViewContext = {
-    setSelectedSong,
-    selectedSong,
+    // setSelectedSong,
+    // selectedSong,
     isMobile,
-    handleOpenDetails,
-    closeDetails,
-    isDetailsOpen,
-    setIsDetailsOpen,
+    // handleOpenDetails,
+    // closeDetails,
+    // isDetailsOpen,
+    // setIsDetailsOpen,
     isDefault,
     setIsDefault,
-    setDrawersOpen,
-    handleDrawerOpen,
-    handleDrawerClosed,
-    drawersOpen,
-    activeSection,
-    setActiveSection,
+    // setDrawersOpen,
+    // handleDrawerOpen,
+    // handleDrawerClosed,
+    // drawersOpen,
+    // activeSection,
+    // setActiveSection,
   };
 
   const context = {

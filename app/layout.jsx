@@ -10,6 +10,8 @@ import Nav from "./_components/layout/header/Header";
 import { SpotifyClientProvider } from "./context/spotify-context";
 import { SongViewProvider } from "./context/song-view-context";
 import { ToastProvider } from "./context/toast-context";
+import { MusicProvider } from "./context/music-context";
+import { StyleProvider } from "./context/style-context";
 
 export const metadata = {
   title: "Randofy",
@@ -24,16 +26,20 @@ export default function RootLayout({ children }) {
     >
       <body className="overscroll-none">
         <ToastProvider>
-          <SpotifyClientProvider>
-            <SongViewProvider>
-              <div className="h-screen">
-                {/* AuthProvider */}
-                <Nav />
-                {children}
-              </div>
-              {/* Auth Provider */}
-            </SongViewProvider>
-          </SpotifyClientProvider>
+          <StyleProvider>
+            <SpotifyClientProvider>
+              <MusicProvider>
+                <SongViewProvider>
+                  <div className="h-screen">
+                    {/* AuthProvider */}
+                    <Nav />
+                    {children}
+                  </div>
+                  {/* Auth Provider */}
+                </SongViewProvider>
+              </MusicProvider>
+            </SpotifyClientProvider>
+          </StyleProvider>
         </ToastProvider>
       </body>
     </html>

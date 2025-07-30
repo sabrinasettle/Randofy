@@ -3,10 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useSongViewContext } from "../../../context/song-view-context";
+import { useMusicContext } from "../../../context/music-context";
 
 export default function AlbumCarousel({ songs, onIndexChange }) {
   const mountRef = useRef(null);
   const { songViewContext } = useSongViewContext();
+  const { musicContext } = useMusicContext();
   const isMobile = songViewContext.isMobile;
   const [isLoading, setIsLoading] = useState(true);
 
@@ -241,7 +243,7 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
         lastReportedIndex = currentIndex;
         if (onIndexChange) {
           onIndexChange(currentIndex);
-          songViewContext.setSelectedSong({
+          musicContext.setSelectedSong({
             index: currentIndex,
             song: songs[currentIndex],
           });

@@ -107,42 +107,7 @@ export default function SongViewController() {
     <div
       className={`${isMobile ? "w-screen" : ""} ${containerStyles.className}`}
     >
-      {isFullScreenOverlay && (
-        <>
-          <div className="absolute inset-0 bg-gray-000/90 backdrop-blur-sm"></div>
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, transparent 80%)`,
-            }}
-          ></div>
-        </>
-      )}
-
-      {isContainedDrawer && (
-        <div
-          className="absolute inset-0 rounded-sm"
-          style={{
-            backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-          }}
-        ></div>
-      )}
-
-      <div
-        className={`${isMobile ? "w-full" : ""} relative z-10 h-full flex flex-col px-4 pt-3 pb-1 box-border`}
-      >
-        {isOpen && (
-          <div className="w-full flex flex-row justify-end">
-            <button
-              onClick={handleClose}
-              className="text-gray-400 hover:text-gray-700 pb-2"
-            >
-              <X size={iconSize} />
-            </button>
-          </div>
-        )}
-        {isDefault ? <DefaultView /> : <HistoryView />}
-      </div>
+      {isDefault ? <DefaultView /> : <HistoryView />}
     </div>
   );
 }

@@ -2,10 +2,11 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { createArtists } from "../../../utils/createArtists.js";
 import { useAccessibleAlpha } from "../../../_hooks/useAccessibleAlpha.js";
-import { millisToMinutesAndSeconds } from "../../../utils/convertMilliseconds.js";
-import AudioPlayer from "../AudioPlayer/AudioPlayer.jsx";
-import AudioFeatureDrawers from "../AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../../context/song-view-context.js";
+import { useSpotifyContext } from "../../../context/spotify-context.js";
+import { useMusicContext } from "../../../context/music-context.js";
+import { useStyleContext } from "../../../context/style-context.js";
+import AudioPlayer from "../AudioPlayer/AudioPlayer.jsx";
 import ScrollingTitle from "../../ui/ScrollingTitle.jsx";
 import { ArrowRight, ArrowLeft, X } from "lucide-react";
 import Image from "next/image";
@@ -13,14 +14,14 @@ import AudioFeatureTabs from "../AudioFeatureTabs.jsx";
 
 export default function DefaultView() {
   const { songViewContext } = useSongViewContext();
-  const song = songViewContext.selectedSong.song;
+  const { spotifyContext } = useSpotifyContext();
+  const { musicContext } = useMusicContext();
+  const { styleContext } = useStyleContext();
+  const song = musicContext.selectedSong.song;
+  const isOpen = musicContext.isDetailsOpen; // true = detailed view, false = not detailed
   const isMobile = songViewContext.isMobile;
-  const isDefault = songViewContext.isDefault; // true = home page, false = other pages
-  const isOpen = songViewContext.isDetailsOpen; // true = detailed view, false = not detailed
 
-  const [activeSection, setActiveSection] = useState(null);
-
-  if (!song.track_name) {
+  if (!song) {
     return <div id="song-drawer__inactive"></div>;
   }
 
@@ -47,10 +48,6 @@ export default function DefaultView() {
   const renderFullScreenPlayer = () => {
     if (!isOpen) return null;
 
-    function moveForward() {}
-
-    function moveBackward() {}
-
     return createPortal(
       <div
         className="fixed inset-0 z-[9998] backdrop-blur-xs"
@@ -72,20 +69,20 @@ export default function DefaultView() {
               <div className="flex flex-row justify-between md:justify-end gap-3">
                 <div className="flex flex-row">
                   <button
-                    onClick={() => songViewContext.setIsDetailsOpen(false)}
+                    onClick={() => musicContext.moveBackward()}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
                     <ArrowLeft size={iconSize} />
                   </button>
                   <button
-                    onClick={() => songViewContext.setIsDetailsOpen(false)}
+                    onClick={() => musicContext.moveForward()}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
                     <ArrowRight size={iconSize} />
                   </button>
                 </div>
                 <button
-                  onClick={() => songViewContext.setIsDetailsOpen(false)}
+                  onClick={() => musicContext.setIsDetailsOpen(false)}
                   className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                 >
                   <X size={iconSize} />
