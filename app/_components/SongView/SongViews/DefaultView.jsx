@@ -14,12 +14,11 @@ import AudioFeatureTabs from "../AudioFeatureTabs.jsx";
 
 export default function DefaultView() {
   const { songViewContext } = useSongViewContext();
-  const { spotifyContext } = useSpotifyContext();
   const { musicContext } = useMusicContext();
   const { styleContext } = useStyleContext();
   const song = musicContext.selectedSong.song;
   const isOpen = musicContext.isDetailsOpen; // true = detailed view, false = not detailed
-  const isMobile = songViewContext.isMobile;
+  const isMobile = styleContext.isMobile;
 
   if (!song) {
     return <div id="song-drawer__inactive"></div>;
@@ -56,12 +55,8 @@ export default function DefaultView() {
         // }}
       >
         <div
-          className="fixed inset-0 backdrop-blur-sm md:m-7 lg:m-10 xl:m-12 border md:border-gray-200 md:rounded-sm bg-gray-000 md:opacity-95"
-          style={
-            {
-              // backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-            }
-          }
+          className="fixed inset-0 backdrop-blur-sm md:m-7 lg:m-10 xl:m-12 border md:border-gray-200 md:rounded-sm "
+          style={{ background: "#0A0A0Af2" }}
         >
           <div className="w-full h-full p-4">
             {/* Portal Controls */}
@@ -90,14 +85,14 @@ export default function DefaultView() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row w-full h-full">
+            <div className="flex flex-col md:flex-row w-full h-full">
               {/* left column */}
               <div className="w-full flex md:items-center md:justify-center">
                 <div
                   className={`flex justify-start transition-all duration-500`}
                   style={{
-                    width: isMobile ? "20vw" : "38vw",
-                    height: isMobile ? "20vw" : "38vw",
+                    width: isMobile ? "28vw" : "38vw",
+                    height: isMobile ? "28vw" : "38vw",
                     transition: "width 0.5s ease, height 0.5s ease",
                     overflow: "hidden",
                   }}
@@ -119,8 +114,8 @@ export default function DefaultView() {
               </div>
 
               {/* right column */}
-              <div className="w-full md:w-2/3 lg:w-[48%] md:pt-8 md:pb-6">
-                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 px-5">
+              <div className="w-full lg:w-[48%] md:pt-8 md:pb-6 pt-6">
+                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2">
                   <div>
                     <div className="pt-2">
                       <ScrollingTitle
