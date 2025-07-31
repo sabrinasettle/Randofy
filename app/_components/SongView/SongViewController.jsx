@@ -2,18 +2,21 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import { useAccessibleAlpha } from "../../_hooks/useAccessibleAlpha.js";
 import { useSongViewContext } from "../../context/song-view-context.js";
+import { useMusicContext } from "../../context/music-context.js";
 import { usePathname } from "next/navigation";
 import DefaultView from "./SongViews/DefaultView.jsx";
 import HistoryView from "./SongViews/HistoryView.jsx";
 
 export default function SongViewController() {
   const { songViewContext } = useSongViewContext();
-  if (!songViewContext) return null;
+  const { musicContext } = useMusicContext();
 
-  const song = songViewContext.selectedSong.song;
-  const isMobile = songViewContext.isMobile;
-  const isDefault = songViewContext.isDefault;
-  const isOpen = songViewContext.isDetailsOpen;
+  if (!musicContext) return null;
+
+  const song = musicContext.selectedSong.song;
+  const isMobile = musicContext.isMobile;
+  const isDefault = musicContext.isDefault;
+  const isOpen = musicContext.isDetailsOpen;
   const pathname = usePathname();
 
   const promColor = song?.color;
@@ -107,42 +110,7 @@ export default function SongViewController() {
     <div
       className={`${isMobile ? "w-screen" : ""} ${containerStyles.className}`}
     >
-      {isFullScreenOverlay && (
-        <>
-          <div className="absolute inset-0 bg-gray-000/90 backdrop-blur-sm"></div>
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, transparent 80%)`,
-            }}
-          ></div>
-        </>
-      )}
-
-      {isContainedDrawer && (
-        <div
-          className="absolute inset-0 rounded-sm"
-          style={{
-            backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-          }}
-        ></div>
-      )}
-
-      <div
-        className={`${isMobile ? "w-full" : ""} relative z-10 h-full flex flex-col px-4 pt-3 pb-1 box-border`}
-      >
-        {isOpen && (
-          <div className="w-full flex flex-row justify-end">
-            <button
-              onClick={handleClose}
-              className="text-gray-400 hover:text-gray-700 pb-2"
-            >
-              <X size={iconSize} />
-            </button>
-          </div>
-        )}
-        {isDefault ? <DefaultView /> : <HistoryView />}
-      </div>
+      {isDefault ? <DefaultView /> : <HistoryView />}
     </div>
   );
 }

@@ -2,29 +2,31 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSongViewContext } from "../../context/song-view-context";
+import { useMusicContext } from "../../context/music-context";
 import { useGridContext } from "../../context/card-layout-context";
 import { createArtists } from "../../utils/createArtists";
 import ScrollingTitle from "../ui/ScrollingTitle";
 
 export default function SongCard({ song, index }) {
   const { songViewContext } = useSongViewContext();
+  const { musicContext } = useMusicContext();
   const { layoutContext } = useGridContext();
   const layout = layoutContext.layoutType;
   const isMobile = songViewContext.isMobile;
   const [isActive, setIsActive] = useState(false);
 
   function checkIsActive() {
-    return song.track_name === songViewContext.selectedSong?.song?.track_name;
+    return song.track_name === musicContext.selectedSong?.song?.track_name;
   }
 
   // Update active state when selected song changes
   useEffect(() => {
     setIsActive(checkIsActive());
-  }, [songViewContext.selectedSong, song.track_name]);
+  }, [musicContext.selectedSong, song.track_name]);
 
-  function moveOrNot() {
-    songViewContext.setSelectedSong({ index: index, song });
-    songViewContext.openDetails();
+  function openSelectedSong() {
+    musicContext.setSelectedSong({ index: index, song });
+    musicContext.openDetails();
   }
 
   let alt = `Album cover for ${song.album_name} by ${createArtists(song)}`;
@@ -45,7 +47,7 @@ export default function SongCard({ song, index }) {
       className={`font-body cursor-pointer group w-full transition-colors duration-100 flex flex-row items-center justify-start md:justify-between px-1 md:px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
       id={`${song.track_name}-${song.album_name}`}
       key={keyString}
-      onClick={moveOrNot}
+      onClick={openSelectedSong}
     >
       {/* Mobile: smaller image */}
       <div className="relative aspect-square w-14 sm:w-16 lg:w-20 bg-gray-100 flex-shrink-0 overflow-hidden">
@@ -98,7 +100,7 @@ export default function SongCard({ song, index }) {
   );
 
   const squareItem = (
-    <li onClick={moveOrNot} className="font-body w-full cursor-pointer">
+    <li onClick={openSelectedSong} className="font-body w-full cursor-pointer">
       {/* Mobile: responsive square sizing - 2 columns on mobile, maintains desktop size on larger screens */}
       <div className="relative bg-gray-100 borderborder-gray-100 aspect-square min-w-[120px]">
         <Image

@@ -1,21 +1,35 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import * as THREE from "three";
 import { useSongViewContext } from "../../../context/song-view-context";
+import { useMusicContext } from "../../../context/music-context";
 
-export default function AlbumCarousel({ songs, onIndexChange }) {
+export default function AlbumCarousel({}) {
   const mountRef = useRef(null);
   const { songViewContext } = useSongViewContext();
+  const { musicContext } = useMusicContext();
   const isMobile = songViewContext.isMobile;
   const [isLoading, setIsLoading] = useState(true);
+  const songs = useMemo(
+    () => musicContext.currentSongs,
+    [musicContext.currentSongs],
+  );
 
-  // ✅ Prevent running setup on the first Strict Mode cycle
   const [hasMounted, setHasMounted] = useState(false);
-
   useEffect(() => {
     setHasMounted(true);
   }, []);
+
+  const targetIndexRef = useRef(musicContext.selectedSong.index ?? 0);
+  const scrollIndexRef = useRef(musicContext.selectedSong.index ?? 0);
+
+  // Helper function to determine if we should animate or jump instantly
+  const shouldAnimate = (from, to, arrayLength) => {
+    const distance = Math.abs(to - from);
+    const threshold = Math.ceil(arrayLength * 0.3); // Animate if less than 30% of array
+    return distance <= threshold;
+  };
 
   useEffect(() => {
     if (!hasMounted || !mountRef.current) return;
@@ -33,8 +47,6 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-
-    // ✅ Prevent duplicate canvas
     if (!mountRef.current.contains(renderer.domElement)) {
       mountRef.current.appendChild(renderer.domElement);
     }
@@ -76,34 +88,11 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
           planeScales[index] = 1;
         },
         undefined,
-        (err) => {
-          console.warn(`Texture load error for index ${index}:`, err);
-        },
+        (err) => console.warn(`Texture load error for index ${index}:`, err),
       );
-      // loader.load(
-      //   song.album_image.url,
-      //   (texture) => {
-      //     // if (!isMounted) return;
-
-      //     const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
-      //     const material = new THREE.MeshBasicMaterial({
-      //       map: texture,
-      //       side: THREE.DoubleSide,
-      //       transparent: true,
-      //     });
-
-      //     const plane = new THREE.Mesh(geometry, material);
-      //     scene.add(plane);
-      //     planes[index] = plane;
-      //     planeScales[index] = 1;
-      //   },
-      //   undefined,
-      //   (err) => console.warn("Texture load error:", err),
-      // );
     });
 
-    let scrollIndex = 0;
-    let targetIndex = 0;
+    // Simplified interaction variables
     let isDragging = false;
     let startX = 0;
     let dragOffset = 0;
@@ -116,10 +105,24 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     const onKeyDown = (e) => {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
-        targetIndex = clampIndex(targetIndex - 1);
+        const newTarget = clampIndex(targetIndexRef.current - 1);
+        if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
+          targetIndexRef.current = newTarget;
+        } else {
+          // Instant jump for large distances
+          targetIndexRef.current = newTarget;
+          scrollIndexRef.current = newTarget;
+        }
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
-        targetIndex = clampIndex(targetIndex + 1);
+        const newTarget = clampIndex(targetIndexRef.current + 1);
+        if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
+          targetIndexRef.current = newTarget;
+        } else {
+          // Instant jump for large distances
+          targetIndexRef.current = newTarget;
+          scrollIndexRef.current = newTarget;
+        }
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -130,14 +133,24 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       wheelAccum += delta;
 
       if (wheelAccum > wheelThreshold) {
-        targetIndex += 1;
+        const newTarget = clampIndex(targetIndexRef.current + 1);
+        if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
+          targetIndexRef.current = newTarget;
+        } else {
+          targetIndexRef.current = newTarget;
+          scrollIndexRef.current = newTarget;
+        }
         wheelAccum = 0;
       } else if (wheelAccum < -wheelThreshold) {
-        targetIndex -= 1;
+        const newTarget = clampIndex(targetIndexRef.current - 1);
+        if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
+          targetIndexRef.current = newTarget;
+        } else {
+          targetIndexRef.current = newTarget;
+          scrollIndexRef.current = newTarget;
+        }
         wheelAccum = 0;
       }
-
-      targetIndex = clampIndex(targetIndex);
     };
 
     const onPointerDown = (e) => {
@@ -152,16 +165,26 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
       dragOffset += delta;
       startX = x;
 
-      const proposed = targetIndex + dragOffset;
-      if (proposed < 0) dragOffset = -targetIndex;
+      const proposed = targetIndexRef.current + dragOffset;
+      if (proposed < 0) dragOffset = -targetIndexRef.current;
       if (proposed > songs.length - 1)
-        dragOffset = songs.length - 1 - targetIndex;
+        dragOffset = songs.length - 1 - targetIndexRef.current;
     };
 
     const onPointerUp = () => {
       if (!isDragging) return;
       isDragging = false;
-      targetIndex = Math.round(targetIndex + dragOffset);
+
+      // Simple drag logic - clamp to valid range
+      let newTarget = Math.round(targetIndexRef.current + dragOffset);
+      newTarget = clampIndex(newTarget);
+
+      if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
+        targetIndexRef.current = newTarget;
+      } else {
+        targetIndexRef.current = newTarget;
+        scrollIndexRef.current = newTarget;
+      }
       dragOffset = 0;
     };
 
@@ -180,7 +203,15 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
         const clickedPlane = intersects[0].object;
         const clickedIndex = planes.indexOf(clickedPlane);
         if (clickedIndex !== -1) {
-          targetIndex = clickedIndex;
+          console.log(`Clicked on plane ${clickedIndex}`);
+          if (
+            shouldAnimate(scrollIndexRef.current, clickedIndex, songs.length)
+          ) {
+            targetIndexRef.current = clickedIndex;
+          } else {
+            targetIndexRef.current = clickedIndex;
+            scrollIndexRef.current = clickedIndex;
+          }
         }
       }
     };
@@ -207,7 +238,8 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
       renderer.domElement.style.cursor =
         intersects.length > 0 &&
-        planes.indexOf(intersects[0].object) !== Math.round(scrollIndex)
+        planes.indexOf(intersects[0].object) !==
+          Math.round(scrollIndexRef.current)
           ? "pointer"
           : "default";
     };
@@ -227,25 +259,25 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
     let lastReportedIndex = -1;
 
     const animate = () => {
-      // if (!isMounted) return;
       requestAnimationFrame(animate);
 
-      const desiredIndex = targetIndex + dragOffset;
-      scrollIndex += (desiredIndex - scrollIndex) * speed;
+      const desiredIndex = targetIndexRef.current + dragOffset;
+      scrollIndexRef.current += (desiredIndex - scrollIndexRef.current) * speed;
 
-      const floorIndex = Math.floor(scrollIndex);
-      const blend = scrollIndex - floorIndex;
+      const floorIndex = Math.floor(scrollIndexRef.current);
+      const blend = scrollIndexRef.current - floorIndex;
 
-      const currentIndex = Math.round(scrollIndex);
+      // Normalize the current index to proper range for reporting
+      let currentIndex = Math.round(scrollIndexRef.current);
+      currentIndex = clampIndex(currentIndex);
+
       if (currentIndex !== lastReportedIndex) {
         lastReportedIndex = currentIndex;
-        if (onIndexChange) {
-          onIndexChange(currentIndex);
-          songViewContext.setSelectedSong({
-            index: currentIndex,
-            song: songs[currentIndex],
-          });
-        }
+        lastSetIndexRef.current = currentIndex;
+        musicContext.setSelectedSong({
+          index: currentIndex,
+          song: songs[currentIndex],
+        });
       }
 
       planes.forEach((plane, i) => {
@@ -257,9 +289,9 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
         if (i === floorIndex) pos -= halfGap * blend;
         else if (i === floorIndex + 1) pos += halfGap * (1 - blend);
 
-        plane.position.x = pos - scrollIndex * baseSpacing;
+        plane.position.x = pos - scrollIndexRef.current * baseSpacing;
 
-        const offset = i - scrollIndex;
+        const offset = i - scrollIndexRef.current;
         const sign = offset < 0 ? 1 : -1;
         const t = THREE.MathUtils.clamp(Math.abs(offset), 0, 1);
 
@@ -319,7 +351,24 @@ export default function AlbumCarousel({ songs, onIndexChange }) {
 
       renderer.dispose();
     };
-  }, [hasMounted, songs, isMobile, onIndexChange]);
+  }, [hasMounted, songs, isMobile]);
+
+  // Sync external index with smart path finding
+  const lastSetIndexRef = useRef(-1);
+
+  useEffect(() => {
+    const index = musicContext.selectedSong.index;
+    if (index !== undefined && index !== lastSetIndexRef.current) {
+      // This change came from outside, so sync it
+      if (shouldAnimate(scrollIndexRef.current, index, songs.length)) {
+        targetIndexRef.current = index;
+      } else {
+        // Instant jump for large distances
+        targetIndexRef.current = index;
+        scrollIndexRef.current = index;
+      }
+    }
+  }, [musicContext.selectedSong.index, songs.length]);
 
   return (
     <div className="flex justify-center">

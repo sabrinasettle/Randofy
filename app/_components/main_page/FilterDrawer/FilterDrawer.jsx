@@ -4,17 +4,18 @@ import GenresSection from "./GenresSection";
 import SongDetailsSection from "./SongDetsSection";
 import TagList from "./TagList";
 import { useSpotifyContext } from "../../../context/spotify-context";
+import { useMusicContext } from "../../../context/music-context";
 
 export default function FilterDrawer({ isOpen, onClose }) {
+  const { musicContext } = useMusicContext();
   const [activePanel, setActivePanel] = useState("main");
   const [isVisible, setIsVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
 
-  const { spotifyClient } = useSpotifyContext();
-  const songDetailsFilters = spotifyClient.songDetails;
-  const selectedGenres = spotifyClient.genres;
-  const sliderValue = spotifyClient.songLimit;
-  const valueStrings = spotifyClient?.valueStrings || {};
+  const songDetailsFilters = musicContext.songDetails;
+  const selectedGenres = musicContext.genres;
+  const sliderValue = musicContext.songLimit;
+  const valueStrings = musicContext?.filterValueStrings || {};
 
   // Debug: Log valueStrings to see what keys are available
   // console.log("valueStrings:", valueStrings);
@@ -52,7 +53,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   // Remove functions for TagList
   const removeGenre = (genre) => {
-    spotifyClient.setGenres((prev) => {
+    musicContext.setGenres((prev) => {
       const newSet = new Set(prev);
       newSet.delete(genre);
       return newSet;
@@ -66,7 +67,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
       return;
     }
 
-    spotifyClient.setSongDetails((prev) => ({
+    musicContext.setSongDetails((prev) => ({
       ...prev,
       [filterName]: { ...defaultFilters[filterName] }, // Use the consistent default
     }));
@@ -95,7 +96,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   }, [isOpen]);
 
   const handleSliderChange = (e) => {
-    spotifyClient.setSongLimit(parseInt(e.target.value));
+    musicContext.setSongLimit(parseInt(e.target.value));
   };
 
   const navigateToPanel = (panel) => {
@@ -107,31 +108,31 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const closeAndGet = () => {
-    spotifyClient.getSongs();
+    musicContext.getSongs();
     onClose();
   };
 
   const clearFilters = () => {
     switch (activePanel) {
       case "genres":
-        spotifyClient.setGenres(new Set());
+        musicContext.setGenres(new Set());
         break;
       case "songDetails":
-        spotifyClient.setSongDetails({ ...defaultFilters }); // Use consistent defaults
+        musicContext.setSongDetails({ ...defaultFilters }); // Use consistent defaults
         break;
       case "main":
       default:
         // Clear all filters
-        spotifyClient.setGenres(new Set());
-        spotifyClient.setSongDetails({ ...defaultFilters }); // Use consistent defaults
-        spotifyClient.setSongLimit(5);
+        musicContext.setGenres(new Set());
+        musicContext.setSongDetails({ ...defaultFilters }); // Use consistent defaults
+        musicContext.setSongLimit(5);
         break;
     }
   };
 
   // changes the state in the context
   const handleSongDetailsFilterChange = (filterName, range) => {
-    spotifyClient.setSongDetails((prev) => ({
+    musicContext.setSongDetails((prev) => ({
       ...prev,
       [filterName]: range,
     }));
@@ -158,8 +159,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   }, [changedSongDetailsCount, selectedGenres, sliderValue]);
 
   useEffect(() => {
-    spotifyClient.setFiltersTotal(totalChangedFilters);
-    // console.log("filtersTotal", spotifyClient.filtersTotal);
+    musicContext.setFiltersTotal(totalChangedFilters);
   }, [totalChangedFilters]);
 
   // Get changed song detail filters for TagList

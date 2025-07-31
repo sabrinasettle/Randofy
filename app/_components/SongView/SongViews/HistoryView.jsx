@@ -7,12 +7,14 @@ import { millisToMinutesAndSeconds } from "../../../utils/convertMilliseconds.js
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
 import AudioFeatureDrawers from "../AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../../context/song-view-context";
+import { useMusicContext } from "../../../context/music-context.js";
 
 export default function HistoryView() {
   const { songViewContext } = useSongViewContext();
-  const song = songViewContext.selectedSong.song;
-  const isOpen = songViewContext.drawersOpen;
-  const areDrawersOpen = songViewContext.drawersOpen;
+  const { musicContext } = useMusicContext();
+
+  const song = musicContext.selectedSong.song;
+  const areDrawersOpen = musicContext.drawersOpen;
 
   const [activeSection, setActiveSection] = useState(null);
   // const [isVisible, setIsVisible] = useState(false);
