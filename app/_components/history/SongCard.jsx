@@ -24,7 +24,7 @@ export default function SongCard({ song, index }) {
     setIsActive(checkIsActive());
   }, [musicContext.selectedSong, song.track_name]);
 
-  function moveOrNot() {
+  function openSelectedSong() {
     musicContext.setSelectedSong({ index: index, song });
     musicContext.openDetails();
   }
@@ -47,7 +47,7 @@ export default function SongCard({ song, index }) {
       className={`font-body cursor-pointer group w-full transition-colors duration-100 flex flex-row items-center justify-start md:justify-between px-1 md:px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
       id={`${song.track_name}-${song.album_name}`}
       key={keyString}
-      onClick={moveOrNot}
+      onClick={openSelectedSong}
     >
       {/* Mobile: smaller image */}
       <div className="relative aspect-square w-14 sm:w-16 lg:w-20 bg-gray-100 flex-shrink-0 overflow-hidden">
