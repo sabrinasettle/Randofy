@@ -15,7 +15,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const songDetailsFilters = musicContext.songDetails;
   const selectedGenres = musicContext.genres;
   const sliderValue = musicContext.songLimit;
-  const valueStrings = musicContext?.valueStrings || {};
+  const valueStrings = musicContext?.filterValueStrings || {};
 
   // Debug: Log valueStrings to see what keys are available
   // console.log("valueStrings:", valueStrings);

@@ -30,7 +30,7 @@ export function MusicProvider({ children }) {
 
   const isMobile = useIsMobile();
 
-  const valueStrings = {
+  const filterValueStrings = {
     popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
     acoustics: [
       "All Electric",
@@ -163,7 +163,7 @@ export function MusicProvider({ children }) {
   }
 
   const musicContext = {
-    valueStrings,
+    filterValueStrings,
     isLoading,
     // State
     isDetailsOpen,

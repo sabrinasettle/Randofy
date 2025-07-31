@@ -13,7 +13,7 @@ export default function SongDetailsSection({
 }) {
   const { spotifyClient } = useSpotifyContext();
   const { musicContext } = useMusicContext();
-  const valueStrings = musicContext?.valueStrings;
+  const valueStrings = musicContext?.filterValueStrings;
 
   const handleSongDetailsFilterChange = (filterName, range) => {
     onFilterChange(filterName, range);

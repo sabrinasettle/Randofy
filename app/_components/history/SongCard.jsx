@@ -100,7 +100,7 @@ export default function SongCard({ song, index }) {
   );
 
   const squareItem = (
-    <li onClick={moveOrNot} className="font-body w-full cursor-pointer">
+    <li onClick={openSelectedSong} className="font-body w-full cursor-pointer">
       {/* Mobile: responsive square sizing - 2 columns on mobile, maintains desktop size on larger screens */}
       <div className="relative bg-gray-100 borderborder-gray-100 aspect-square min-w-[120px]">
         <Image
