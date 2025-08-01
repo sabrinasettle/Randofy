@@ -1,50 +1,30 @@
 "use client";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSongViewContext } from "../../context/song-view-context";
-import { useMusicContext } from "../../context/music-context";
-import { useGridContext } from "../../context/card-layout-context";
+import { useHistoryContext } from "../../context/history-context";
 import { createArtists } from "../../utils/createArtists";
 import ScrollingTitle from "../ui/ScrollingTitle";
 
 export default function SongCard({ song, index }) {
   const { songViewContext } = useSongViewContext();
-  const { musicContext } = useMusicContext();
-  const { layoutContext } = useGridContext();
-  const layout = layoutContext.layoutType;
+  const { historyContext } = useHistoryContext();
+  const layout = historyContext.layoutType;
   const isMobile = songViewContext.isMobile;
-  const [isActive, setIsActive] = useState(false);
-
-  function checkIsActive() {
-    return song.track_name === musicContext.selectedSong?.song?.track_name;
-  }
-
-  // Update active state when selected song changes
-  useEffect(() => {
-    setIsActive(checkIsActive());
-  }, [musicContext.selectedSong, song.track_name]);
 
   function openSelectedSong() {
-    musicContext.setSelectedSong({ index: index, song });
-    musicContext.openDetails();
+    historyContext.setSelectedSong({ index: index, song });
+    historyContext.openDetails();
   }
 
   let alt = `Album cover for ${song.album_name} by ${createArtists(song)}`;
   let keyString = `${song.track_name}${song.track_id}`;
   const artists = createArtists(song);
 
-  const activeStyle = checkIsActive()
-    ? "md:bg-gray-100 md:border-gray-700 hover:border-gray-700"
-    : "border-gray-100 hover:border-gray-200";
-  const activeTextStyle = checkIsActive()
-    ? "text-gray-700"
-    : "text-gray-600 group-hover:text-gray-700";
-
   const imageSize = isMobile ? 64 : 74;
 
   const listItem = (
     <li
-      className={`font-body cursor-pointer group w-full transition-colors duration-100 flex flex-row items-center justify-start md:justify-between px-1 md:px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100 ${activeStyle}`}
+      className={`font-body cursor-pointer group w-full transition-colors duration-100 flex flex-row items-center justify-start md:justify-between px-1 md:px-2 py-3 border-b border-gray-100 hover:border-gray-200 hover:bg-gray-100`}
       id={`${song.track_name}-${song.album_name}`}
       key={keyString}
       onClick={openSelectedSong}
@@ -73,14 +53,10 @@ export default function SongCard({ song, index }) {
           </p>
         )}
         <span
-          className={`flex flex-row gap-1 text-body-sm md:text-body-md font-normal ${activeTextStyle}`}
+          className={`flex flex-row gap-1 text-body-sm md:text-body-md font-normal`}
         >
           {song.is_explicit && <div className="explicit-flag">E</div>}
-          <p
-            className={`text-body-sm md:text-body-md ${activeTextStyle} truncate`}
-          >
-            {artists}
-          </p>
+          <p className={`text-body-sm md:text-body-md truncate`}>{artists}</p>
         </span>
       </div>
 

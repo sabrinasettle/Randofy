@@ -4,7 +4,7 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import CardGrid from "./CardGrid";
 // import { useGridContext } from "../../../context/card-layout-context";
 
-export default function HistorySection({ date, songs, idIndex, isActive }) {
+export default function HistorySection({ date, songs, idIndex }) {
   const [isOpen, setIsOpen] = useState(true);
 
   function toggleSection() {
@@ -19,13 +19,13 @@ export default function HistorySection({ date, songs, idIndex, isActive }) {
     return date === dateString;
   }
 
-  const styled = useMemo(() => {
-    if (isActive) {
-      return "section-header__active";
-    } else {
-      return "section-header";
-    }
-  }, [isActive]);
+  // const styled = useMemo(() => {
+  //   if (isActive) {
+  //     return "section-header__active";
+  //   } else {
+  //     return "section-header";
+  //   }
+  // }, [isActive]);
 
   // To Do
   // Animate the date getting bigger as the user scrolls
@@ -46,7 +46,7 @@ export default function HistorySection({ date, songs, idIndex, isActive }) {
 
   return (
     <li id={idIndex} className="font-body">
-      <div id={`${idIndex}-header`} className={styled}>
+      <div id={`${idIndex}-header`}>
         {/* <div className="">
           <h2>{isToday() ? "Today" : `${date}`}</h2>
           <button className="" onClick={toggleSection}>

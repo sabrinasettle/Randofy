@@ -135,7 +135,7 @@ export default function AudioFeatureTabs({ song }) {
     {
       label: "Song Details",
       content: (
-        <div className="py-4 space-y-4">
+        <div className="py-2 space-y-4">
           {/* Song metadata */}
           <div className="flex flex-col gap-2">
             <span className="text-sm font-medium text-gray-700">General:</span>
@@ -277,7 +277,7 @@ export default function AudioFeatureTabs({ song }) {
         ))}
       </div>
 
-      <div className="mt-6 h-full">{tabs[activeTab].content}</div>
+      <div className="mt-4 h-full">{tabs[activeTab].content}</div>
     </div>
   );
 }

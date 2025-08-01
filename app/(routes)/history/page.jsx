@@ -2,18 +2,16 @@
 //
 // new
 import HistoryContent from "../../_components/history/HistoryContent";
-import { SpotifyClientProvider } from "../../context/spotify-context";
 import { CardLayoutProvider } from "../../context/card-layout-context";
-// import InformationLink from "../../_components/layout/InformationLink";
-
+import { HistoryProvider } from "../../context/history-context";
 export default function History() {
   return (
     <>
-      <SpotifyClientProvider>
+      <HistoryProvider>
         <CardLayoutProvider>
           <HistoryContent />
         </CardLayoutProvider>
-      </SpotifyClientProvider>
+      </HistoryProvider>
       {/* <InformationLink /> */}
     </>
   );
