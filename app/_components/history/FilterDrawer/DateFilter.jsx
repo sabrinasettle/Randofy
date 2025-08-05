@@ -11,7 +11,7 @@ const FilterButton = ({ handleActivation, string, activeFilter }) => {
   );
 };
 
-export default function DateFilter({ updateFilter, historyFilter }) {
+export default function DateFilterTabs({ updateFilter, historyFilter }) {
   // const [activeFilter, setActiveFilter] = useState("All");
   const { songViewContext } = useSongViewContext();
   const isMobile = songViewContext.isMobile;

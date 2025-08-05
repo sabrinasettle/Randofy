@@ -1,23 +1,17 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
-import { useGridContext } from "../../context/card-layout-context";
 import { useSongViewContext } from "../../context/song-view-context";
 import { useMusicContext } from "../../context/music-context";
 import { useHistoryContext } from "../../context/history-context";
-import HistorySection from "./HistorySection";
-import SongViewController from "../SongView/SongViewController";
 import CardLayoutOptions from "./PageHeader/CardLayoutOptions";
 import LoadingBall from "../ui/loading/LoadingBall";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import PaginatedHistory from "./PaginatedHistory";
-import SongCard from "./SongCard";
 import HistoryView from "../SongView/SongViews/HistoryView";
 
 export default function HistoryContent() {
-  const { spotifyClient } = useSpotifyContext();
   const { songViewContext } = useSongViewContext();
-  const { musicContext } = useMusicContext();
   const { historyContext } = useHistoryContext();
   const isMobile = songViewContext.isMobile;
 
@@ -57,8 +51,8 @@ export default function HistoryContent() {
         <div className="flex flex-row w-full justify-between">
           <CardLayoutOptions />
           <button
-            className="text-gray-700"
-            onClick={() => setFilterOpen(!filtersOpen)}
+            className="text-gray-600 hover:text-gray-700"
+            onClick={() => setFilterOpen(true)}
           >
             Filter
           </button>
@@ -78,7 +72,7 @@ export default function HistoryContent() {
             </div>
             <FilterDrawer
               isOpen={filtersOpen}
-              onClose={() => setFilterOpen(!filtersOpen)}
+              onClose={() => setFilterOpen(false)}
             />
             <HistoryView />
           </div>

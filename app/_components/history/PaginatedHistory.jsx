@@ -8,19 +8,19 @@ import { useIsMobile } from "../../_hooks/useIsMobile";
 
 export default function PaginatedHistory() {
   const { historyContext } = useHistoryContext();
-  const { songsPerPage, currentPage, loadMoreSongs, layoutType } =
+  const { visibleCount, songsPerLoad, loadMoreSongs, layoutType } =
     historyContext;
 
   const history = historyContext.songHistory;
   const isMobile = useIsMobile();
   const progressString = `${Math.min(
-    historyContext.visibleCount,
+    visibleCount,
     history.totalSongs,
   )} / ${history.totalSongs}`;
 
   const paginatedSongs = useMemo(() => {
-    return history.allSongsChronological.slice(0, historyContext.visibleCount);
-  }, [history, historyContext.visibleCount]);
+    return history.allSongsChronological.slice(0, visibleCount);
+  }, [history, visibleCount]);
 
   const groupedByDate = useMemo(() => {
     return paginatedSongs.reduce((acc, song) => {

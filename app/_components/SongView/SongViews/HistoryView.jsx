@@ -49,7 +49,7 @@ export default function HistoryView() {
 
     return createPortal(
       <div
-        className="fixed inset-0 z-[9998] backdrop-blur-xs"
+        className="fixed inset-0 z-[9998] backdrop-blur-xs bg-[#0a0a0ae3]"
         // style={{
         //   backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
         // }}
@@ -77,7 +77,7 @@ export default function HistoryView() {
                   </button>
                 </div>
                 <button
-                  onClick={() => historyContext.openDetails()}
+                  onClick={() => historyContext.closeDetails()}
                   className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                 >
                   <X size={iconSize} />

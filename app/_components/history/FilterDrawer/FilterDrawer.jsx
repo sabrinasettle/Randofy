@@ -4,26 +4,25 @@ import GenresSection from "./GenresSection";
 import SongDetailsSection from "./SongDetsSection";
 import { useHistoryContext } from "../../../context/history-context";
 import TagList from "./TagList";
-import { useSpotifyContext } from "../../../context/spotify-context";
-import { useMusicContext } from "../../../context/music-context";
-import DateFilter from "./DateFilter";
+import DateFilterTabs from "./DateFilter";
 
 export default function FilterDrawer({ isOpen, onClose }) {
   // from History Content
-  const [historyFilter, setHistoryFilter] = useState("All");
-  function updateFilter(filterString) {
-    setHistoryFilter(filterString);
-  }
+  const { historyContext } = useHistoryContext();
+  const { dateRangeFilter } = historyContext;
 
-  const { musicContext } = useMusicContext();
   const [activePanel, setActivePanel] = useState("main");
   const [isVisible, setIsVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
 
-  const songDetailsFilters = musicContext.songDetails;
-  const selectedGenres = musicContext.genres;
-  const sliderValue = musicContext.songLimit;
-  const valueStrings = musicContext?.filterValueStrings || {};
+  const songDetailsFilters = historyContext.songFeaturesFilters;
+  const selectedGenres = historyContext.genreFilters;
+  const valueStrings = historyContext?.songFeatureStrings || {};
+  const allSongs = historyContext.songHistory.allSongsChronological;
+
+  function updateDateFilter(filterString) {
+    historyContext.setDateRangeFilter(filterString);
+  }
 
   // Debug: Log valueStrings to see what keys are available
   // console.log("valueStrings:", valueStrings);
@@ -61,7 +60,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   // Remove functions for TagList
   const removeGenre = (genre) => {
-    musicContext.setGenres((prev) => {
+    historyContext.setGenreFilters((prev) => {
       const newSet = new Set(prev);
       newSet.delete(genre);
       return newSet;
@@ -75,7 +74,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
       return;
     }
 
-    musicContext.setSongDetails((prev) => ({
+    historyContext.setSongFeaturesFilters((prev) => ({
       ...prev,
       [filterName]: { ...defaultFilters[filterName] }, // Use the consistent default
     }));
@@ -112,7 +111,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const closeAndFilter = () => {
-    // musicContext.getSongs();
     // update and filter the song on hitting this button
     onClose();
   };
@@ -120,24 +118,24 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const clearFilters = () => {
     switch (activePanel) {
       case "genres":
-        musicContext.setGenres(new Set());
+        historyContext.setGenreFilters(new Set());
         break;
       case "songDetails":
-        musicContext.setSongDetails({ ...defaultFilters }); // Use consistent defaults
+        historyContext.setSongFeaturesFilters({ ...defaultFilters }); // Use consistent defaults
         break;
       case "main":
       default:
         // Clear all filters
-        musicContext.setGenres(new Set());
-        musicContext.setSongDetails({ ...defaultFilters }); // Use consistent defaults
-        musicContext.setSongLimit(5);
+        historyContext.setGenreFilters(new Set());
+        historyContext.setSongFeaturesFilters({ ...defaultFilters }); // Use consistent defaults
+        historyContext.setDateRangeFilter("All");
         break;
     }
   };
 
   // changes the state in the context
   const handleSongDetailsFilterChange = (filterName, range) => {
-    musicContext.setSongDetails((prev) => ({
+    historyContext.setSongFeaturesFilters((prev) => ({
       ...prev,
       [filterName]: range,
     }));
@@ -159,19 +157,15 @@ export default function FilterDrawer({ isOpen, onClose }) {
     return (
       changedSongDetailsCount +
       selectedGenres.size +
-      (sliderValue !== 5 ? 1 : 0)
+      (dateRangeFilter !== "All" ? 1 : 0)
     );
-  }, [changedSongDetailsCount, selectedGenres, sliderValue]);
-
-  useEffect(() => {
-    musicContext.setFiltersTotal(totalChangedFilters);
-  }, [totalChangedFilters]);
+  }, [changedSongDetailsCount, selectedGenres, dateRangeFilter]);
 
   // Get changed song detail filters for TagList
   const changedSongDetailFilters = useMemo(() => {
     const changedFilters = new Set();
-    Object.keys(songDetailsFilters).forEach((key) => {
-      const current = songDetailsFilters[key];
+    Object.keys(historyContext.setSongFeaturesFilters).forEach((key) => {
+      const current = historyContext.setSongFeaturesFilters[key];
       const defaultRange = defaultFilters[key];
       if (
         current.min !== defaultRange?.min ||
@@ -181,7 +175,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
       }
     });
     return changedFilters;
-  }, [songDetailsFilters]);
+  }, [historyContext.setSongFeaturesFilters]);
 
   // Views -------------------------------------------------------------------------------------------
   if (!isVisible) return null;
@@ -206,9 +200,9 @@ export default function FilterDrawer({ isOpen, onClose }) {
       <div className="flex-1 p-4">
         {/* Filters */}
         <div className="mb-8">
-          <DateFilter
-            updateFilter={updateFilter}
-            historyFilter={historyFilter}
+          <DateFilterTabs
+            updateFilter={updateDateFilter}
+            historyFilter={dateRangeFilter}
           />
         </div>
 

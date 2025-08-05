@@ -13,11 +13,32 @@ export const HistoryProvider = ({ children }) => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [songHistory, setSongHistory] = useState([]);
   const [selectedSong, setSelectedSong] = useState({});
-  const [filters, setFilters] = useState({
-    dateRange: "all",
-    artist: "",
-    album: "",
-    genre: "",
+
+  const [sortValue, setSortValue] = useState("Default");
+
+  const songFeatureStrings = {
+    popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
+    acoustics: [
+      "All Electric",
+      "Mostly Electric",
+      "Some Acoustic",
+      "All Acoustic",
+    ],
+    energy: ["Super Chill", "Kinda Chill", "Kinda Hype", "Super Hype"],
+    vocals: ["No Vocals", "Some Vocals", "Lots of Vocals", "All Vocals"],
+    danceability: ["No Groove", "Almost a Bop", "Bop", "Dance Party"],
+    mood: ["Real Low", "Kinda Low", "Kinda High", "Real High"],
+  };
+
+  const [dateRangeFilter, setDateRangeFilter] = useState("All");
+  const [genreFilters, setGenreFilters] = useState(new Set());
+  const [songFeaturesFilters, setSongFeaturesFilters] = useState({
+    popularity: { min: 0, max: 1.0 },
+    acoustics: { min: 0.0, max: 1.0 },
+    energy: { min: 0.0, max: 1.0 },
+    vocals: { min: 0.0, max: 1.0 },
+    danceability: { min: 0.0, max: 1.0 },
+    mood: { min: 0.0, max: 1.0 },
   });
 
   useEffect(() => {
@@ -43,48 +64,22 @@ export const HistoryProvider = ({ children }) => {
   }, []);
 
   function openDetails() {
-    // setPageActive(page);
     console.log("openDetails");
-    setIsDetailsOpen(!isDetailsOpen);
+    setIsDetailsOpen(true);
+  }
+
+  function closeDetails() {
+    setIsDetailsOpen(false);
   }
 
   //Pagination
-  const [songsPerPage, setSongsPerPage] = useState(50);
-  const [visibleCount, setVisibleCount] = useState(50);
-  const [currentPage, setCurrentPage] = useState(0);
-  // const [totalPages, setTotalPages] = useState(1);
+  // change name of first var?
+  const [songsPerLoad, setSongsPerLoad] = useState(30);
+  const [visibleCount, setVisibleCount] = useState(30);
 
   const loadMoreSongs = () => {
-    setVisibleCount((prev) => prev + songsPerPage);
+    setVisibleCount((prev) => prev + songsPerLoad);
   };
-
-  // const handlePageChange = (page) => {
-  //   setCurrentPage(page);
-  // };
-
-  // const handlePrevPage = () => {
-  //   if (currentPage > 1) {
-  //     handlePageChange(currentPage - 1);
-  //   }
-  // };
-
-  // const handleNextPage = () => {
-  //   if (currentPage < totalPages) {
-  //     handlePageChange(currentPage + 1);
-  //   }
-  // };
-
-  // const handlePageSizeChange = (size) => {
-  //   setSongsPerPage(size);
-  // };
-
-  // const handleFirstPage = () => {
-  //   handlePageChange(1);
-  // };
-
-  // const handleLastPage = () => {
-  //   handlePageChange(totalPages);
-  // };
 
   // Layout change, Filter and Sort
   const [layoutType, setLayoutType] = useState("list-grid");
@@ -94,9 +89,9 @@ export const HistoryProvider = ({ children }) => {
     setLayoutType(element.id);
   }
 
-  const updateFilters = (newFilters) => {
-    setFilters((prevFilters) => ({ ...prevFilters, ...newFilters }));
-  };
+  // const updateFilters = (newFilters) => {
+  //   setFilters((prevFilters) => ({ ...prevFilters, ...newFilters }));
+  // };
 
   function filterObjectByDateRange(obj, startDate, endDate) {
     const filteredObj = {};
@@ -124,19 +119,47 @@ export const HistoryProvider = ({ children }) => {
     const startOfDay = new Date(now.setHours(0, 0, 0, 0));
     const endOfDay = new Date(now.setHours(23, 59, 59, 59));
 
-    if (historyFilter === "Today") {
+    switch (dateRangeFilter) {
+      case dateRangeFilter === "Today":
+        return filterObjectByDateRange(songHistory, startOfDay, endOfDay);
+      case dateRangeFilter === "This Week":
+        let thisWeek = getThisWeek(today);
+        return filterObjectByDateRange(
+          songHistory,
+          thisWeek.start,
+          thisWeek.end,
+        );
+      case dateRangeFilter === "This Month":
+        let thisMonth = getThisMonth(today);
+        return filterObjectByDateRange(
+          songHistory,
+          thisMonth.start,
+          thisMonth.end,
+        );
+      case dateRangeFilter === "Past 6 Months":
+        let past6Months = getPast6Months(today);
+        return filterObjectByDateRange(
+          history,
+          past6Months.start,
+          past6Months.end,
+        );
+      default:
+        return songHistory;
+    }
+
+    if (dateRangeFilter === "Today") {
       return filterObjectByDateRange(songHistory, startOfDay, endOfDay);
-    } else if (historyFilter === "This Week") {
+    } else if (dateRangeFilter === "This Week") {
       let thisWeek = getThisWeek(today);
       return filterObjectByDateRange(songHistory, thisWeek.start, thisWeek.end);
-    } else if (historyFilter === "This Month") {
+    } else if (dateRangeFilter === "This Month") {
       let thisMonth = getThisMonth(today);
       return filterObjectByDateRange(
         songHistory,
         thisMonth.start,
         thisMonth.end,
       );
-    } else if (historyFilter === "Past 6 Months") {
+    } else if (dateRangeFilter === "Past 6 Months") {
       let past6Months = getPast6Months(today);
       return filterObjectByDateRange(
         history,
@@ -147,6 +170,10 @@ export const HistoryProvider = ({ children }) => {
     return history;
   }
 
+  function filterByGenre() {}
+
+  function filterBySongFeatures() {}
+
   const historyContext = {
     isLoading,
     // Songs
@@ -155,18 +182,22 @@ export const HistoryProvider = ({ children }) => {
     songHistory,
     isDetailsOpen,
     openDetails,
+    closeDetails,
     // Filters
-    filters,
-    updateFilters,
+    songFeatureStrings,
+    songFeaturesFilters,
+    setSongFeaturesFilters,
+    dateRangeFilter,
+    setDateRangeFilter,
+    genreFilters,
+    setGenreFilters,
     layoutType,
     changeLayout,
     filterByDate,
     //Pagination
-    songsPerPage,
+    songsPerLoad,
     visibleCount,
     setVisibleCount,
-    currentPage,
-    setCurrentPage,
     loadMoreSongs,
   };
 

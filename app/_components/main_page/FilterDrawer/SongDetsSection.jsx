@@ -1,8 +1,6 @@
 "use client";
-import {} from "react";
 import DoubleEndedSlider from "../../ui/DoubleEndedSlider";
 import { ArrowLeft } from "lucide-react";
-import { useSpotifyContext } from "../../../context/spotify-context";
 import { useMusicContext } from "../../../context/music-context";
 
 export default function SongDetailsSection({
@@ -11,7 +9,6 @@ export default function SongDetailsSection({
   onFilterChange,
   changed,
 }) {
-  const { spotifyClient } = useSpotifyContext();
   const { musicContext } = useMusicContext();
   const valueStrings = musicContext?.filterValueStrings;
 

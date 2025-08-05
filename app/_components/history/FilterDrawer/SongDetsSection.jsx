@@ -2,8 +2,7 @@
 import {} from "react";
 import DoubleEndedSlider from "../../ui/DoubleEndedSlider";
 import { ArrowLeft } from "lucide-react";
-import { useSpotifyContext } from "../../../context/spotify-context";
-import { useMusicContext } from "../../../context/music-context";
+import { useHistoryContext } from "../../../context/history-context";
 
 export default function SongDetailsSection({
   navigateBack,
@@ -11,9 +10,8 @@ export default function SongDetailsSection({
   onFilterChange,
   changed,
 }) {
-  const { spotifyClient } = useSpotifyContext();
-  const { musicContext } = useMusicContext();
-  const valueStrings = musicContext?.filterValueStrings;
+  const { historyContext } = useHistoryContext();
+  const valueStrings = historyContext?.songFeatureStrings;
 
   const handleSongDetailsFilterChange = (filterName, range) => {
     onFilterChange(filterName, range);

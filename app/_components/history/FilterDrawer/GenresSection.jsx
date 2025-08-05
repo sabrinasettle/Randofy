@@ -2,9 +2,10 @@
 import { useMemo } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useSpotifyContext } from "../../../context/spotify-context";
+import { useHistoryContext } from "../../../context/history-context";
 
 export default function GenresSection({ navigateBack, selectedGenres }) {
-  const { spotifyClient } = useSpotifyContext();
+  const { historyContext } = useHistoryContext();
 
   const genres = [
     "acoustic",
@@ -159,7 +160,7 @@ export default function GenresSection({ navigateBack, selectedGenres }) {
     } else {
       newSelected.add(genre);
     }
-    spotifyClient.setGenres(newSelected);
+    historyContext.setGenreFilters(newSelected);
   };
 
   // Memoize the selected count calculations to avoid recalculating on each render
