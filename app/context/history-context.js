@@ -50,44 +50,41 @@ export const HistoryProvider = ({ children }) => {
 
   //Pagination
   const [songsPerPage, setSongsPerPage] = useState(50);
+  const [visibleCount, setVisibleCount] = useState(50);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
+  // const [totalPages, setTotalPages] = useState(1);
 
-  const handlePageChange = (page) => {
-    onPageChange(page);
+  const loadMoreSongs = () => {
+    setVisibleCount((prev) => prev + songsPerPage);
   };
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      handlePageChange(currentPage - 1);
-    }
-  };
+  // const handlePageChange = (page) => {
+  //   setCurrentPage(page);
+  // };
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      handlePageChange(currentPage + 1);
-    }
-  };
+  // const handlePrevPage = () => {
+  //   if (currentPage > 1) {
+  //     handlePageChange(currentPage - 1);
+  //   }
+  // };
 
-  const handlePageSizeChange = (size) => {
-    setSongsPerPage(size);
-  };
+  // const handleNextPage = () => {
+  //   if (currentPage < totalPages) {
+  //     handlePageChange(currentPage + 1);
+  //   }
+  // };
 
-  const handleFirstPage = () => {
-    handlePageChange(1);
-  };
+  // const handlePageSizeChange = (size) => {
+  //   setSongsPerPage(size);
+  // };
 
-  const handleLastPage = () => {
-    handlePageChange(totalPages);
-  };
+  // const handleFirstPage = () => {
+  //   handlePageChange(1);
+  // };
 
-  //Get history and set loading useeffects (needs to be combined)
-  // useEffect(() => {
-  //   // simulate loading or wait for a Spotify API call
-  //   const timer = setTimeout(() => {
-  //     setIsloading(false);
-  //   }, 700); // or however long your data takes to load
-  // }, []);
+  // const handleLastPage = () => {
+  //   handlePageChange(totalPages);
+  // };
 
   // Layout change, Filter and Sort
   const [layoutType, setLayoutType] = useState("list-grid");
@@ -166,16 +163,11 @@ export const HistoryProvider = ({ children }) => {
     filterByDate,
     //Pagination
     songsPerPage,
+    visibleCount,
+    setVisibleCount,
     currentPage,
     setCurrentPage,
-    totalPages,
-    setTotalPages,
-    handlePageChange,
-    handlePageSizeChange,
-    handleNextPage,
-    handlePrevPage,
-    handleFirstPage,
-    handleLastPage,
+    loadMoreSongs,
   };
 
   const context = {

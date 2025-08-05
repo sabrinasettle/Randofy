@@ -25,35 +25,35 @@ export default function HistoryContent() {
 
   const [historyFilter, setHistoryFilter] = useState("All");
   const [isAtTop, setIsAtTop] = useState(true);
-  // const [isLoading, setIsloading] = useState(true);
 
   let history = historyContext.songHistory;
   const isLoading = historyContext.isLoading;
 
-  // const sortOptions = ["newest to oldest", "oldest to newest"];
-  // filter Options
-  const scrollContainerRef = useRef(null);
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      setIsAtTop(scrollTop <= 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // run once on mount
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   function handleBackToTop() {
-    // console.log("to top clicked", scrollContainerRef.current);
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo(0, 0, { behavior: "smooth" });
-      // scrollContainerRef.current.scrollIntoView({
-      //   behavior: "smooth",
-      //   block: "start",
-      // });
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setIsAtTop(true);
   }
 
-  // const filteredHistory = filteredSongHistory();
   const isEmptyObject = (obj) => Object.keys(obj).length === 0;
 
   return (
     <div
       id="history-content"
-      className="h-screen flex flex-col px-3 pt-[72px] md:px-4 pb-2"
+      className="flex flex-col px-3 pt-[72px] md:px-4 pb-2"
     >
-      <section className="flex flex-col h-full ">
+      <div className="flex flex-col h-full ">
         <div className="flex flex-row w-full justify-between">
           <CardLayoutOptions />
           <button
@@ -75,77 +75,24 @@ export default function HistoryContent() {
           <div>
             <div>
               <PaginatedHistory />
-              {/* {Object.keys(history)
-                  .reverse()
-                  .map((key, index) => (
-                    <HistorySection
-                      key={`history ` + `${index}` + `${key}`}
-                      date={key}
-                      songs={history[key]}
-                      idIndex={`section-${index}`}
-                    />
-                  ))}*/}
             </div>
-            {/* <Pagination />*/}
             <FilterDrawer
               isOpen={filtersOpen}
               onClose={() => setFilterOpen(!filtersOpen)}
             />
             <HistoryView />
           </div>
-          // <div className="mt-1 flex flex-row w-full h-full pb-4">
-          //   <div
-          //     id="history-column"
-          //     ref={scrollContainerRef}
-          //     className={`flex flex-col flex-1 ${isMobile && isDrawerOpen ? `w-full` : `w-full`} ${
-          //       isDrawerOpen ? "sm:mr-0 md:mr-4" : "mr-0"
-          //     }`}
-          //   >
-          //     {/* Your existing header with filters */}
-          //     <div className="w-full flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between flex-shrink-0 pb-2">
-          //       {history && (
-          //         <HistoryFilters
-          //           updateFilter={updateFilter}
-          //           historyFilter={historyFilter}
-          //         />
-          //       )}
-          //       <div className="flex flex-row gap-3" id="right_controls">
-          //         {!isAtTop && (
-          //           <button className="text-gray-700" onClick={handleBackToTop}>
-          //             Back to Top
-          //           </button>
-          //         )}
-
-          //         {history && <CardLayoutOptions />}
-          //       </div>
-          //     </div>
-
-          //     {/* Your existing scrollable content */}
-          //     <div
-          //       id="history-songlist-container"
-          //       className="mt-8 overflow-y-auto"
-          //     >
-          //       <ul className="flex flex-col gap-24" id="history-songlist">
-          //         {Object.keys(filteredHistory)
-          //           .reverse()
-          //           .map((key, index) => (
-          //             <HistorySection
-          //               key={`history ` + `${index}` + `${key}`}
-          //               date={key}
-          //               songs={history[key]}
-          //               idIndex={`section-${index}`}
-          //               isActive={activeSection === index}
-          //             />
-          //           ))}
-          //       </ul>
-          //     </div>
-          //   </div>
-          // </div>
         )}
-        {/* {!isAtTop && (
-              <button className="btn btn__overlay back-to-top">To Top</button>
-            )} */}
-      </section>
+
+        {!isAtTop && (
+          <button
+            className="z-30 fixed bottom-6 right-6 bg-[#191919e6] text-gray-700 font-body text-body-md px-2 py-1 rounded-sm border border-transparent hover:border-gray-400 transition-all duration-400 ease-in-out"
+            onClick={handleBackToTop}
+          >
+            Back To Top
+          </button>
+        )}
+      </div>
     </div>
   );
 }

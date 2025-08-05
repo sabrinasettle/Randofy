@@ -1,30 +1,26 @@
 import React, { useMemo } from "react";
 import { useHistoryContext } from "../../context/history-context";
 import SongCard from "./SongCard";
+import { useIsMobile } from "../../_hooks/useIsMobile";
 
 // Currently the structure of the History follows this pattern:
 // [{date : [song{}, song{}, song{}]}, {date : [song{}, song{}, song{}]}, ]
 
 export default function PaginatedHistory() {
   const { historyContext } = useHistoryContext();
-  const {
-    songsPerPage,
-    currentPage,
-    totalPages,
-    onPageChange,
-    handlePrevPage,
-    handleFirstPage,
-    handleLastPage,
-    handleNextPage,
-    layoutType,
-  } = historyContext;
+  const { songsPerPage, currentPage, loadMoreSongs, layoutType } =
+    historyContext;
 
   const history = historyContext.songHistory;
+  const isMobile = useIsMobile();
+  const progressString = `${Math.min(
+    historyContext.visibleCount,
+    history.totalSongs,
+  )} / ${history.totalSongs}`;
 
   const paginatedSongs = useMemo(() => {
-    const start = currentPage * songsPerPage;
-    return history.allSongsChronological.slice(start, start + songsPerPage);
-  }, [history, currentPage, songsPerPage]);
+    return history.allSongsChronological.slice(0, historyContext.visibleCount);
+  }, [history, historyContext.visibleCount]);
 
   const groupedByDate = useMemo(() => {
     return paginatedSongs.reduce((acc, song) => {
@@ -61,8 +57,7 @@ export default function PaginatedHistory() {
       <div className="space-y-6">
         {Object.entries(groupedByDate).map(([date, songs]) => (
           <div className="text-gray-700" key={`${date}`}>
-            <h2 className="text-lg font-semibold mb-2">
-              {" "}
+            <h2 className="font-body text-heading-2 lg:text-heading-1 font-semibold mb-8 mt-20">
               {isToday(date) ? "Today" : `${formatDate(date)}`}
             </h2>
             <ul className={list}>
@@ -78,18 +73,10 @@ export default function PaginatedHistory() {
           </div>
         ))}
       </div>
-      <div>
-        <button
-          className="px-6 py-2 bg-gray-600 border border-transparent hover:border-gray-600 hover:bg-gray-700 text-gray-000 rounded transition-colors duration-400 ease-in-out font-body"
-          onClick={handlePrevPage}
-        >
-          Previous
-        </button>
-        <button
-          className="px-6 py-2 bg-gray-600 border border-transparent hover:border-gray-600 hover:bg-gray-700 text-gray-000 rounded transition-colors duration-400 ease-in-out font-body"
-          onClick={handleNextPage}
-        >
-          Next
+      <div className="flex justify-between w-full pt-6 pb-20">
+        <p className="font-mono text-gray-700">{progressString}</p>
+        <button className="font-mono text-gray-700" onClick={loadMoreSongs}>
+          Load More
         </button>
       </div>
     </div>
