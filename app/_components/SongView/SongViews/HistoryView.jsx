@@ -17,7 +17,6 @@ export default function HistoryView() {
   const song = historyContext.selectedSong.song;
   const isOpen = historyContext.isDetailsOpen; // true = detailed view, false = not detailed
   const isMobile = styleContext.isMobile;
-  console.log("isOpen", isOpen);
 
   if (!song) {
     return <div id="song-drawer__inactive"></div>;
@@ -37,9 +36,6 @@ export default function HistoryView() {
       },
     };
   };
-
-  const containerStyles = getContainerStyles();
-  const preview = song.preview_url;
 
   const iconSize = isMobile ? 32 : 24;
 

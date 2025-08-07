@@ -11,6 +11,10 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const { historyContext } = useHistoryContext();
   const { dateRangeFilter } = historyContext;
 
+  const [tempDateRange, setTempRangeDate] = useState("All");
+  const [tempGenres, setTempGenres] = useState(new Set());
+  //const [tempSongFeatures, setTempSongFeatures] = useState()
+
   const [activePanel, setActivePanel] = useState("main");
   const [isVisible, setIsVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
@@ -111,6 +115,9 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const closeAndFilter = () => {
+    historyContext.setDateRangeFilter(tempDateRange);
+    historyContext.setGenreFilters(tempGenres);
+    // historyContext.setSongFeaturesFilters()
     // update and filter the song on hitting this button
     onClose();
   };
@@ -118,6 +125,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const clearFilters = () => {
     switch (activePanel) {
       case "genres":
+        setTempGenres(new Set());
         historyContext.setGenreFilters(new Set());
         break;
       case "songDetails":
@@ -126,8 +134,11 @@ export default function FilterDrawer({ isOpen, onClose }) {
       case "main":
       default:
         // Clear all filters
+        setTempGenres(new Set());
         historyContext.setGenreFilters(new Set());
+
         historyContext.setSongFeaturesFilters({ ...defaultFilters }); // Use consistent defaults
+        setTempRangeDate("All");
         historyContext.setDateRangeFilter("All");
         break;
     }
@@ -153,13 +164,13 @@ export default function FilterDrawer({ isOpen, onClose }) {
   }, [songDetailsFilters]);
 
   //get a total of filters changed
-  const totalChangedFilters = useMemo(() => {
-    return (
-      changedSongDetailsCount +
-      selectedGenres.size +
-      (dateRangeFilter !== "All" ? 1 : 0)
-    );
-  }, [changedSongDetailsCount, selectedGenres, dateRangeFilter]);
+  // const totalChangedFilters = useMemo(() => {
+  //   return (
+  //     changedSongDetailsCount +
+  //     selectedGenres.size +
+  //     (dateRangeFilter !== "All" ? 1 : 0)
+  //   );
+  // }, [changedSongDetailsCount, selectedGenres, dateRangeFilter]);
 
   // Get changed song detail filters for TagList
   const changedSongDetailFilters = useMemo(() => {
@@ -224,21 +235,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
                 className="text-gray-500 group-hover:text-gray-700 transition-colors"
               />
             </button>
-
-            {changedSongDetailFilters.size !== 0 && (
-              <div className="pt-4 pb-7">
-                <p className="pb-2  text-gray-700 font-body text-body-md">
-                  Feeling and sounding like:
-                </p>
-
-                <TagList
-                  items={songDetailsFilters} // Pass the full songDetailsFilters object
-                  onRemove={removeSongDetailFilter}
-                  valueStrings={getSafeValueStrings()}
-                  defaultFilters={defaultFilters} // Pass defaultFilters so TagList can filter internally
-                />
-              </div>
-            )}
           </div>
 
           <div>
@@ -248,24 +244,13 @@ export default function FilterDrawer({ isOpen, onClose }) {
             >
               <span className="text-gray-700 font-body">
                 Genres{" "}
-                {selectedGenres.size !== 0 && (
-                  <span>[{selectedGenres.size}]</span>
-                )}
+                {tempGenres.size !== 0 && <span>[{tempGenres.size}]</span>}
               </span>
               <ArrowRight
                 size={20}
                 className="text-gray-500 group-hover:text-gray-700 transition-colors"
               />
             </button>
-
-            {selectedGenres.size !== 0 && (
-              <div className="pt-4">
-                <p className="pb-2  text-gray-700 font-body text-body-md">
-                  From the genres of:
-                </p>
-                <TagList items={selectedGenres} onRemove={removeGenre} />
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -287,9 +272,15 @@ export default function FilterDrawer({ isOpen, onClose }) {
     <div className="h-full flex flex-col">
       <GenresSection
         navigateBack={navigateBack}
-        selectedGenres={selectedGenres}
+        selectedGenres={tempGenres}
+        setTempGenres={setTempGenres}
       />
     </div>
+  );
+
+  let predictedAmount = historyContext.lengthPrediction(
+    tempGenres,
+    tempDateRange,
   );
 
   return (
@@ -341,7 +332,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
           <div className="w-full flex flex-row justify-between px-4 py-4">
             <button
               className="py-2 px-1 text-gray-400 hover:text-white transition-colors font-body"
-              onClick={clearFilters}
+              onClick={() => clearFilters()}
             >
               Clear
             </button>
@@ -349,7 +340,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
               className="px-6 py-2 bg-gray-600 border border-transparent hover:border-gray-600 hover:bg-gray-700 text-gray-000 rounded transition-colors duration-400 ease-in-out font-body"
               onClick={() => closeAndFilter()}
             >
-              View (number)
+              View {predictedAmount}
             </button>
           </div>
         </div>

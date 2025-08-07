@@ -4,7 +4,11 @@ import { ArrowLeft } from "lucide-react";
 import { useSpotifyContext } from "../../../context/spotify-context";
 import { useHistoryContext } from "../../../context/history-context";
 
-export default function GenresSection({ navigateBack, selectedGenres }) {
+export default function GenresSection({
+  navigateBack,
+  selectedGenres,
+  setTempGenres,
+}) {
   const { historyContext } = useHistoryContext();
 
   const genres = [
@@ -160,7 +164,7 @@ export default function GenresSection({ navigateBack, selectedGenres }) {
     } else {
       newSelected.add(genre);
     }
-    historyContext.setGenreFilters(newSelected);
+    setTempGenres(newSelected);
   };
 
   // Memoize the selected count calculations to avoid recalculating on each render

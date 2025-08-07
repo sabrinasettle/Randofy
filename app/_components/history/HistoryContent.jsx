@@ -9,6 +9,7 @@ import LoadingBall from "../ui/loading/LoadingBall";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import PaginatedHistory from "./PaginatedHistory";
 import HistoryView from "../SongView/SongViews/HistoryView";
+import DateFilterTabs from "./FilterDrawer/DateFilter";
 
 export default function HistoryContent() {
   const { songViewContext } = useSongViewContext();
@@ -50,6 +51,10 @@ export default function HistoryContent() {
       <div className="flex flex-col h-full ">
         <div className="flex flex-row w-full justify-between">
           <CardLayoutOptions />
+          <DateFilterTabs
+            updateFilter={historyContext.setDateRangeFilter}
+            historyFilter={historyContext.dateRangeFilter}
+          />
           <button
             className="text-gray-600 hover:text-gray-700"
             onClick={() => setFilterOpen(true)}

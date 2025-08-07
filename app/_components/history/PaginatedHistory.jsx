@@ -8,8 +8,14 @@ import { useIsMobile } from "../../_hooks/useIsMobile";
 
 export default function PaginatedHistory() {
   const { historyContext } = useHistoryContext();
-  const { visibleCount, songsPerLoad, loadMoreSongs, layoutType } =
-    historyContext;
+  const {
+    visibleCount,
+    loadMoreSongs,
+    layoutType,
+    genreFilters,
+    songFeaturesFilters,
+    dateRangeFilter,
+  } = historyContext;
 
   const history = historyContext.songHistory;
   const isMobile = useIsMobile();
@@ -19,8 +25,26 @@ export default function PaginatedHistory() {
   )} / ${history.totalSongs}`;
 
   const paginatedSongs = useMemo(() => {
-    return history.allSongsChronological.slice(0, visibleCount);
-  }, [history, visibleCount]);
+    console.log("total", history.totalSongs);
+
+    let filteredSongs = history.allSongsChronological;
+    if (dateRangeFilter !== "All") {
+      filteredSongs = historyContext.filterByDate();
+    }
+
+    if (genreFilters.size !== 0) {
+      console.log(genreFilters, filteredSongs.length);
+      const genreArray = [...genreFilters];
+      filteredSongs = filteredSongs.filter((song) =>
+        song.genres.some((genre) => genreArray.includes(genre)),
+      );
+    }
+
+    if (filteredSongs.length !== 0 && filteredSongs)
+      filteredSongs = filteredSongs.slice(0, visibleCount);
+
+    return filteredSongs;
+  }, [history, visibleCount, genreFilters, dateRangeFilter]);
 
   const groupedByDate = useMemo(() => {
     return paginatedSongs.reduce((acc, song) => {
@@ -82,3 +106,80 @@ export default function PaginatedHistory() {
     </div>
   );
 }
+
+// function filterObjectByDateRange(obj, startDate, endDate) {
+//   const filteredObj = {};
+//   // console.log(historyFilter, startDate, endDate);
+
+//   Object.keys(obj)
+//     .filter((tDate) => {
+//       const date = new Date(tDate);
+//       // console.log(date);
+//       if (date >= startDate && date <= endDate) {
+//         return true;
+//       }
+//       return false;
+//     })
+//     .map((key) => {
+//       filteredObj[key] = obj[key];
+//     });
+
+//   return filteredObj;
+// }
+
+// function filterByDate() {
+//   const now = new Date();
+//   const today = new Date();
+//   const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+//   const endOfDay = new Date(now.setHours(23, 59, 59, 59));
+
+//   switch (dateRangeFilter) {
+//     case dateRangeFilter === "Today":
+//       return filterObjectByDateRange(songHistory, startOfDay, endOfDay);
+//     case dateRangeFilter === "This Week":
+//       let thisWeek = getThisWeek(today);
+//       return filterObjectByDateRange(
+//         songHistory,
+//         thisWeek.start,
+//         thisWeek.end,
+//       );
+//     case dateRangeFilter === "This Month":
+//       let thisMonth = getThisMonth(today);
+//       return filterObjectByDateRange(
+//         songHistory,
+//         thisMonth.start,
+//         thisMonth.end,
+//       );
+//     case dateRangeFilter === "Past 6 Months":
+//       let past6Months = getPast6Months(today);
+//       return filterObjectByDateRange(
+//         history,
+//         past6Months.start,
+//         past6Months.end,
+//       );
+//     default:
+//       return songHistory;
+//   }
+
+//   if (dateRangeFilter === "Today") {
+//     return filterObjectByDateRange(songHistory, startOfDay, endOfDay);
+//   } else if (dateRangeFilter === "This Week") {
+//     let thisWeek = getThisWeek(today);
+//     return filterObjectByDateRange(songHistory, thisWeek.start, thisWeek.end);
+//   } else if (dateRangeFilter === "This Month") {
+//     let thisMonth = getThisMonth(today);
+//     return filterObjectByDateRange(
+//       songHistory,
+//       thisMonth.start,
+//       thisMonth.end,
+//     );
+//   } else if (dateRangeFilter === "Past 6 Months") {
+//     let past6Months = getPast6Months(today);
+//     return filterObjectByDateRange(
+//       history,
+//       past6Months.start,
+//       past6Months.end,
+//     );
+//   }
+//   return history;
+// }

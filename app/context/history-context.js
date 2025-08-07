@@ -93,86 +93,80 @@ export const HistoryProvider = ({ children }) => {
   //   setFilters((prevFilters) => ({ ...prevFilters, ...newFilters }));
   // };
 
-  function filterObjectByDateRange(obj, startDate, endDate) {
-    const filteredObj = {};
-    // console.log(historyFilter, startDate, endDate);
+  function filterSongsByDateRange(songs, startDate, endDate) {
+    const startTs = startDate.getTime();
+    const endTs = endDate.getTime();
 
-    Object.keys(obj)
-      .filter((tDate) => {
-        const date = new Date(tDate);
-        // console.log(date);
-        if (date >= startDate && date <= endDate) {
-          return true;
-        }
-        return false;
-      })
-      .map((key) => {
-        filteredObj[key] = obj[key];
-      });
+    // console.log(
+    //   "Start Date:",
+    //   startDate.toISOString(),
+    //   "| Timestamp:",
+    //   startTs,
+    // );
+    // console.log("End Date:", endDate.toISOString(), "| Timestamp:", endTs);
 
-    return filteredObj;
+    const results = [];
+
+    for (let i = 0; i < songs.length; i++) {
+      const song = songs[i];
+      const genTimeStr = song.generated_at;
+      const genTime = new Date(genTimeStr).getTime();
+
+      // console.log(
+      //   `Checking song: ${song.track_name || "Untitled"} | generated_at: ${genTimeStr} (${genTime})`,
+      // );
+
+      if (genTime >= startTs && genTime <= endTs) {
+        // console.log("✅ Passes filter");
+        results.push(song);
+      }
+    }
+
+    console.log(`Filtered ${results.length} / ${songs.length} songs.`);
+    return results;
   }
 
   function filterByDate() {
-    const now = new Date();
+    console.log("start at date filter", dateRangeFilter);
     const today = new Date();
-    const startOfDay = new Date(now.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(now.setHours(23, 59, 59, 59));
+    const songs = songHistory.allSongsChronological;
 
-    switch (dateRangeFilter) {
-      case dateRangeFilter === "Today":
-        return filterObjectByDateRange(songHistory, startOfDay, endOfDay);
-      case dateRangeFilter === "This Week":
-        let thisWeek = getThisWeek(today);
-        return filterObjectByDateRange(
-          songHistory,
-          thisWeek.start,
-          thisWeek.end,
-        );
-      case dateRangeFilter === "This Month":
-        let thisMonth = getThisMonth(today);
-        return filterObjectByDateRange(
-          songHistory,
-          thisMonth.start,
-          thisMonth.end,
-        );
-      case dateRangeFilter === "Past 6 Months":
-        let past6Months = getPast6Months(today);
-        return filterObjectByDateRange(
-          history,
-          past6Months.start,
-          past6Months.end,
-        );
-      default:
-        return songHistory;
+    if (dateRangeFilter === "This Week") {
+      const thisWeek = getThisWeek(today);
+      return filterSongsByDateRange(songs, thisWeek.start, thisWeek.end);
     }
 
-    if (dateRangeFilter === "Today") {
-      return filterObjectByDateRange(songHistory, startOfDay, endOfDay);
-    } else if (dateRangeFilter === "This Week") {
-      let thisWeek = getThisWeek(today);
-      return filterObjectByDateRange(songHistory, thisWeek.start, thisWeek.end);
-    } else if (dateRangeFilter === "This Month") {
-      let thisMonth = getThisMonth(today);
-      return filterObjectByDateRange(
-        songHistory,
-        thisMonth.start,
-        thisMonth.end,
-      );
-    } else if (dateRangeFilter === "Past 6 Months") {
-      let past6Months = getPast6Months(today);
-      return filterObjectByDateRange(
-        history,
-        past6Months.start,
-        past6Months.end,
-      );
+    if (dateRangeFilter === "This Month") {
+      const thisMonth = getThisMonth(today);
+      return filterSongsByDateRange(songs, thisMonth.start, thisMonth.end);
     }
-    return history;
+
+    if (dateRangeFilter === "Past 6 Months") {
+      const past6Months = getPast6Months(today);
+      return filterSongsByDateRange(songs, past6Months.start, past6Months.end);
+    }
+
+    return songs;
   }
 
-  function filterByGenre() {}
+  function lengthPrediction(genres, dates) {
+    //predict the amount of songs they will get by using the filter
+    let filteredSongs = songHistory.allSongsChronological;
 
-  function filterBySongFeatures() {}
+    if (dates !== "All") {
+      filteredSongs = filterByDate();
+    }
+
+    if (genres.size !== 0) {
+      // console.log(genres, filteredSongs.length);
+      const genreArray = [...genres];
+      filteredSongs = filteredSongs.filter((song) =>
+        song.genres.some((genre) => genreArray.includes(genre)),
+      );
+    }
+
+    return filteredSongs.length;
+  }
 
   const historyContext = {
     isLoading,
@@ -194,6 +188,7 @@ export const HistoryProvider = ({ children }) => {
     layoutType,
     changeLayout,
     filterByDate,
+    lengthPrediction,
     //Pagination
     songsPerLoad,
     visibleCount,
