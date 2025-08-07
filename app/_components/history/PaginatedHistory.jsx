@@ -97,12 +97,14 @@ export default function PaginatedHistory() {
           </div>
         ))}
       </div>
-      <div className="flex justify-between w-full pt-6 pb-20">
-        <p className="font-mono text-gray-700">{progressString}</p>
-        <button className="font-mono text-gray-700" onClick={loadMoreSongs}>
-          Load More
-        </button>
-      </div>
+      {paginatedSongs.length >= visibleCount && (
+        <div className="flex justify-between w-full pt-6 pb-20">
+          <p className="font-mono text-gray-700">{progressString}</p>
+          <button className="font-mono text-gray-700" onClick={loadMoreSongs}>
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 }
