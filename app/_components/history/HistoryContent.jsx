@@ -51,10 +51,10 @@ export default function HistoryContent() {
       <div className="flex flex-col h-full ">
         <div className="flex flex-row w-full justify-between">
           <CardLayoutOptions />
-          <DateFilterTabs
+          {/* <DateFilterTabs
             updateFilter={historyContext.setDateRangeFilter}
             historyFilter={historyContext.dateRangeFilter}
-          />
+          />*/}
           <button
             className="text-gray-600 hover:text-gray-700"
             onClick={() => setFilterOpen(true)}

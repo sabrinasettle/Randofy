@@ -6,14 +6,24 @@ import { useHistoryContext } from "../../../context/history-context";
 import TagList from "./TagList";
 import DateFilterTabs from "./DateFilter";
 
+// ...imports stay the same
+
 export default function FilterDrawer({ isOpen, onClose }) {
-  // from History Content
+  // Context
   const { historyContext } = useHistoryContext();
   const { dateRangeFilter } = historyContext;
 
+  // Temp filter states
   const [tempDateRange, setTempRangeDate] = useState("All");
   const [tempGenres, setTempGenres] = useState(new Set());
-  //const [tempSongFeatures, setTempSongFeatures] = useState()
+  const [tempSongFeaturesFilters, setTempSongFeaturesFilters] = useState({
+    popularity: { min: 0, max: 1.0 },
+    acoustics: { min: 0.0, max: 1.0 },
+    energy: { min: 0.0, max: 1.0 },
+    vocals: { min: 0.0, max: 1.0 },
+    danceability: { min: 0.0, max: 1.0 },
+    mood: { min: 0.0, max: 1.0 },
+  });
 
   const [activePanel, setActivePanel] = useState("main");
   const [isVisible, setIsVisible] = useState(false);
@@ -22,16 +32,27 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const songDetailsFilters = historyContext.songFeaturesFilters;
   const selectedGenres = historyContext.genreFilters;
   const valueStrings = historyContext?.songFeatureStrings || {};
-  const allSongs = historyContext.songHistory.allSongsChronological;
 
-  function updateDateFilter(filterString) {
-    historyContext.setDateRangeFilter(filterString);
-  }
+  useEffect(() => {
+    if (isOpen) {
+      setTempRangeDate(dateRangeFilter);
+      setTempGenres(new Set(selectedGenres));
+      setTempSongFeaturesFilters({ ...songDetailsFilters });
+    }
+  }, [isOpen]);
 
-  // Debug: Log valueStrings to see what keys are available
-  // console.log("valueStrings:", valueStrings);
+  const predictedAmount = useMemo(() => {
+    return historyContext.lengthPrediction(
+      tempGenres,
+      tempDateRange,
+      tempSongFeaturesFilters,
+    );
+  }, [tempGenres, tempDateRange, tempSongFeaturesFilters]);
 
-  // Define default filters consistently in one place
+  const updateDateFilter = (filterString) => {
+    setTempRangeDate(filterString);
+  };
+
   const defaultFilters = {
     popularity: { min: 0.0, max: 1.0 },
     acoustics: { min: 0.0, max: 1.0 },
@@ -41,20 +62,17 @@ export default function FilterDrawer({ isOpen, onClose }) {
     mood: { min: 0.0, max: 1.0 },
   };
 
-  // Safe valueStrings access helper
   const getSafeValueStrings = () => {
     if (!valueStrings || typeof valueStrings !== "object") {
       return {};
     }
 
-    // Ensure all filter keys have safe arrays
     const safeValueStrings = {};
     Object.keys(defaultFilters).forEach((key) => {
       const keyLower = key.toLowerCase();
       if (valueStrings[keyLower] && Array.isArray(valueStrings[keyLower])) {
         safeValueStrings[keyLower] = valueStrings[keyLower];
       } else {
-        // Provide fallback array if missing
         safeValueStrings[keyLower] = ["Low", "Medium", "High"];
       }
     });
@@ -62,9 +80,8 @@ export default function FilterDrawer({ isOpen, onClose }) {
     return safeValueStrings;
   };
 
-  // Remove functions for TagList
   const removeGenre = (genre) => {
-    historyContext.setGenreFilters((prev) => {
+    setTempGenres((prev) => {
       const newSet = new Set(prev);
       newSet.delete(genre);
       return newSet;
@@ -72,23 +89,16 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const removeSongDetailFilter = (filterName) => {
-    // Ensure we have a valid filter name
-    if (!filterName || !defaultFilters[filterName]) {
-      console.warn(`Invalid filter name: ${filterName}`);
-      return;
-    }
-
-    historyContext.setSongFeaturesFilters((prev) => ({
+    if (!filterName || !defaultFilters[filterName]) return;
+    tempSongFeaturesFilters((prev) => ({
       ...prev,
-      [filterName]: { ...defaultFilters[filterName] }, // Use the consistent default
+      [filterName]: { ...defaultFilters[filterName] },
     }));
   };
 
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
-
-      // Ensure the drawer is rendered before transitioning
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setAnimateIn(true);
@@ -96,12 +106,9 @@ export default function FilterDrawer({ isOpen, onClose }) {
       });
     } else {
       setAnimateIn(false);
-
-      // Delay unmount to let transition play
       const timeout = setTimeout(() => {
         setIsVisible(false);
-      }, 500); // matches transition duration
-
+      }, 500);
       return () => clearTimeout(timeout);
     }
   }, [isOpen]);
@@ -117,8 +124,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const closeAndFilter = () => {
     historyContext.setDateRangeFilter(tempDateRange);
     historyContext.setGenreFilters(tempGenres);
-    // historyContext.setSongFeaturesFilters()
-    // update and filter the song on hitting this button
+    historyContext.setSongFeaturesFilters(tempSongFeaturesFilters); // ✅ ← STORE TEMP FEATURES
     onClose();
   };
 
@@ -129,54 +135,43 @@ export default function FilterDrawer({ isOpen, onClose }) {
         historyContext.setGenreFilters(new Set());
         break;
       case "songDetails":
-        historyContext.setSongFeaturesFilters({ ...defaultFilters }); // Use consistent defaults
+        setTempSongFeaturesFilters({ ...defaultFilters });
+        historyContext.setSongFeaturesFilters({ ...defaultFilters });
         break;
       case "main":
       default:
-        // Clear all filters
         setTempGenres(new Set());
         historyContext.setGenreFilters(new Set());
-
-        historyContext.setSongFeaturesFilters({ ...defaultFilters }); // Use consistent defaults
+        setTempSongFeaturesFilters({ ...defaultFilters });
+        historyContext.setSongFeaturesFilters({ ...defaultFilters });
         setTempRangeDate("All");
         historyContext.setDateRangeFilter("All");
         break;
     }
   };
 
-  // changes the state in the context
   const handleSongDetailsFilterChange = (filterName, range) => {
-    historyContext.setSongFeaturesFilters((prev) => ({
+    setTempSongFeaturesFilters((prev) => ({
       ...prev,
       [filterName]: range,
     }));
   };
 
-  //count of the changed Song details
   const changedSongDetailsCount = useMemo(() => {
-    return Object.keys(songDetailsFilters).filter((key) => {
-      const current = songDetailsFilters[key];
+    console.log("changedSongDetailsCount", tempSongFeaturesFilters);
+    return Object.keys(tempSongFeaturesFilters).filter((key) => {
+      const current = tempSongFeaturesFilters[key];
       const defaultRange = defaultFilters[key];
       return (
         current.min !== defaultRange?.min || current.max !== defaultRange?.max
       );
     }).length;
-  }, [songDetailsFilters]);
+  }, [tempSongFeaturesFilters]);
 
-  //get a total of filters changed
-  // const totalChangedFilters = useMemo(() => {
-  //   return (
-  //     changedSongDetailsCount +
-  //     selectedGenres.size +
-  //     (dateRangeFilter !== "All" ? 1 : 0)
-  //   );
-  // }, [changedSongDetailsCount, selectedGenres, dateRangeFilter]);
-
-  // Get changed song detail filters for TagList
   const changedSongDetailFilters = useMemo(() => {
     const changedFilters = new Set();
-    Object.keys(historyContext.setSongFeaturesFilters).forEach((key) => {
-      const current = historyContext.setSongFeaturesFilters[key];
+    Object.keys(tempSongFeaturesFilters).forEach((key) => {
+      const current = tempSongFeaturesFilters[key];
       const defaultRange = defaultFilters[key];
       if (
         current.min !== defaultRange?.min ||
@@ -186,19 +181,12 @@ export default function FilterDrawer({ isOpen, onClose }) {
       }
     });
     return changedFilters;
-  }, [historyContext.setSongFeaturesFilters]);
+  }, [tempSongFeaturesFilters]);
 
-  // Views -------------------------------------------------------------------------------------------
   if (!isVisible) return null;
-
-  const numberSongText =
-    changedSongDetailFilters.size !== 0 || selectedGenres.size !== 0
-      ? "random songs"
-      : "Totally random songs";
 
   const renderMainView = () => (
     <div className="h-full flex flex-col">
-      {/* Header */}
       <div className="flex justify-between items-center p-4">
         <h1 className="text-gray-700 text-body-lg font-body">
           Filter Song History
@@ -207,19 +195,18 @@ export default function FilterDrawer({ isOpen, onClose }) {
           <X size={24} />
         </button>
       </div>
-      {/* Content */}
       <div className="flex-1 p-4">
-        {/* Filters */}
+        {/* Date Filter */}
         <div className="mb-8">
           <DateFilterTabs
             updateFilter={updateDateFilter}
-            historyFilter={dateRangeFilter}
+            historyFilter={tempDateRange}
           />
         </div>
 
-        {/* Navigation Items */}
         <div className="space-y-0">
-          <div>
+          {/* Song Details */}
+          {/* <div>
             <button
               onClick={() => navigateToPanel("songDetails")}
               className="group w-full h-12 bg-gray-000 hover:text-gray-700 border-t border-gray-200 flex items-center justify-between px-0 transition-colors"
@@ -235,8 +222,23 @@ export default function FilterDrawer({ isOpen, onClose }) {
                 className="text-gray-500 group-hover:text-gray-700 transition-colors"
               />
             </button>
-          </div>
+            {changedSongDetailFilters.size !== 0 && (
+              <div className="pt-4 pb-7">
+                <p className="pb-2  text-gray-700 font-body text-body-md">
+                  Feeling and sounding like:
+                </p>
 
+                <TagList
+                  items={tempSongFeaturesFilters} // Pass the full songDetailsFilters object
+                  onRemove={removeSongDetailFilter}
+                  valueStrings={getSafeValueStrings()}
+                  defaultFilters={defaultFilters} // Pass defaultFilters so TagList can filter internally
+                />
+              </div>
+            )}
+          </div>*/}
+
+          {/* Genres */}
           <div>
             <button
               onClick={() => navigateToPanel("genres")}
@@ -251,6 +253,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
                 className="text-gray-500 group-hover:text-gray-700 transition-colors"
               />
             </button>
+            <TagList items={tempGenres} onRemove={removeGenre} />
           </div>
         </div>
       </div>
@@ -261,7 +264,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
     <div className="h-full flex flex-col">
       <SongDetailsSection
         navigateBack={navigateBack}
-        songDetailsFilters={songDetailsFilters}
+        songDetailsFilters={tempSongFeaturesFilters}
         onFilterChange={handleSongDetailsFilterChange}
         changed={changedSongDetailsCount}
       />
@@ -278,27 +281,16 @@ export default function FilterDrawer({ isOpen, onClose }) {
     </div>
   );
 
-  let predictedAmount = historyContext.lengthPrediction(
-    tempGenres,
-    tempDateRange,
-  );
-
   return (
     <div className="fixed inset-0 z-50 h-full flex justify-end">
-      {/* Backdrop for main content */}
       <div className="absolute inset-0" onClick={onClose} />
-
-      {/* Drawer Container */}
       <div
         className={`relative w-full md:w-lg h-full bg-gray-000 transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)] ${
           animateIn ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Panel Container with full-height layout and left border */}
         <div className="relative w-full h-full flex flex-col border-l border-gray-300">
-          {/* Sliding Panels Wrapper (scrollable area) */}
           <div className="flex-1 relative overflow-hidden">
-            {/* Main Panel */}
             <div
               className={`absolute inset-0 w-full h-full overflow-auto bg-gray-000 transition-transform duration-300 ease-in-out ${
                 activePanel === "main" ? "translate-x-0" : "-translate-x-full"
@@ -307,7 +299,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
               {renderMainView()}
             </div>
 
-            {/* Song Details Panel */}
             <div
               className={`absolute inset-0 w-full h-full overflow-auto bg-gray-000 transition-transform duration-300 ease-in-out ${
                 activePanel === "songDetails"
@@ -318,7 +309,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
               {renderSongDetails()}
             </div>
 
-            {/* Genres Panel */}
             <div
               className={`absolute inset-0 w-full h-full overflow-auto bg-gray-000 transition-transform duration-300 ease-in-out ${
                 activePanel === "genres" ? "translate-x-0" : "translate-x-full"
@@ -328,17 +318,16 @@ export default function FilterDrawer({ isOpen, onClose }) {
             </div>
           </div>
 
-          {/* Footer */}
           <div className="w-full flex flex-row justify-between px-4 py-4">
             <button
               className="py-2 px-1 text-gray-400 hover:text-white transition-colors font-body"
-              onClick={() => clearFilters()}
+              onClick={clearFilters}
             >
               Clear
             </button>
             <button
               className="px-6 py-2 bg-gray-600 border border-transparent hover:border-gray-600 hover:bg-gray-700 text-gray-000 rounded transition-colors duration-400 ease-in-out font-body"
-              onClick={() => closeAndFilter()}
+              onClick={closeAndFilter}
             >
               View {predictedAmount}
             </button>

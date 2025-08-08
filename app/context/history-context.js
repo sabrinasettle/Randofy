@@ -126,22 +126,22 @@ export const HistoryProvider = ({ children }) => {
     return results;
   }
 
-  function filterByDate() {
-    console.log("start at date filter", dateRangeFilter);
+  function filterByDate(dateRange) {
+    // console.log("start at date filter", dateRange); // corrected
     const today = new Date();
     const songs = songHistory.allSongsChronological;
 
-    if (dateRangeFilter === "This Week") {
+    if (dateRange === "This Week") {
       const thisWeek = getThisWeek(today);
       return filterSongsByDateRange(songs, thisWeek.start, thisWeek.end);
     }
 
-    if (dateRangeFilter === "This Month") {
+    if (dateRange === "This Month") {
       const thisMonth = getThisMonth(today);
       return filterSongsByDateRange(songs, thisMonth.start, thisMonth.end);
     }
 
-    if (dateRangeFilter === "Past 6 Months") {
+    if (dateRange === "Past 6 Months") {
       const past6Months = getPast6Months(today);
       return filterSongsByDateRange(songs, past6Months.start, past6Months.end);
     }
@@ -149,23 +149,30 @@ export const HistoryProvider = ({ children }) => {
     return songs;
   }
 
-  function lengthPrediction(genres, dates) {
-    //predict the amount of songs they will get by using the filter
-    let filteredSongs = songHistory.allSongsChronological;
+  function filterByGenres(selectedGenres, songs) {
+    if (!selectedGenres || selectedGenres.size === 0) return songs;
 
-    if (dates !== "All") {
-      filteredSongs = filterByDate();
-    }
+    return songs.filter((song) =>
+      song.genres?.some((genre) => selectedGenres.has(genre)),
+    );
+  }
 
-    if (genres.size !== 0) {
-      // console.log(genres, filteredSongs.length);
-      const genreArray = [...genres];
-      filteredSongs = filteredSongs.filter((song) =>
-        song.genres.some((genre) => genreArray.includes(genre)),
-      );
-    }
+  function filterBySongFeatures(featureFilters, songs) {
+    return songs.filter((song) => {
+      return Object.entries(featureFilters).every(([feature, { min, max }]) => {
+        const value = song[feature];
+        return typeof value === "number" && value >= min && value <= max;
+      });
+    });
+  }
 
-    return filteredSongs.length;
+  function lengthPrediction(genres, dateRange, featureFilters) {
+    let songs = songHistory.allSongsChronological;
+    songs = filterByDate(dateRange, songs);
+    songs = filterByGenres(genres, songs);
+    // issue here because it returns 0 on having default values
+    // songs = filterBySongFeatures(featureFilters, songs);
+    return songs.length;
   }
 
   const historyContext = {

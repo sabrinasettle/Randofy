@@ -45,7 +45,7 @@ export default function HistoryView() {
 
     return createPortal(
       <div
-        className="fixed inset-0 z-[9998] backdrop-blur-xs bg-[#0a0a0ae3]"
+        className="fixed inset-0 z-[9998] backdrop-blur-xs bg-[#0a0a0a6B]"
         // style={{
         //   backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
         // }}
