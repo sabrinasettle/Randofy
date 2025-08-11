@@ -134,7 +134,7 @@ export default function DefaultView() {
                       </div>
                     </div>
                     {/* Audio player centered */}
-                    <div className="flex-1 flex items-center justify-center mt-2">
+                    <div className="flex-1 flex items-center justify-center mt-4">
                       <div className="w-full">
                         <AudioPlayer song={song} />
                       </div>

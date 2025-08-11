@@ -3,7 +3,7 @@ import { useSongViewContext } from "../../../context/song-view-context";
 const FilterButton = ({ handleActivation, string, activeFilter }) => {
   return (
     <div
-      className={`p-2 flex items-center text-gray-500 cursor-pointer ${activeFilter === string ? `text-gray-700` : `text - gray - 500`}`}
+      className={`p-2 flex items-center cursor-pointer hover:underline ${activeFilter === string ? `text-gray-700` : `text-gray-500`}`}
       onClick={handleActivation}
     >
       {string}
@@ -11,7 +11,7 @@ const FilterButton = ({ handleActivation, string, activeFilter }) => {
   );
 };
 
-export default function HistoryFilters({ updateFilter, historyFilter }) {
+export default function DateFilterTabs({ updateFilter, historyFilter }) {
   // const [activeFilter, setActiveFilter] = useState("All");
   const { songViewContext } = useSongViewContext();
   const isMobile = songViewContext.isMobile;
@@ -24,7 +24,8 @@ export default function HistoryFilters({ updateFilter, historyFilter }) {
   }
 
   return (
-    <div className="font-body bg-gray-100 flex flex-row w-full md:max-w-max rounded-sm justify-evenly items-center">
+    //md:max-w-max
+    <div className="font-body bg-gray-100 flex flex-row w-full rounded-sm justify-evenly items-center">
       <FilterButton
         handleActivation={handleActivation}
         string={"All"}
