@@ -2,18 +2,21 @@
 //
 // new
 import HistoryContent from "../../_components/history/HistoryContent";
-import { SpotifyClientProvider } from "../../context/spotify-context";
 import { CardLayoutProvider } from "../../context/card-layout-context";
-// import InformationLink from "../../_components/layout/InformationLink";
-
+import { HistoryProvider } from "../../context/history-context";
 export default function History() {
   return (
     <>
-      <SpotifyClientProvider>
+      <HistoryProvider>
         <CardLayoutProvider>
-          <HistoryContent />
+          <div className="flex flex-col h-full">
+            <HistoryContent />
+            <footer className="flex justify-between w-full p-6 h-max-min">
+              <p className="text-gray-500">Footer Content</p>
+            </footer>
+          </div>
         </CardLayoutProvider>
-      </SpotifyClientProvider>
+      </HistoryProvider>
       {/* <InformationLink /> */}
     </>
   );

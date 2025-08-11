@@ -2,6 +2,7 @@
 import { useGridContext } from "../../../context/card-layout-context";
 import { LayoutGrid, LayoutList } from "lucide-react";
 import { useState } from "react";
+import { useHistoryContext } from "../../../context/history-context";
 
 // const OblongGrid = ({}) => {
 //   return (
@@ -32,8 +33,9 @@ import { useState } from "react";
 // };
 
 export default function CardLayoutOptions() {
-  const { layoutContext } = useGridContext();
-  const [activeLayout, setActiveLayout] = useState(layoutContext.layoutType);
+  const { historyContext } = useHistoryContext();
+  const [activeLayout, setActiveLayout] = useState(historyContext.layoutType);
+  const history = historyContext.songHistory;
 
   // To Do
   // add animation to click change
@@ -41,7 +43,7 @@ export default function CardLayoutOptions() {
   function handleOnClick(e) {
     let element = e.currentTarget;
     // console.log(element.id);
-    layoutContext.changeLayout(element);
+    historyContext.changeLayout(element);
     setActiveLayout(element.id);
   }
 

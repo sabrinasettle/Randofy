@@ -2,10 +2,11 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { createArtists } from "../../../utils/createArtists.js";
 import { useAccessibleAlpha } from "../../../_hooks/useAccessibleAlpha.js";
-import { millisToMinutesAndSeconds } from "../../../utils/convertMilliseconds.js";
-import AudioPlayer from "../AudioPlayer/AudioPlayer.jsx";
-import AudioFeatureDrawers from "../AudioFeatureDrawers.jsx";
 import { useSongViewContext } from "../../../context/song-view-context.js";
+import { useSpotifyContext } from "../../../context/spotify-context.js";
+import { useMusicContext } from "../../../context/music-context.js";
+import { useStyleContext } from "../../../context/style-context.js";
+import AudioPlayer from "../AudioPlayer/AudioPlayer.jsx";
 import ScrollingTitle from "../../ui/ScrollingTitle.jsx";
 import { ArrowRight, ArrowLeft, X } from "lucide-react";
 import Image from "next/image";
@@ -13,14 +14,13 @@ import AudioFeatureTabs from "../AudioFeatureTabs.jsx";
 
 export default function DefaultView() {
   const { songViewContext } = useSongViewContext();
-  const song = songViewContext.selectedSong.song;
-  const isMobile = songViewContext.isMobile;
-  const isDefault = songViewContext.isDefault; // true = home page, false = other pages
-  const isOpen = songViewContext.isDetailsOpen; // true = detailed view, false = not detailed
+  const { musicContext } = useMusicContext();
+  const { styleContext } = useStyleContext();
+  const song = musicContext.selectedSong.song;
+  const isOpen = musicContext.isDetailsOpen; // true = detailed view, false = not detailed
+  const isMobile = styleContext.isMobile;
 
-  const [activeSection, setActiveSection] = useState(null);
-
-  if (!song.track_name) {
+  if (!song) {
     return <div id="song-drawer__inactive"></div>;
   }
 
@@ -47,10 +47,6 @@ export default function DefaultView() {
   const renderFullScreenPlayer = () => {
     if (!isOpen) return null;
 
-    function moveForward() {}
-
-    function moveBackward() {}
-
     return createPortal(
       <div
         className="fixed inset-0 z-[9998] backdrop-blur-xs"
@@ -59,12 +55,8 @@ export default function DefaultView() {
         // }}
       >
         <div
-          className="fixed inset-0 backdrop-blur-sm md:m-7 lg:m-10 xl:m-12 border md:border-gray-200 md:rounded-sm bg-gray-000 md:opacity-95"
-          style={
-            {
-              // backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
-            }
-          }
+          className="fixed inset-0 backdrop-blur-sm md:m-7 lg:m-10 xl:m-12 border md:border-gray-200 md:rounded-sm "
+          style={{ background: "#0A0A0Af2" }}
         >
           <div className="w-full h-full p-4">
             {/* Portal Controls */}
@@ -72,20 +64,20 @@ export default function DefaultView() {
               <div className="flex flex-row justify-between md:justify-end gap-3">
                 <div className="flex flex-row">
                   <button
-                    onClick={() => songViewContext.setIsDetailsOpen(false)}
+                    onClick={() => musicContext.moveBackward()}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
                     <ArrowLeft size={iconSize} />
                   </button>
                   <button
-                    onClick={() => songViewContext.setIsDetailsOpen(false)}
+                    onClick={() => musicContext.moveForward()}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
                     <ArrowRight size={iconSize} />
                   </button>
                 </div>
                 <button
-                  onClick={() => songViewContext.setIsDetailsOpen(false)}
+                  onClick={() => musicContext.setIsDetailsOpen(false)}
                   className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                 >
                   <X size={iconSize} />
@@ -93,14 +85,14 @@ export default function DefaultView() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row w-full h-full">
+            <div className="flex flex-col md:flex-row w-full h-full">
               {/* left column */}
               <div className="w-full flex md:items-center md:justify-center">
                 <div
                   className={`flex justify-start transition-all duration-500`}
                   style={{
-                    width: isMobile ? "20vw" : "38vw",
-                    height: isMobile ? "20vw" : "38vw",
+                    width: isMobile ? "28vw" : "38vw",
+                    height: isMobile ? "28vw" : "38vw",
                     transition: "width 0.5s ease, height 0.5s ease",
                     overflow: "hidden",
                   }}
@@ -122,8 +114,8 @@ export default function DefaultView() {
               </div>
 
               {/* right column */}
-              <div className="w-full md:w-2/3 lg:w-[48%] md:pt-8 md:pb-6">
-                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 px-5">
+              <div className="w-full lg:w-[48%] md:pt-8 md:pb-6 pt-6">
+                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2">
                   <div>
                     <div className="pt-2">
                       <ScrollingTitle
@@ -142,7 +134,7 @@ export default function DefaultView() {
                       </div>
                     </div>
                     {/* Audio player centered */}
-                    <div className="flex-1 flex items-center justify-center mt-2">
+                    <div className="flex-1 flex items-center justify-center mt-4">
                       <div className="w-full">
                         <AudioPlayer song={song} />
                       </div>

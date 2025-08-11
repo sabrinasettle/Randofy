@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
+import { useMusicContext } from "../../context/music-context";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import SongListController from "./SongList/SongListController";
 import LoadingBall from "../ui/loading/LoadingBall";
@@ -8,21 +9,22 @@ import ButtonsContainer from "./ButtonsContainer";
 
 export default function RandofyContent() {
   const { spotifyClient } = useSpotifyContext();
-  const [filtersOpen, setFilterOpen] = useState(false);
+  const { musicContext } = useMusicContext();
   const { spotifyUser } = spotifyClient;
+  const [filtersOpen, setFilterOpen] = useState(false);
   const isMobile = spotifyClient.isMobile;
 
   const hasContent =
-    spotifyClient.isLoading || spotifyClient.currentSongs.length !== 0;
+    musicContext.isLoading || musicContext.currentSongs.length !== 0;
 
   function showItem() {
-    if (spotifyClient.isLoading)
+    if (musicContext.isLoading)
       return (
         <div className="w-full flex justify-center items-center">
-          <LoadingBall isLoading={spotifyClient.isLoading} />
+          <LoadingBall isLoading={musicContext.isLoading} />
         </div>
       );
-    else if (spotifyClient.currentSongs.length !== 0)
+    else if (musicContext.currentSongs.length !== 0)
       return (
         <div className="w-full flex justify-end items-center sm:mt-8 md:mt-0">
           {/* <LoadingBall isLoading={true} /> */}
@@ -40,7 +42,7 @@ export default function RandofyContent() {
         className={
           isMobile
             ? ``
-            : `flex h-full ${spotifyClient.isLoading ? "w-screen" : "w-full"} pt-4 pb-4 md:pt-0 md:pb-6 flex-col justify-start sm:justify-center items-center relative overflow-hidden z-0`
+            : `flex h-full ${musicContext.isLoading ? "w-screen" : "w-full"} pt-4 pb-4 md:pt-0 md:pb-6 flex-col justify-start sm:justify-center items-center relative overflow-hidden z-0`
         }
       >
         {/* Buttons Container - responsive behavior */}

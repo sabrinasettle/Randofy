@@ -1,45 +1,41 @@
 export function getThisWeek(today) {
-  const currentDay = today.getDay(); // 0 for Sunday, 1 for Monday, and so on
+  const start = new Date(today);
+  const day = start.getDay(); // 0 for Sunday, 1 for Monday, and so on
+  start.setDate(start.getDate() - day);
+  start.setHours(0, 0, 0, 0);
 
-  // Calculate the start of the week (Sunday)
-  // const startOfWeek = new Date(today);
-  // startOfWeek.setDate(today.getDate() - 7);
-  // startOfWeek.setHours(0, 0, 0, 1);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  end.setHours(23, 59, 59, 999);
 
-  // Calculate the end of the week (Saturday)
-  const endOfWeek = new Date(today);
-  endOfWeek.setDate(today.getDate() - 7);
-  endOfWeek.setHours(0, 0, 0, 1);
   return {
-    start: endOfWeek,
-    end: new Date(),
+    start,
+    end,
   };
 }
 
 export function getThisMonth(today) {
   const y = today.getFullYear();
   const m = today.getMonth();
-  const firstDay = new Date(y, m, 1);
-  const lastDay = new Date(y, m + 1, 0);
+  const start = new Date(y, m, 1, 0, 0, 0, 0);
+  const end = new Date(y, m + 1, 0, 23, 59, 59, 999);
 
   return {
-    start: firstDay,
-    end: lastDay,
+    start,
+    end,
   };
 }
 
 export function getPast6Months(today) {
-  // const y = today.getFullYear();
-  // const m = today.getMonth();
+  const start = new Date(today);
 
-  // const firstDay = new Date(y, m, 1);
-  const firstDay = new Date();
+  start.setMonth(today.getMonth() - 6);
+  start.setHours(0, 0, 0, 0);
 
-  firstDay.setMonth(today.getMonth() - 6);
-  console.log("getDates", firstDay);
-  // const monthsAgo = today.setMonth(today.getMonth() - 6);
+  const end = new Date(today);
+  end.setHours(23, 59, 59, 999);
   return {
-    start: firstDay,
-    end: today,
+    start,
+    end,
   };
 }
