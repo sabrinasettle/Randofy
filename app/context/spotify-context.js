@@ -22,20 +22,6 @@ export function SpotifyClientProvider({ children }) {
   const { showToast } = useToast();
   const isMobile = useIsMobile();
 
-  const valueStrings = {
-    popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
-    acoustics: [
-      "All Electric",
-      "Mostly Electric",
-      "Some Acoustic",
-      "All Acoustic",
-    ],
-    energy: ["Super Chill", "Kinda Chill", "Kinda Hype", "Super Hype"],
-    vocals: ["No Vocals", "Some Vocals", "Lots of Vocals", "All Vocals"],
-    danceability: ["No Groove", "Almost a Bop", "Bop", "Dance Party"],
-    mood: ["Real Low", "Kinda Low", "Kinda High", "Real High"],
-  };
-
   useEffect(() => {
     const auth = JSON.parse(localStorage.getItem("auth"));
     const spotifyUser = JSON.parse(localStorage.getItem("spotifyUser"));
@@ -66,7 +52,7 @@ export function SpotifyClientProvider({ children }) {
 
   const checkTokenTime = async () => {
     // checks if auth is present and if a new time is greater than the time for auth
-    if (auth && auth.expires_at && new Date() > auth.expires_at) {
+    if (auth && auth.expires_at && new Date() > new Date(auth.expires_at)) {
       const params = new URLSearchParams({
         refresh_token: auth.refresh_token,
       });
@@ -105,30 +91,29 @@ export function SpotifyClientProvider({ children }) {
       const data = await res.json();
       const seconds = data.expires_in;
       data.created_at = new Date();
-      data.expires_at = new Date().setSeconds(
-        data.created_at.getSeconds() + seconds,
-      );
+      data.expires_at = new Date(data.created_at.getTime() + seconds * 1000);
+
       localStorage.setItem("auth", JSON.stringify(data));
       setAuth(data);
-      getSpotifyUser();
+      getSpotifyUser(data);
     }
     // needs error handling;
   };
 
-  const getSpotifyUser = async () => {
-    if (!auth) return;
+  const getSpotifyUser = async (authData = auth) => {
+    if (!authData) return;
 
     const res = await fetch("https://api.spotify.com/v1/me", {
       headers: {
-        Authorization: `Bearer ${auth.access_token}`,
+        Authorization: `Bearer ${authData.access_token}`,
       },
     });
     const data = await res.json();
     // console.log(data);
     setSpotifyUser(data);
     localStorage.setItem("spotifyUser", JSON.stringify(data));
-    window.history.pushState(
-      "",
+    window.history.replaceState(
+      {},
       "",
       window.location.host.includes("localhost")
         ? "http://" + window.location.host
@@ -330,27 +315,6 @@ export function SpotifyClientProvider({ children }) {
     }
   };
 
-  // const updateSongHistory = (songs) => {
-  //   // localStorage.removeItem("history");
-  //   // check if local storage can be reached else return
-  //   const songHistory = JSON.parse(localStorage.getItem("history"));
-  //   const date = new Date();
-  //   const dateKey = date.toLocaleDateString();
-
-  //   if (!songHistory) {
-  //     localStorage.setItem("history", JSON.stringify({ [dateKey]: songs }));
-  //   } else {
-  //     if (!songHistory[dateKey]) {
-  //       songHistory[dateKey] = [];
-  //     }
-  //     const songList = [...songHistory[dateKey], ...songs];
-  //     songHistory[dateKey] = songList;
-  //     localStorage.setItem("history", JSON.stringify(songHistory));
-
-  //     setGenerationHistory(songHistory);
-  //   }
-  // };
-
   const loginRequest = async () => {
     window.location.href = "/api/login";
   };
@@ -370,70 +334,11 @@ export function SpotifyClientProvider({ children }) {
     console.log("Logged out.");
   };
 
-  React.useMemo(async () => {
+  useEffect(() => {
     if (_code) {
-      await onSuccessCode(_code);
+      onSuccessCode(_code);
     }
   }, [_code]);
-
-  // const getSongs = async () => {
-  //   setIsLoading(true);
-
-  //   const params = new URLSearchParams();
-
-  //   // const [songDetails, setSongDetails] = useState({
-  //   //   popularity: { min: 0, max: 100 },
-  //   //   acoustics: { min: 0.0, max: 1.0 },
-  //   //   energy: { min: 0.0, max: 1.0 },
-  //   //   vocals: { min: 0.0, max: 1.0 },
-  //   //   danceability: { min: 0.0, max: 1.0 },
-  //   //   mood: { min: 0.0, max: 1.0 },
-  //   // });
-
-  //   params.set("limit", songLimit);
-
-  //   params.set("min_popularity", Math.ceil(songDetails.popularity.min * 100));
-  //   params.set("max_popularity", Math.ceil(songDetails.popularity.max * 100));
-
-  //   params.set("min_energy", songDetails.energy.min);
-  //   params.set("max_energy", songDetails.energy.max);
-
-  //   params.set("min_danceability", songDetails.danceability.min);
-  //   params.set("max_danceability", songDetails.danceability.max);
-
-  //   params.set("min_acousticness", songDetails.acoustics.min);
-  //   params.set("max_acousticness", songDetails.acoustics.max);
-
-  //   params.set("min_speechiness", songDetails.vocals.min);
-  //   params.set("max_speechiness", songDetails.vocals.max);
-
-  //   params.set("min_valence", songDetails.mood.min);
-  //   params.set("max_valence", songDetails.mood.max);
-
-  //   if (!genres.size === 0) {
-  //     const fiveGenres = genres.size > 5 ? genres.slice(0, 5) : genres;
-  //     params.set("genres", Array.from(fiveGenres));
-  //   }
-
-  //   const res = await fetch("/api/random?" + params.toString());
-
-  //   if (!res.ok) {
-  //     setError(await res.json());
-  //     setIsLoading(false);
-  //   } else {
-  //     const data = await res.json();
-  //     // console.log(data);
-
-  //     let song = data.recommendedTracks[0];
-  //     // console.log(song);
-  //     setCurrentSongs(data.recommendedTracks);
-  //     setSelectedSong({ index: 0, song });
-
-  //     updateSongHistory(data.recommendedTracks);
-  //     setIsLoading(false);
-  //     return data;
-  //   }
-  // };
 
   const spotifyClient = {
     // State
