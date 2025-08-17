@@ -79,15 +79,18 @@ export function SpotifyClientProvider({ children }) {
     // gets the user https://api.spotify.com/v1/me
     // https://developer.spotify.com/documentation/web-api/reference/users-profile/get-current-users-profile/
     // needs the access_token and token_type in the request
-    const res = await fetch(`/api/token?code=${_code}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!res.ok) {
-      throw new Error("Failed to fetch token");
-    } else {
+    try {
+      const res = await fetch(`/api/token?code=${_code}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch token");
+      }
+
       const data = await res.json();
       const seconds = data.expires_in;
       data.created_at = new Date();
@@ -95,12 +98,19 @@ export function SpotifyClientProvider({ children }) {
 
       localStorage.setItem("auth", JSON.stringify(data));
       setAuth(data);
-      getSpotifyUser(data);
+
+      await getSpotifyUser(data);
+      // console.log("User data fetched");
+    } catch (error) {
+      console.error("Token call error:", error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false); // Always set loading false
     }
-    // needs error handling;
   };
 
   const getSpotifyUser = async (authData = auth) => {
+    console.log("Fetching user data");
     if (!authData) return;
 
     const res = await fetch("https://api.spotify.com/v1/me", {
@@ -316,6 +326,7 @@ export function SpotifyClientProvider({ children }) {
   };
 
   const loginRequest = async () => {
+    setIsLoading(true);
     window.location.href = "/api/login";
   };
 
@@ -339,6 +350,12 @@ export function SpotifyClientProvider({ children }) {
       onSuccessCode(_code);
     }
   }, [_code]);
+
+  useEffect(() => {
+    if (spotifyUser !== null) {
+      setIsLoading(false);
+    }
+  }, [spotifyUser]);
 
   const spotifyClient = {
     // State
