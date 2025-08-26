@@ -1,38 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useAudio } from "../../../context/audio-context.js";
 
-export default function ProgressBar({
-  isPlaying,
-  currentTime,
-  setCurrentTime,
-  onSongEnd,
-  audioRef, // Add audioRef prop
-}) {
-  const duration = 29;
+export default function ProgressBar() {
+  const { currentTime, duration, seek, setCurrentTime } = useAudio();
   const [isDragging, setIsDragging] = useState(false);
   const progressBarRef = useRef(null);
 
-  useEffect(() => {
-    // Only run the interval if `isPlaying` is true and not dragging
-    if (isPlaying && !isDragging) {
-      const intervalId = setInterval(() => {
-        setCurrentTime((prevTime) => {
-          if (prevTime >= duration) {
-            clearInterval(intervalId);
-            onSongEnd();
-            return duration;
-          }
-          return prevTime + 1;
-        });
-      }, 1000);
-      // Clear the interval when `isPlaying` changes or component unmounts
-      return () => clearInterval(intervalId);
-    }
-  }, [isPlaying, duration, setCurrentTime, onSongEnd, isDragging]);
-
-  const progressPercent = (currentTime / duration) * 100;
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const calculateTimeFromPosition = (clientX) => {
-    if (!progressBarRef.current) return 0;
+    if (!progressBarRef.current || duration === 0) return 0;
     const rect = progressBarRef.current.getBoundingClientRect();
     const clickX = clientX - rect.left;
     const width = rect.width;
@@ -40,27 +17,19 @@ export default function ProgressBar({
       0,
       Math.min(duration, (clickX / width) * duration),
     );
-    return Math.floor(newTime);
+    return newTime;
   };
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
     const newTime = calculateTimeFromPosition(e.clientX);
-    setCurrentTime(newTime);
-    // Seek audio to new position
-    if (audioRef?.current) {
-      audioRef.current.currentTime = newTime;
-    }
+    seek(newTime);
   };
 
   const handleMouseMove = (e) => {
     if (isDragging) {
       const newTime = calculateTimeFromPosition(e.clientX);
-      setCurrentTime(newTime);
-      // Seek audio to new position while dragging
-      if (audioRef?.current) {
-        audioRef.current.currentTime = newTime;
-      }
+      seek(newTime);
     }
   };
 
@@ -81,13 +50,20 @@ export default function ProgressBar({
     }
   }, [isDragging]);
 
+  // format time helper
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+  };
+
   return (
     <div
       id="progress-bar-container"
       className="flex items-center gap-3 text-gray-600 w-full"
     >
       <span className="text-sm md:text-xs font-mono min-w-[32px]">
-        0:{String(currentTime).padStart(2, "0")}
+        {formatTime(currentTime)}
       </span>
 
       {/* Progress Bar */}
@@ -116,7 +92,9 @@ export default function ProgressBar({
         />
       </div>
 
-      <span className="text-sm md:text-xs font-mono min-w-[32px]">0:30</span>
+      <span className="text-sm md:text-xs font-mono min-w-[32px]">
+        {formatTime(duration)}
+      </span>
     </div>
   );
 }
