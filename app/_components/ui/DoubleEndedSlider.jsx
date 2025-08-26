@@ -8,7 +8,6 @@ export default function DoubleEndedSlider({
 }) {
   const [localMin, setLocalMin] = useState(value.min);
   const [localMax, setLocalMax] = useState(value.max);
-  console.log("des", valueStrings);
 
   useEffect(() => {
     setLocalMin(value.min);

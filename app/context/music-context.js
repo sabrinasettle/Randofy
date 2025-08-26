@@ -108,9 +108,9 @@ export function MusicProvider({ children }) {
     params.set("min_valence", songDetails.mood.min);
     params.set("max_valence", songDetails.mood.max);
 
-    if (!genres.size === 0) {
+    if (genres.size !== 0) {
       const fiveGenres = genres.size > 5 ? genres.slice(0, 5) : genres;
-      params.set("genres", Array.from(fiveGenres));
+      params.set("seed_genres", Array.from(fiveGenres));
     }
 
     const res = await fetch("/api/random?" + params.toString());
