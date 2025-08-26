@@ -159,7 +159,6 @@ export default function GenresSection({ navigateBack, selectedGenres }) {
       newSelected.add(genre);
     }
     musicContext.setGenres(newSelected);
-    console.log("selectedGenres", musicContext.genres);
   };
 
   // Memoize the selected count calculations to avoid recalculating on each render
