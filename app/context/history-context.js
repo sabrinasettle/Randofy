@@ -5,7 +5,6 @@ import {
   getThisMonth,
   getPast6Months,
 } from "../utils/getDates.js";
-import { networkInterfaces } from "os";
 
 const HistoryContext = createContext();
 
