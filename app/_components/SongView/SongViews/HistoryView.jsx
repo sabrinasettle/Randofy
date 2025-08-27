@@ -7,7 +7,6 @@ import ScrollingTitle from "../../ui/ScrollingTitle.jsx";
 import { ArrowRight, ArrowLeft, X } from "lucide-react";
 import Image from "next/image";
 import AudioFeatureTabs from "../AudioFeatureTabs.jsx";
-import { hsla } from "motion";
 
 export default function HistoryView() {
   const { styleContext } = useStyleContext();
