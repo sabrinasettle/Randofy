@@ -206,7 +206,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
         <div className="space-y-0">
           {/* Song Details */}
-          {/* <div>
+          <div>
             <button
               onClick={() => navigateToPanel("songDetails")}
               className="group w-full h-12 bg-gray-000 hover:text-gray-700 border-t border-gray-200 flex items-center justify-between px-0 transition-colors"
@@ -236,7 +236,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
                 />
               </div>
             )}
-          </div>*/}
+          </div>
 
           {/* Genres */}
           <div>

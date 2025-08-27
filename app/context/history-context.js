@@ -41,6 +41,15 @@ export const HistoryProvider = ({ children }) => {
     mood: { min: 0.0, max: 1.0 },
   });
 
+  const defaultFilter = {
+    popularity: { min: 0, max: 1.0 },
+    acoustics: { min: 0.0, max: 1.0 },
+    energy: { min: 0.0, max: 1.0 },
+    vocals: { min: 0.0, max: 1.0 },
+    danceability: { min: 0.0, max: 1.0 },
+    mood: { min: 0.0, max: 1.0 },
+  };
+
   useEffect(() => {
     const history = JSON.parse(localStorage.getItem("history"));
     if (history) {
@@ -166,12 +175,23 @@ export const HistoryProvider = ({ children }) => {
     });
   }
 
+  // Fixed function - compare against defaultFilter instead of itself
+  const isAudioFeatureFilterActive = (currentFilter) => {
+    return Object.keys(currentFilter).some((key) => {
+      const { min, max } = currentFilter[key];
+      return min !== defaultFilter[key].min || max !== defaultFilter[key].max;
+    });
+  };
+
   function lengthPrediction(genres, dateRange, featureFilters) {
     let songs = songHistory.allSongsChronological;
     songs = filterByDate(dateRange, songs);
     songs = filterByGenres(genres, songs);
-    // issue here because it returns 0 on having default values
-    // songs = filterBySongFeatures(featureFilters, songs);
+
+    // Only apply feature filtering if any filter has been changed from default
+    if (isAudioFeatureFilterActive(featureFilters)) {
+      songs = filterBySongFeatures(featureFilters, songs);
+    }
     return songs.length;
   }
 
