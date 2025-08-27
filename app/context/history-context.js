@@ -176,11 +176,6 @@ export const HistoryProvider = ({ children }) => {
   }
 
   function moveForward(index) {
-    console.log(
-      "Moving forward",
-      index,
-      songHistory.allSongsChronological[index + 1],
-    );
     if (index < songHistory.allSongsChronological.length - 1) {
       let newIndex = index + 1;
       setSelectedSong({
@@ -191,7 +186,6 @@ export const HistoryProvider = ({ children }) => {
   }
 
   function moveBackward(index) {
-    console.log("Moving backward", index);
     if (index > 0) {
       let newIndex = index - 1;
       setSelectedSong({
