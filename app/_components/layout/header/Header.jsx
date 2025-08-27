@@ -29,10 +29,16 @@ export default function Nav() {
         >
           History
         </Link>
+        <Link
+          href="/information"
+          className={`font-body ${pathname === "/information" ? "text-gray-700" : "text-gray-600"} text-body-md hover:text-gray-700 transition-all duration-300 ease-in`}
+        >
+          Info
+        </Link>
       </div>
       <div className="flex flex-row items-center gap-2">
         <AuthButton />
-        <InformationLink />
+        {/* <InformationLink />*/}
       </div>
     </nav>
   );
