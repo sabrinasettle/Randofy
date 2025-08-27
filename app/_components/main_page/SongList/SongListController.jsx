@@ -13,7 +13,7 @@ export default function SongListController({}) {
   return (
     <div className="flex flex-col items-center md:h-full w-screen">
       {/* Index number */}
-      <div className="text-gray-600 font-mono text-body-md font-normal md:mb-1">
+      <div className="text-gray-600 font-mono text-body-md font-normal md:mb-2">
         {index} / {songs.length}
       </div>
 
