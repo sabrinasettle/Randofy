@@ -20,9 +20,9 @@ export default function RandofyContent() {
   function showItem() {
     if (musicContext.isLoading)
       return (
-        <div className="w-full flex justify-center items-center">
-          <LoadingBall isLoading={musicContext.isLoading} />
-        </div>
+        // <div className="w-full flex justify-center items-center h-[80%]">
+        <LoadingBall isLoading={musicContext.isLoading} />
+        // </div>
       );
     else if (musicContext.currentSongs.length !== 0)
       return (
