@@ -4,6 +4,7 @@ import { useSongViewContext } from "../../context/song-view-context";
 import { useHistoryContext } from "../../context/history-context";
 import { createArtists } from "../../utils/createArtists";
 import ScrollingTitle from "../ui/ScrollingTitle";
+import { ArrowUpRight } from "lucide-react";
 
 export default function SongCard({ song, index }) {
   const { songViewContext } = useSongViewContext();
@@ -67,25 +68,35 @@ export default function SongCard({ song, index }) {
         <p className="truncate">{song.album_name}</p>
       </div> */}
 
-      <div className={`hidden md:group-hover:block pr-5`}>
-        <p className="text-body-sm md:text-body-md font-normal text-gray-500">
+      <div className={`hidden md:group-hover:flex pr-5 gap-2`}>
+        <p className="text-body-sm md:text-body-md font-normal text-gray-600">
           Click to see details
         </p>
+        <ArrowUpRight className="text-gray-600" />
       </div>
     </li>
   );
 
   const squareItem = (
-    <li onClick={openSelectedSong} className="font-body w-full cursor-pointer">
+    <li
+      onClick={openSelectedSong}
+      className="font-body w-full cursor-pointer group"
+    >
       {/* Mobile: responsive square sizing - 2 columns on mobile, maintains desktop size on larger screens */}
-      <div className="relative bg-gray-100 borderborder-gray-100 aspect-square min-w-[120px]">
+      <div className="relative bg-gray-100 border border-gray-100 aspect-square min-w-[120px] overflow-hidden transition-all duration-300 ease-out group-hover:scale-[1.02]">
         <Image
           src={song.album_image.url}
           fill
           alt={alt}
-          className="object-cover"
+          className="object-cover transition-all duration-300 ease-out group-hover:scale-105"
           sizes="(max-width: 640px) 50vw, (max-width: 768px) 160px, (max-width: 1024px) 192px, 224px"
         />
+        {/* Play button in bottom left */}
+        <div className="absolute bottom-2 right-2 opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0">
+          <button className="bg-gray-100 backdrop-blur-sm rounded-full p-2 shadow-lg">
+            <ArrowUpRight />
+          </button>
+        </div>
       </div>
     </li>
   );
