@@ -5,6 +5,7 @@ import {
   getThisMonth,
   getPast6Months,
 } from "../utils/getDates.js";
+import { networkInterfaces } from "os";
 
 const HistoryContext = createContext();
 
@@ -175,6 +176,32 @@ export const HistoryProvider = ({ children }) => {
     return songs.length;
   }
 
+  function moveForward(index) {
+    console.log(
+      "Moving forward",
+      index,
+      songHistory.allSongsChronological[index + 1],
+    );
+    if (index < songHistory.allSongsChronological.length - 1) {
+      let newIndex = index + 1;
+      setSelectedSong({
+        index: newIndex,
+        song: songHistory.allSongsChronological[newIndex],
+      });
+    }
+  }
+
+  function moveBackward(index) {
+    console.log("Moving backward", index);
+    if (index > 0) {
+      let newIndex = index - 1;
+      setSelectedSong({
+        index: newIndex,
+        song: songHistory.allSongsChronological[newIndex],
+      });
+    }
+  }
+
   const historyContext = {
     isLoading,
     // Songs
@@ -201,6 +228,9 @@ export const HistoryProvider = ({ children }) => {
     visibleCount,
     setVisibleCount,
     loadMoreSongs,
+    //portal
+    moveForward,
+    moveBackward,
   };
 
   const context = {
