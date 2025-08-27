@@ -155,21 +155,29 @@ export default function AudioFeatureTabs({ song }) {
                 <span>Year:</span>
                 <span className="text-gray-700">{formatYear(song)}</span>
               </div>
+              <div className="flex gap-2 text-gray-600 text-sm">
+                <span>Randomized On:</span>
+                <span className="text-gray-700">{song.date}</span>
+              </div>
             </div>
           </div>
           {/* Song genres */}
           <div className="flex flex-col gap-2">
             <span className="text-sm font-medium text-gray-700">Genres:</span>
-            <div className="flex flex-wrap gap-2">
-              {song.genres.map((g, i) => (
-                <span
-                  key={i}
-                  className="text-sm text-gray-700 bg-gray-200 px-3 py-1 rounded-sm"
-                >
-                  {g}
-                </span>
-              ))}
-            </div>
+            {song.genres.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {song.genres.map((g, i) => (
+                  <span
+                    key={i}
+                    className="text-sm text-gray-700 bg-gray-200 px-3 py-1 rounded-sm"
+                  >
+                    {g}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <span className="text-sm text-gray-700">No genres available</span>
+            )}
           </div>
         </div>
       ),
