@@ -117,7 +117,7 @@ export default function DefaultView() {
               <div className="w-full lg:w-[48%] md:pt-8 md:pb-6 pt-6">
                 <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2">
                   <div>
-                    <div className="pt-2">
+                    <div className="pt-4 md:pt-6">
                       <ScrollingTitle
                         text={song.track_name}
                         className="text-gray-700 font-medium text-heading-5"

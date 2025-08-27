@@ -1,8 +1,5 @@
-import { useState } from "react";
 import { createPortal } from "react-dom";
 import { createArtists } from "../../../utils/createArtists.js";
-import { useSongViewContext } from "../../../context/song-view-context.js";
-import { useMusicContext } from "../../../context/music-context.js";
 import { useStyleContext } from "../../../context/style-context.js";
 import { useHistoryContext } from "../../../context/history-context.js";
 import AudioPlayer from "../AudioPlayer/AudioPlayer.jsx";
@@ -15,6 +12,7 @@ export default function HistoryView() {
   const { styleContext } = useStyleContext();
   const { historyContext } = useHistoryContext();
   const song = historyContext.selectedSong.song;
+  const index = historyContext.selectedSong.index;
   const isOpen = historyContext.isDetailsOpen; // true = detailed view, false = not detailed
   const isMobile = styleContext.isMobile;
 
@@ -60,13 +58,13 @@ export default function HistoryView() {
               <div className="flex flex-row justify-between md:justify-end gap-3">
                 <div className="flex flex-row">
                   <button
-                    // onClick={() => musicContext.moveBackward()}
+                    onClick={() => historyContext.moveBackward(index)}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
                     <ArrowLeft size={iconSize} />
                   </button>
                   <button
-                    // onClick={() => musicContext.moveForward()}
+                    onClick={() => historyContext.moveForward(index)}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
                     <ArrowRight size={iconSize} />
@@ -113,7 +111,7 @@ export default function HistoryView() {
               <div className="w-full lg:w-[48%] md:pt-8 md:pb-6 pt-6">
                 <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2">
                   <div>
-                    <div className="pt-2">
+                    <div className="pt-4 md:pt-6">
                       <ScrollingTitle
                         text={song.track_name}
                         className="text-gray-700 font-medium text-heading-5"
