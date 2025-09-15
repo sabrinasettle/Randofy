@@ -4,7 +4,7 @@ import { useSpotifyContext } from "../../context/spotify-context";
 import { useMusicContext } from "../../context/music-context";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import SongListController from "./SongList/SongListController";
-import LoadingBall from "../ui/loading/LoadingBall";
+import Loader from "../ui/loading/Loader";
 import ButtonsContainer from "./ButtonsContainer";
 
 export default function RandofyContent() {
@@ -19,16 +19,10 @@ export default function RandofyContent() {
 
   function showItem() {
     if (musicContext.isLoading)
-      return (
-        // <div className="w-full flex justify-center items-center h-[80%]">
-        <LoadingBall isLoading={musicContext.isLoading} />
-        // </div>
-      );
+      return <Loader isLoading={musicContext.isLoading} />;
     else if (musicContext.currentSongs.length !== 0)
       return (
         <div className="w-full flex justify-end items-center sm:mt-8 md:mt-0">
-          {/* <LoadingBall isLoading={true} /> */}
-          {/* <AlbumCarousel songs={spotifyClient.currentSongs} /> */}
           <SongListController />
         </div>
       );

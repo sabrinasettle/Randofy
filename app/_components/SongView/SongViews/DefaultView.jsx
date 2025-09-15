@@ -34,7 +34,7 @@ export default function DefaultView() {
   const getContainerStyles = () => {
     return {
       className:
-        "w-full flex flex-col justify-between min-h-[180px] lg:w-[564px] lg:min-h-[160px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
+        "w-full flex flex-col justify-between min-h-[180px] md:w-[564px] lg:min-h-[160px] p-3 border border-gray-200 rounded-sm backdrop-blur-sm",
       style: {
         // backgroundImage: `radial-gradient(at 50% 45%, ${promColor}${alpha}, #0A0A0A 80%)`,
       },
@@ -117,7 +117,7 @@ export default function DefaultView() {
               <div className="w-full lg:w-[48%] md:pt-8 md:pb-6 pt-6">
                 <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2">
                   <div>
-                    <div className="pt-2">
+                    <div className="pt-4 md:pt-6">
                       <ScrollingTitle
                         text={song.track_name}
                         className="text-gray-700 font-medium text-heading-5"
@@ -159,7 +159,7 @@ export default function DefaultView() {
   const preview = song.preview_url;
 
   return (
-    <>
+    <div className="w-full flex justify-center p-4">
       {/* Compact player - only shows when not in full-screen mode */}
       <div className={containerStyles.className} style={containerStyles.style}>
         <div>
@@ -188,6 +188,6 @@ export default function DefaultView() {
 
       {/* Full-screen player rendered via portal */}
       {renderFullScreenPlayer()}
-    </>
+    </div>
   );
 }

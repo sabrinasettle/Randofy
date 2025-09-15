@@ -1,99 +1,67 @@
-"use client";
-import { useState, useEffect, useRef } from "react";
-import { useSongViewContext } from "../../../context/song-view-context.js";
-import { useSpotifyContext } from "../../../context/spotify-context";
-import { useToast } from "../../../context/toast-context";
-
-import Controls from "./Controls/Controls.jsx";
+import React, { useEffect } from "react";
+import { useAudio } from "../../../context/audio-context.js";
 import ProgressBar from "./ProgressBar.jsx";
-import { Share2, Plus, Eye } from "lucide-react";
-import Tooltip from "../../ui/ToolTip.jsx";
+import Controls from "./Controls/Controls.jsx";
 import AddSongButton from "./AddSongButton.jsx";
 import ShareButton from "./ShareButton.jsx";
 import OpenDetailsButton from "./OpenDetailsButton.jsx";
+import { useSongViewContext } from "../../../context/song-view-context.js";
 
 export default function AudioPlayer({ song }) {
   const { songViewContext } = useSongViewContext();
-  const { spotifyClient } = useSpotifyContext();
-  const { showToast } = useToast();
-  const { spotifyUser } = spotifyClient;
+  const { isPlaying, setIsPlaying, play, pause, currentTime, setSong } =
+    useAudio();
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [openInformation, setOpenInformation] = useState(false);
-  const audioRef = useRef(null);
-  const [currentTime, setCurrentTime] = useState(0);
-  const isMobile = songViewContext.isMobile;
   const isDefault = songViewContext.isDefault;
-  const areDrawersOpen = songViewContext.drawersOpen;
-  const isOpen = songViewContext.isDetailsOpen; // true = detailed view, false = not detailed
+  const isOpen = songViewContext.isDetailsOpen;
 
-  // Reset currentTime and stop playing when song changes
+  // when song prop changes, tell context
   useEffect(() => {
-    setCurrentTime(0);
-    setIsPlaying(false);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  }, [song]); // Add song as dependency
+    setSong(song);
+  }, [song, setSong]);
 
-  function onSongEnd() {
-    setCurrentTime(0);
-    setIsPlaying(false);
-  }
-
-  function playAudio() {
-    if (audioRef.current && !isPlaying) {
-      setIsPlaying(true);
-      audioRef.current.play();
+  const togglePlay = () => {
+    if (isPlaying) {
+      pause();
     } else {
-      setIsPlaying(false);
-      audioRef.current.pause();
+      play();
     }
-  }
-
-  //If the audio file is hosted on a different domain than your React app, you may need to configure Cross-Origin Resource Sharing (CORS) on the server serving the audio file.
-  const preview = song.preview_url;
+  };
 
   return (
-    <div className={`flex-1 pt-0`}>
-      {preview ? (
+    <div className="flex-1 pt-0">
+      {song.preview_url ? (
         <div className="w-full pb-4 md:pb-3">
           <ProgressBar
             isPlaying={isPlaying}
-            onSongEnd={onSongEnd}
             currentTime={currentTime}
-            setCurrentTime={setCurrentTime}
-            audioRef={audioRef}
+            // pass seek if ProgressBar needs it
           />
-          <audio ref={audioRef} src={preview} />
         </div>
       ) : (
-        <div
-          className={`flex flex-row justify-between flex-1 pt-0 text-gray-600`}
-        >
+        <div className="flex flex-row justify-between flex-1 pt-0 text-gray-600">
           <a
             className="font-body text-body-lg md:text-body-sm pt-2 pb-2 hover:text-gray-700"
-            id="open-spotify"
             href={song.href}
           >
             Open in Spotify
           </a>
         </div>
       )}
-      {/* Controls Component */}
+
       <div
         className={`w-full flex flex-row items-center ${isDefault ? `justify-between` : `pb-5`}`}
       >
         <div
-          className={`flex flex-row items-center ${isDefault ? `gap-2` : `justify-between w-full gap-0`}`}
+          className={`flex flex-row items-center ${
+            isDefault ? `gap-2` : `justify-between w-full gap-0`
+          }`}
         >
-          {preview && <Controls isPlaying={isPlaying} playAudio={playAudio} />}
+          {song.preview_url && (
+            <Controls isPlaying={isPlaying} playAudio={togglePlay} />
+          )}
           <div className="flex flex-row gap-1">
-            {/* If Logged in have the button available */}
-            {/* toast suggesting to be logged in iif not? */}
             <AddSongButton song={song} />
-
             <ShareButton song={song} />
           </div>
         </div>

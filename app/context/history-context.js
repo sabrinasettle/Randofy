@@ -175,6 +175,26 @@ export const HistoryProvider = ({ children }) => {
     return songs.length;
   }
 
+  function moveForward(index) {
+    if (index < songHistory.allSongsChronological.length - 1) {
+      let newIndex = index + 1;
+      setSelectedSong({
+        index: newIndex,
+        song: songHistory.allSongsChronological[newIndex],
+      });
+    }
+  }
+
+  function moveBackward(index) {
+    if (index > 0) {
+      let newIndex = index - 1;
+      setSelectedSong({
+        index: newIndex,
+        song: songHistory.allSongsChronological[newIndex],
+      });
+    }
+  }
+
   const historyContext = {
     isLoading,
     // Songs
@@ -201,6 +221,9 @@ export const HistoryProvider = ({ children }) => {
     visibleCount,
     setVisibleCount,
     loadMoreSongs,
+    //portal
+    moveForward,
+    moveBackward,
   };
 
   const context = {

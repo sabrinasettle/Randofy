@@ -5,7 +5,7 @@ import { useSongViewContext } from "../../context/song-view-context";
 import { useMusicContext } from "../../context/music-context";
 import { useHistoryContext } from "../../context/history-context";
 import CardLayoutOptions from "./PageHeader/CardLayoutOptions";
-import LoadingBall from "../ui/loading/LoadingBall";
+import Loader from "../ui/loading/Loader";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import PaginatedHistory from "./PaginatedHistory";
 import HistoryView from "../SongView/SongViews/HistoryView";
@@ -46,7 +46,7 @@ export default function HistoryContent() {
   return (
     <div
       id="history-content"
-      className="flex flex-col px-3 pt-[72px] md:px-4 pb-2"
+      className={`flex flex-col px-3 pt-[72px] md:px-4 pb-2 ${isLoading ? "h-screen" : "h-full"}`}
     >
       <div className="flex flex-col h-full ">
         <div className="flex flex-row w-full justify-between">
@@ -63,10 +63,12 @@ export default function HistoryContent() {
           </button>
         </div>
         {isLoading ? (
+          // <div className="w-full h-full flex justify-center items-center">
           <div className="w-full h-full flex justify-center items-center">
-            <LoadingBall isLoading={isLoading} />
+            <Loader isLoading={isLoading} />
           </div>
-        ) : !isLoading && (!history || isEmptyObject(history)) ? (
+        ) : // </div>
+        !isLoading && (!history || isEmptyObject(history)) ? (
           <div className="w-full flex justify-center items-center text-gray-700">
             <p>No History Yet! Lets get you started!</p>
           </div>

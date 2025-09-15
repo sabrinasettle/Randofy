@@ -30,7 +30,7 @@ function CollapsingCircles() {
   );
 }
 
-export default function LoadingBall({ isLoading }) {
+export default function Loader({ isLoading }) {
   return (
     <div className="w-full flex items-center justify-center h-[80%]">
       <Canvas camera={{ position: [0, 0, 4], fov: 60 }}>
