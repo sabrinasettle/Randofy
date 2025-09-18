@@ -283,7 +283,10 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 h-full flex justify-end">
-      <div className="absolute inset-0" onClick={onClose} />
+      <div
+        className="hidden md:block absolute inset-0 bg-gray-000 opacity-50 blur-2xl"
+        onClick={onClose}
+      />
       <div
         className={`relative w-full md:w-lg h-full bg-gray-000 transform transition-transform duration-500 [ease:cubic-bezier(0.16,1,0.3,1)] ${
           animateIn ? "translate-x-0" : "translate-x-full"

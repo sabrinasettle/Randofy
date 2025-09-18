@@ -77,8 +77,10 @@ export default function PaginatedHistory() {
   };
 
   return (
-    <div className="flex flex-col justify-center mt-4">
-      <div className="space-y-6">
+    <div className="flex flex-col justify-center mt-4 px-4">
+      <div
+        className={`space-y-6 ${paginatedSongs.length >= visibleCount ? "pb-0" : "pb-24"}`}
+      >
         {Object.entries(groupedByDate).map(([date, songs]) => (
           <div className="text-gray-700" key={`${date}`}>
             <h2 className="font-body text-heading-2 lg:text-heading-1 font-semibold mb-8 mt-20">
@@ -98,9 +100,15 @@ export default function PaginatedHistory() {
         ))}
       </div>
       {paginatedSongs.length >= visibleCount && (
-        <div className="flex justify-between w-full pt-6 pb-20">
-          <p className="font-mono text-gray-700">{progressString}</p>
-          <button className="font-mono text-gray-700" onClick={loadMoreSongs}>
+        <div className="flex justify-between w-full pt-8 pb-8">
+          <p className="text-body-md font-mono text-gray-700">
+            {progressString}
+          </p>
+
+          <button
+            className="text-body-md font-mono text-gray-600 hover:text-gray-700 mr-33"
+            onClick={loadMoreSongs}
+          >
             Load More
           </button>
         </div>

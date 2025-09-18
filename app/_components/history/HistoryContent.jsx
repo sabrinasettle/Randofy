@@ -87,7 +87,7 @@ export default function HistoryContent() {
 
         {!isAtTop && (
           <button
-            className="z-30 fixed bottom-6 right-6 bg-[#191919e6] text-gray-700 font-body text-body-md px-2 py-1 rounded-sm border border-transparent hover:border-gray-400 transition-all duration-400 ease-in-out"
+            className="z-30 fixed bottom-6 right-4 bg-[#191919e6] text-gray-700 font-body text-body-md px-4 py-2 rounded-sm border border-transparent hover:border-gray-400 transition-all duration-400 ease-in-out"
             onClick={handleBackToTop}
           >
             Back To Top

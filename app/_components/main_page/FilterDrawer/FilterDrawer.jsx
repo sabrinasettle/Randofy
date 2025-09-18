@@ -11,7 +11,6 @@ export default function FilterDrawer({ isOpen, onClose }) {
   const [activePanel, setActivePanel] = useState("main");
   const [isVisible, setIsVisible] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
-
   const songDetailsFilters = musicContext.songDetails;
   const selectedGenres = musicContext.genres;
   const sliderValue = musicContext.songLimit;
@@ -340,8 +339,10 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 h-full flex justify-end">
-      {/* Backdrop for main content */}
-      <div className="absolute inset-0" onClick={onClose}></div>
+      <div
+        className="hidden md:block absolute inset-0 bg-gray-000 opacity-50 blur-2xl"
+        onClick={onClose}
+      />
 
       {/* Drawer Container */}
       <div
