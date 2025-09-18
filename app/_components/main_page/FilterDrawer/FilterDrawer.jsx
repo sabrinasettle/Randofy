@@ -341,7 +341,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-50 h-full flex justify-end">
       {/* Backdrop for main content */}
-      <div className="absolute inset-0" onClick={onClose} />
+      <div className="absolute inset-0" onClick={onClose}></div>
 
       {/* Drawer Container */}
       <div
