@@ -158,7 +158,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const changedSongDetailsCount = useMemo(() => {
-    console.log("changedSongDetailsCount", tempSongFeaturesFilters);
+    // console.log("changedSongDetailsCount", tempSongFeaturesFilters);
     return Object.keys(tempSongFeaturesFilters).filter((key) => {
       const current = tempSongFeaturesFilters[key];
       const defaultRange = defaultFilters[key];

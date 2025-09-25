@@ -21,8 +21,6 @@ export default function PaginatedHistory() {
   const isMobile = useIsMobile();
 
   const paginatedSongs = useMemo(() => {
-    console.log("total for pagination", history.totalSongs);
-
     let filteredSongs = history.allSongsChronological;
     if (dateRangeFilter !== "All") {
       filteredSongs = historyContext.filterByDate();

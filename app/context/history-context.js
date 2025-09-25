@@ -66,7 +66,6 @@ export const HistoryProvider = ({ children }) => {
   }, []);
 
   function openDetails() {
-    console.log("openDetails");
     setIsDetailsOpen(true);
   }
 
@@ -124,7 +123,7 @@ export const HistoryProvider = ({ children }) => {
       }
     }
 
-    console.log(`Filtered ${results.length} / ${songs.length} songs.`);
+    // console.log(`Filtered ${results.length} / ${songs.length} songs.`);
     return results;
   }
 
