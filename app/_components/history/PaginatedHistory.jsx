@@ -19,32 +19,74 @@ export default function PaginatedHistory() {
 
   const history = historyContext.songHistory;
   const isMobile = useIsMobile();
-  const progressString = `${Math.min(
-    visibleCount,
-    history.totalSongs,
-  )} / ${history.totalSongs}`;
 
   const paginatedSongs = useMemo(() => {
-    console.log("total", history.totalSongs);
-
     let filteredSongs = history.allSongsChronological;
     if (dateRangeFilter !== "All") {
       filteredSongs = historyContext.filterByDate();
     }
 
     if (genreFilters.size !== 0) {
-      console.log(genreFilters, filteredSongs.length);
       const genreArray = [...genreFilters];
       filteredSongs = filteredSongs.filter((song) =>
         song.genres.some((genre) => genreArray.includes(genre)),
       );
     }
 
+    // add filters for features - songFeaturesFilters
+    // feature filters
+    //
+    const featureKeyMap = {
+      acoustic: "acousticness",
+      instrumental: "instrumentalness",
+      popularity: "popularity", // stays the same
+      energy: "energy",
+      vocals: "speechiness",
+      danceability: "danceability",
+      mood: "valence",
+    };
+
+    if (songFeaturesFilters && Object.keys(songFeaturesFilters).length > 0) {
+      const activeFilters = Object.entries(songFeaturesFilters).filter(
+        ([, { min, max }]) => min !== 0.0 || max !== 1.0,
+      );
+
+      if (activeFilters.length > 0) {
+        filteredSongs = filteredSongs.filter((song) => {
+          for (const [feature, { min, max }] of activeFilters) {
+            const spotifyKey = featureKeyMap[feature] || feature;
+
+            const raw =
+              feature === "popularity"
+                ? song[feature] / 100
+                : song.audioFeatures?.[spotifyKey];
+
+            if (raw == null) continue; // skip missing features
+
+            const value = typeof raw === "number" ? raw : Number(raw);
+            if (value < min || value > max) return false; // fail fast
+          }
+          return true;
+        });
+      }
+    }
+
     if (filteredSongs.length !== 0 && filteredSongs)
       filteredSongs = filteredSongs.slice(0, visibleCount);
 
     return filteredSongs;
-  }, [history, visibleCount, genreFilters, dateRangeFilter]);
+  }, [
+    history,
+    visibleCount,
+    genreFilters,
+    dateRangeFilter,
+    songFeaturesFilters,
+  ]);
+
+  const progressString = `${Math.min(
+    visibleCount,
+    paginatedSongs.length,
+  )} / ${paginatedSongs.length}`;
 
   const groupedByDate = useMemo(() => {
     return paginatedSongs.reduce((acc, song) => {
@@ -79,7 +121,7 @@ export default function PaginatedHistory() {
   return (
     <div className="flex flex-col justify-center mt-4 px-4">
       <div
-        className={`space-y-6 ${paginatedSongs.length >= visibleCount ? "pb-0" : "pb-24"}`}
+        className={`space-y-6 ${paginatedSongs.length >= visibleCount ? "pb-0" : "pb-8"}`}
       >
         {Object.entries(groupedByDate).map(([date, songs]) => (
           <div className="text-gray-700" key={`${date}`}>
@@ -99,20 +141,21 @@ export default function PaginatedHistory() {
           </div>
         ))}
       </div>
-      {paginatedSongs.length >= visibleCount && (
-        <div className="flex justify-between w-full pt-8 pb-8">
-          <p className="text-body-md font-mono text-gray-700">
-            {progressString}
-          </p>
+      {/* {paginatedSongs.length >= visibleCount && (*/}
+      <div className="flex justify-between w-full pt-8 pb-8">
+        <p className="text-body-md font-mono text-gray-700">{progressString}</p>
 
+        {Math.min(visibleCount, paginatedSongs.length) !==
+          paginatedSongs.length && (
           <button
             className="text-body-md font-mono text-gray-600 hover:text-gray-700 mr-33"
             onClick={loadMoreSongs}
           >
             Load More
           </button>
-        </div>
-      )}
+        )}
+      </div>
+      {/* )}*/}
     </div>
   );
 }

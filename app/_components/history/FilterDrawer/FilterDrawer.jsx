@@ -90,7 +90,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
   const removeSongDetailFilter = (filterName) => {
     if (!filterName || !defaultFilters[filterName]) return;
-    tempSongFeaturesFilters((prev) => ({
+    setTempSongFeaturesFilters((prev) => ({
       ...prev,
       [filterName]: { ...defaultFilters[filterName] },
     }));
@@ -158,7 +158,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
   };
 
   const changedSongDetailsCount = useMemo(() => {
-    console.log("changedSongDetailsCount", tempSongFeaturesFilters);
+    // console.log("changedSongDetailsCount", tempSongFeaturesFilters);
     return Object.keys(tempSongFeaturesFilters).filter((key) => {
       const current = tempSongFeaturesFilters[key];
       const defaultRange = defaultFilters[key];
@@ -183,6 +183,15 @@ export default function FilterDrawer({ isOpen, onClose }) {
     return changedFilters;
   }, [tempSongFeaturesFilters]);
 
+  //get a total of filters changed
+  const totalChangedFilters = useMemo(() => {
+    return changedSongDetailsCount + selectedGenres.size;
+  }, [changedSongDetailsCount, selectedGenres]);
+
+  useEffect(() => {
+    historyContext.setFiltersTotal(totalChangedFilters);
+  }, [totalChangedFilters]);
+
   if (!isVisible) return null;
 
   const renderMainView = () => (
@@ -206,7 +215,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
 
         <div className="space-y-0">
           {/* Song Details */}
-          {/* <div>
+          <div>
             <button
               onClick={() => navigateToPanel("songDetails")}
               className="group w-full h-12 bg-gray-000 hover:text-gray-700 border-t border-gray-200 flex items-center justify-between px-0 transition-colors"
@@ -236,7 +245,7 @@ export default function FilterDrawer({ isOpen, onClose }) {
                 />
               </div>
             )}
-          </div>*/}
+          </div>
 
           {/* Genres */}
           <div>

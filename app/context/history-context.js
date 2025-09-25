@@ -33,13 +33,15 @@ export const HistoryProvider = ({ children }) => {
   const [dateRangeFilter, setDateRangeFilter] = useState("All");
   const [genreFilters, setGenreFilters] = useState(new Set());
   const [songFeaturesFilters, setSongFeaturesFilters] = useState({
-    popularity: { min: 0, max: 1.0 },
+    popularity: { min: 0.0, max: 1.0 },
     acoustics: { min: 0.0, max: 1.0 },
     energy: { min: 0.0, max: 1.0 },
     vocals: { min: 0.0, max: 1.0 },
     danceability: { min: 0.0, max: 1.0 },
     mood: { min: 0.0, max: 1.0 },
   });
+
+  const [filtersTotal, setFiltersTotal] = useState(0);
 
   useEffect(() => {
     const history = JSON.parse(localStorage.getItem("history"));
@@ -64,7 +66,6 @@ export const HistoryProvider = ({ children }) => {
   }, []);
 
   function openDetails() {
-    console.log("openDetails");
     setIsDetailsOpen(true);
   }
 
@@ -122,7 +123,7 @@ export const HistoryProvider = ({ children }) => {
       }
     }
 
-    console.log(`Filtered ${results.length} / ${songs.length} songs.`);
+    // console.log(`Filtered ${results.length} / ${songs.length} songs.`);
     return results;
   }
 
@@ -157,21 +158,59 @@ export const HistoryProvider = ({ children }) => {
     );
   }
 
+  const featureKeyMap = {
+    acoustic: "acousticness",
+    instrumental: "instrumentalness",
+    popularity: "popularity", // stays the same
+    energy: "energy",
+    vocals: "speechiness",
+    danceability: "danceability",
+    mood: "valence",
+  };
+
+  function getActiveFilters(featureFilters) {
+    const active = {};
+    for (const [feature, { min, max }] of Object.entries(
+      featureFilters || {},
+    )) {
+      if (min !== 0.0 || max !== 1.0) {
+        active[feature] = { min, max };
+      }
+    }
+    return active;
+  }
+
   function filterBySongFeatures(featureFilters, songs) {
+    const activeFilters = getActiveFilters(featureFilters);
+    if (Object.keys(activeFilters).length === 0) return songs;
+
     return songs.filter((song) => {
-      return Object.entries(featureFilters).every(([feature, { min, max }]) => {
-        const value = song[feature];
-        return typeof value === "number" && value >= min && value <= max;
-      });
+      for (const [feature, { min, max }] of Object.entries(activeFilters)) {
+        const spotifyKey = featureKeyMap[feature] || feature;
+
+        const raw =
+          feature === "popularity"
+            ? song[feature] / 100
+            : song.audioFeatures?.[spotifyKey];
+
+        if (raw == null) continue; // skip missing feature
+
+        const value = typeof raw === "number" ? raw : Number(raw);
+        if (value < min || value > max) {
+          return false; // early exit
+        }
+      }
+      return true;
     });
   }
 
   function lengthPrediction(genres, dateRange, featureFilters) {
     let songs = songHistory.allSongsChronological;
+    if (!songs) return 0;
     songs = filterByDate(dateRange, songs);
     songs = filterByGenres(genres, songs);
     // issue here because it returns 0 on having default values
-    // songs = filterBySongFeatures(featureFilters, songs);
+    songs = filterBySongFeatures(featureFilters, songs);
     return songs.length;
   }
 
@@ -216,6 +255,8 @@ export const HistoryProvider = ({ children }) => {
     changeLayout,
     filterByDate,
     lengthPrediction,
+    filtersTotal,
+    setFiltersTotal,
     //Pagination
     songsPerLoad,
     visibleCount,
