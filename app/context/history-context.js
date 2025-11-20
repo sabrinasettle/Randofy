@@ -14,7 +14,7 @@ export const HistoryProvider = ({ children }) => {
   const [songHistory, setSongHistory] = useState([]);
   const [selectedSong, setSelectedSong] = useState({});
 
-  const [sortValue, setSortValue] = useState("Default");
+  const [sortOption, setSortOption] = useState("time-recent");
 
   const songFeatureStrings = {
     popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
@@ -33,13 +33,15 @@ export const HistoryProvider = ({ children }) => {
   const [dateRangeFilter, setDateRangeFilter] = useState("All");
   const [genreFilters, setGenreFilters] = useState(new Set());
   const [songFeaturesFilters, setSongFeaturesFilters] = useState({
-    popularity: { min: 0, max: 1.0 },
+    popularity: { min: 0.0, max: 1.0 },
     acoustics: { min: 0.0, max: 1.0 },
     energy: { min: 0.0, max: 1.0 },
     vocals: { min: 0.0, max: 1.0 },
     danceability: { min: 0.0, max: 1.0 },
     mood: { min: 0.0, max: 1.0 },
   });
+
+  const [filtersTotal, setFiltersTotal] = useState(0);
 
   useEffect(() => {
     const history = JSON.parse(localStorage.getItem("history"));
@@ -64,7 +66,6 @@ export const HistoryProvider = ({ children }) => {
   }, []);
 
   function openDetails() {
-    console.log("openDetails");
     setIsDetailsOpen(true);
   }
 
@@ -89,21 +90,10 @@ export const HistoryProvider = ({ children }) => {
     setLayoutType(element.id);
   }
 
-  // const updateFilters = (newFilters) => {
-  //   setFilters((prevFilters) => ({ ...prevFilters, ...newFilters }));
-  // };
-
+  // Filter songs by date range used in Filter Drawer
   function filterSongsByDateRange(songs, startDate, endDate) {
     const startTs = startDate.getTime();
     const endTs = endDate.getTime();
-
-    // console.log(
-    //   "Start Date:",
-    //   startDate.toISOString(),
-    //   "| Timestamp:",
-    //   startTs,
-    // );
-    // console.log("End Date:", endDate.toISOString(), "| Timestamp:", endTs);
 
     const results = [];
 
@@ -112,22 +102,15 @@ export const HistoryProvider = ({ children }) => {
       const genTimeStr = song.generated_at;
       const genTime = new Date(genTimeStr).getTime();
 
-      // console.log(
-      //   `Checking song: ${song.track_name || "Untitled"} | generated_at: ${genTimeStr} (${genTime})`,
-      // );
-
       if (genTime >= startTs && genTime <= endTs) {
-        // console.log("✅ Passes filter");
         results.push(song);
       }
     }
-
-    console.log(`Filtered ${results.length} / ${songs.length} songs.`);
     return results;
   }
 
+  // Filter songs by date range used in Filter Drawer
   function filterByDate(dateRange) {
-    // console.log("start at date filter", dateRange); // corrected
     const today = new Date();
     const songs = songHistory.allSongsChronological;
 
@@ -149,6 +132,7 @@ export const HistoryProvider = ({ children }) => {
     return songs;
   }
 
+  // Used in Filter Drawer
   function filterByGenres(selectedGenres, songs) {
     if (!selectedGenres || selectedGenres.size === 0) return songs;
 
@@ -157,21 +141,62 @@ export const HistoryProvider = ({ children }) => {
     );
   }
 
+  // Used in Filter Drawer
+  const featureKeyMap = {
+    acoustic: "acousticness",
+    instrumental: "instrumentalness",
+    popularity: "popularity", // stays the same
+    energy: "energy",
+    vocals: "speechiness",
+    danceability: "danceability",
+    mood: "valence",
+  };
+
+  // Used in Filter Drawer
+  function getActiveFilters(featureFilters) {
+    const active = {};
+    for (const [feature, { min, max }] of Object.entries(
+      featureFilters || {},
+    )) {
+      if (min !== 0.0 || max !== 1.0) {
+        active[feature] = { min, max };
+      }
+    }
+    return active;
+  }
+
+  // Used in Filter Drawer
   function filterBySongFeatures(featureFilters, songs) {
+    const activeFilters = getActiveFilters(featureFilters);
+    if (Object.keys(activeFilters).length === 0) return songs;
+
     return songs.filter((song) => {
-      return Object.entries(featureFilters).every(([feature, { min, max }]) => {
-        const value = song[feature];
-        return typeof value === "number" && value >= min && value <= max;
-      });
+      for (const [feature, { min, max }] of Object.entries(activeFilters)) {
+        const spotifyKey = featureKeyMap[feature] || feature;
+
+        const raw =
+          feature === "popularity"
+            ? song[feature] / 100
+            : song.audioFeatures?.[spotifyKey];
+
+        if (raw == null) continue; // skip missing feature
+
+        const value = typeof raw === "number" ? raw : Number(raw);
+        if (value < min || value > max) {
+          return false; // early exit
+        }
+      }
+      return true;
     });
   }
 
   function lengthPrediction(genres, dateRange, featureFilters) {
     let songs = songHistory.allSongsChronological;
+    if (!songs) return 0;
     songs = filterByDate(dateRange, songs);
     songs = filterByGenres(genres, songs);
     // issue here because it returns 0 on having default values
-    // songs = filterBySongFeatures(featureFilters, songs);
+    songs = filterBySongFeatures(featureFilters, songs);
     return songs.length;
   }
 
@@ -216,6 +241,11 @@ export const HistoryProvider = ({ children }) => {
     changeLayout,
     filterByDate,
     lengthPrediction,
+    filtersTotal,
+    setFiltersTotal,
+    // Sort
+    sortOption,
+    setSortOption,
     //Pagination
     songsPerLoad,
     visibleCount,

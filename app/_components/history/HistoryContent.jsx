@@ -1,24 +1,57 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import { useSpotifyContext } from "../../context/spotify-context";
+import { useState, useEffect } from "react";
 import { useSongViewContext } from "../../context/song-view-context";
-import { useMusicContext } from "../../context/music-context";
 import { useHistoryContext } from "../../context/history-context";
 import CardLayoutOptions from "./PageHeader/CardLayoutOptions";
 import Loader from "../ui/loading/Loader";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import PaginatedHistory from "./PaginatedHistory";
 import HistoryView from "../SongView/SongViews/HistoryView";
-import DateFilterTabs from "./FilterDrawer/DateFilter";
+
+const SortButton = () => {
+  const { historyContext } = useHistoryContext();
+
+  // const string =
+  //   historyContext.sortTotal > 0
+  //     ? `Sort Songs [${historyContext.sortTotal}]`
+  //     : "Sort Songs";
+
+  return (
+    <select
+      value={historyContext.sortOption}
+      onChange={(e) => historyContext.setSortOption(e.target.value)}
+      className="font-body rounded-sm text-gray-600 border border-transparent hover:text-gray-700 transition-all duration-700 ease-in-out min-w-fit px-1 py-1"
+    >
+      <option value="time-recent">Date: Most recent first</option>
+      <option value="time-early">Date: Oldest first</option>
+      <option value="alpha-asc">Name: A → Z</option>
+      <option value="alpha-desc">Name: Z → A</option>
+    </select>
+  );
+};
+
+const FilterButton = ({ handleOpen }) => {
+  const { historyContext } = useHistoryContext();
+
+  const string =
+    historyContext.filtersTotal > 0
+      ? `Filter Songs [${historyContext.filtersTotal}]`
+      : "Filter Songs";
+
+  return (
+    <button
+      className="font-body rounded-sm text-gray-600 border border-transparent hover:text-gray-700 transition-all duration-700 ease-in-out min-w-fit px-1 py-1"
+      onClick={handleOpen}
+    >
+      {string}
+    </button>
+  );
+};
 
 export default function HistoryContent() {
-  const { songViewContext } = useSongViewContext();
   const { historyContext } = useHistoryContext();
-  const isMobile = songViewContext.isMobile;
 
   const [filtersOpen, setFilterOpen] = useState(false);
-
-  const [historyFilter, setHistoryFilter] = useState("All");
   const [isAtTop, setIsAtTop] = useState(true);
 
   let history = historyContext.songHistory;
@@ -51,24 +84,16 @@ export default function HistoryContent() {
       <div className="flex flex-col h-full ">
         <div className="flex flex-row w-full justify-between">
           <CardLayoutOptions />
-          {/* <DateFilterTabs
-            updateFilter={historyContext.setDateRangeFilter}
-            historyFilter={historyContext.dateRangeFilter}
-          />*/}
-          <button
-            className="text-gray-600 hover:text-gray-700"
-            onClick={() => setFilterOpen(true)}
-          >
-            Filter
-          </button>
+          <div className="flex flex-row items-center gap-2">
+            <FilterButton handleOpen={() => setFilterOpen(true)} />
+            <SortButton />
+          </div>
         </div>
         {isLoading ? (
-          // <div className="w-full h-full flex justify-center items-center">
           <div className="w-full h-full flex justify-center items-center">
             <Loader isLoading={isLoading} />
           </div>
-        ) : // </div>
-        !isLoading && (!history || isEmptyObject(history)) ? (
+        ) : !isLoading && (!history || isEmptyObject(history)) ? (
           <div className="w-full flex justify-center items-center text-gray-700">
             <p>No History Yet! Lets get you started!</p>
           </div>
