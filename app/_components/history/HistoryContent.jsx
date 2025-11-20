@@ -8,6 +8,28 @@ import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import PaginatedHistory from "./PaginatedHistory";
 import HistoryView from "../SongView/SongViews/HistoryView";
 
+const SortButton = () => {
+  const { historyContext } = useHistoryContext();
+
+  // const string =
+  //   historyContext.sortTotal > 0
+  //     ? `Sort Songs [${historyContext.sortTotal}]`
+  //     : "Sort Songs";
+
+  return (
+    <select
+      value={historyContext.sortOption}
+      onChange={(e) => historyContext.setSortOption(e.target.value)}
+      className="font-body rounded-sm text-gray-600 border border-transparent hover:text-gray-700 transition-all duration-700 ease-in-out min-w-fit px-1 py-1"
+    >
+      <option value="time-recent">Date: Most recent first</option>
+      <option value="time-early">Date: Oldest first</option>
+      <option value="alpha-asc">Name: A → Z</option>
+      <option value="alpha-desc">Name: Z → A</option>
+    </select>
+  );
+};
+
 const FilterButton = ({ handleOpen }) => {
   const { historyContext } = useHistoryContext();
 
@@ -18,7 +40,7 @@ const FilterButton = ({ handleOpen }) => {
 
   return (
     <button
-      className="font-body rounded-sm text-gray-700 border border-transparent hover:border-gray-300 transition-all duration-700 ease-in-out min-w-fit  bg-gray-100 px-3 py-2"
+      className="font-body rounded-sm text-gray-600 border border-transparent hover:text-gray-700 transition-all duration-700 ease-in-out min-w-fit px-1 py-1"
       onClick={handleOpen}
     >
       {string}
@@ -62,7 +84,10 @@ export default function HistoryContent() {
       <div className="flex flex-col h-full ">
         <div className="flex flex-row w-full justify-between">
           <CardLayoutOptions />
-          <FilterButton handleOpen={() => setFilterOpen(true)} />
+          <div className="flex flex-row items-center gap-2">
+            <FilterButton handleOpen={() => setFilterOpen(true)} />
+            <SortButton />
+          </div>
         </div>
         {isLoading ? (
           <div className="w-full h-full flex justify-center items-center">
