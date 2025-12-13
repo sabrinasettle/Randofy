@@ -4,10 +4,37 @@ import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
 import { formatYear } from "../../utils/formatYear.js";
 
 const RadarChart = ({ data, size = 200 }) => {
+  const [hoverIndex, setHoverIndex] = useState(null);
+
+  // exact grayscale palette you provided
+  const G = {
+    "gray-700": "#E5E5E5",
+    "gray-600": "#B2B2B2",
+    "gray-500": "#757575",
+    "gray-400": "#5D5D5D",
+    "gray-300": "#4B4B4B",
+    "gray-200": "#333333",
+    "gray-100": "#191919",
+    "gray-000": "#0A0A0A",
+  };
+
+  const filterValueStrings = {
+    popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
+    acoustics: [
+      "All Electric",
+      "Mostly Electric",
+      "Some Acoustic",
+      "All Acoustic",
+    ],
+    energy: ["Super Chill", "Kinda Chill", "Kinda Hype", "Super Hype"],
+    vocals: ["No Vocals", "Some Vocals", "Lots of Vocals", "All Vocals"],
+    danceability: ["No Groove", "Almost a Bop", "Bop", "Dance Party"],
+    mood: ["Real Low", "Kinda Low", "Kinda High", "Real High"],
+  };
+
   const center = size / 2;
   const radius = size * 0.35;
 
-  // 5 attributes, evenly spaced (360 / 5 = 72 degrees apart)
   const attributes = [
     { key: "energy", label: "Energy", angle: 0 },
     { key: "danceability", label: "Danceability", angle: 72 },
@@ -24,36 +51,39 @@ const RadarChart = ({ data, size = 200 }) => {
     };
   };
 
-  const createPolygon = (radiusMultiplier) => {
-    return attributes
+  const createPolygon = (radiusMultiplier) =>
+    attributes
       .map((attr) => getPoint(attr.angle, radius * radiusMultiplier))
       .map((pt) => `${pt.x},${pt.y}`)
       .join(" ");
-  };
 
   const dataPoints = attributes.map((attr) => {
-    const rawValue = data[attr.key] || 0;
-    const value = attr.key === "popularity" ? rawValue / 100 : rawValue;
-    return getPoint(attr.angle, radius * value);
+    const rawValue = data?.[attr.key] ?? 0;
+    const normalized = attr.key === "popularity" ? rawValue / 100 : rawValue;
+    return getPoint(attr.angle, radius * normalized);
   });
 
   const dataPolygon = dataPoints.map((pt) => `${pt.x},${pt.y}`).join(" ");
 
   return (
-    <div className="flex justify-center items-center py-5">
+    <div
+      className="flex justify-center items-center py-5"
+      style={{ background: G["gray-000"], padding: 12 }}
+    >
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="absolute left-0 top-0">
           {/* Grid lines and axes */}
-          <g className="opacity-30">
+          <g style={{ opacity: 0.35 }}>
             {[0.25, 0.5, 0.75, 1].map((multiplier) => (
               <polygon
                 key={multiplier}
                 points={createPolygon(multiplier)}
                 fill="none"
-                stroke="#E5E5E5"
+                stroke={G["gray-600"]}
                 strokeWidth="1"
               />
             ))}
+
             {attributes.map((attr) => {
               const end = getPoint(attr.angle, radius);
               return (
@@ -63,24 +93,38 @@ const RadarChart = ({ data, size = 200 }) => {
                   y1={center}
                   x2={end.x}
                   y2={end.y}
-                  stroke="#E5E5E5"
+                  stroke={G["gray-600"]}
                   strokeWidth="1"
                 />
               );
             })}
           </g>
 
-          {/* Data polygon */}
+          {/* Data polygon (filled) */}
           <polygon
             points={dataPolygon}
-            fill="rgba(229, 229, 229, 0.3)"
-            stroke="#E5E5E5"
+            fill={`${G["gray-700"]}66`}
+            stroke={G["gray-600"]}
             strokeWidth="2"
           />
 
           {/* Data points */}
           {dataPoints.map((pt, i) => (
-            <circle key={i} cx={pt.x} cy={pt.y} r="3" fill="#E5E5E5" />
+            <g key={i}>
+              <circle cx={pt.x} cy={pt.y} r="3.5" fill={G["gray-700"]} />
+
+              <circle
+                cx={pt.x}
+                cy={pt.y}
+                r="12"
+                fill="transparent"
+                style={{ cursor: "pointer" }}
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() => setHoverIndex(null)}
+                onFocus={() => setHoverIndex(i)}
+                onBlur={() => setHoverIndex(null)}
+              />
+            </g>
           ))}
         </svg>
 
@@ -97,25 +141,88 @@ const RadarChart = ({ data, size = 200 }) => {
                   ? "center"
                   : "right";
 
+          const transform =
+            alignment === "center"
+              ? "translate(-50%, -50%)"
+              : alignment === "left"
+                ? "translateY(-50%)"
+                : "translate(-100%, -50%)";
+
           return (
             <div
               key={attr.key}
-              className="absolute font-body text-xs text-gray-600 whitespace-nowrap"
               style={{
+                position: "absolute",
                 left: labelPoint.x,
                 top: labelPoint.y,
-                transform:
-                  alignment === "center"
-                    ? "translate(-50%, -50%)"
-                    : alignment === "left"
-                      ? "translateY(-50%)"
-                      : "translate(-100%, -50%)",
+                transform,
+                color: G["gray-700"],
+                fontFamily: "Inter, system-ui, -apple-system, sans-serif",
+                fontSize: 12,
+                whiteSpace: "nowrap",
               }}
             >
               {attr.label}
             </div>
           );
         })}
+
+        {/* Tooltip (fixed logic) */}
+        {hoverIndex !== null && (
+          <div
+            style={{
+              position: "absolute",
+              left: dataPoints[hoverIndex].x + 8,
+              top: dataPoints[hoverIndex].y - 8,
+              transform: "translate(-50%, -100%)",
+              background: G["gray-100"],
+              color: G["gray-700"],
+              borderColor: G["gray-200"],
+              borderStyle: "solid",
+              borderWidth: 1,
+              padding: "8px 10px",
+              borderRadius: 8,
+              fontSize: 12,
+              pointerEvents: "none",
+              display: "flex",
+              flexDirection: "column",
+              gap: "2px",
+              textAlign: "center",
+            }}
+          >
+            {(() => {
+              const attrKey = attributes[hoverIndex].key;
+              const label = attributes[hoverIndex].label;
+              const raw = data[attrKey] ?? 0;
+
+              // Convert everything to percent
+              const percent =
+                attrKey === "popularity" ? raw : Math.round(raw * 100);
+
+              // Quarter indexing (25,50,75,100)
+              let index = Math.round(percent / 25) - 1;
+
+              // Clamp safely to 0–3
+              index = Math.max(
+                0,
+                Math.min(index, filterValueStrings[attrKey].length - 1),
+              );
+
+              const textLabel = filterValueStrings[attrKey][index];
+
+              return (
+                <>
+                  <div style={{ fontWeight: 600, color: G["gray-700"] }}>
+                    {label}
+                  </div>
+                  <div style={{ color: G["gray-600"] }}>
+                    {textLabel} — {percent}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        )}
       </div>
     </div>
   );
