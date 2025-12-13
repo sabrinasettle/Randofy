@@ -6,6 +6,7 @@ import AddSongButton from "./AddSongButton.jsx";
 import ShareButton from "./ShareButton.jsx";
 import OpenDetailsButton from "./OpenDetailsButton.jsx";
 import { useSongViewContext } from "../../../context/song-view-context.js";
+import { Share2 } from "lucide-react";
 
 export default function AudioPlayer({ song }) {
   const { songViewContext } = useSongViewContext();
@@ -39,13 +40,14 @@ export default function AudioPlayer({ song }) {
           />
         </div>
       ) : (
-        <div className="flex flex-row justify-between flex-1 pt-0 text-gray-600">
+        <div className="flex flex-row items-center pt-0 text-gray-600 group">
           <a
-            className="font-body text-body-lg md:text-body-sm pt-2 pb-2 hover:text-gray-700"
+            className="font-body text-body-lg md:text-body-sm pt-2 pb-2 group-hover:text-gray-700"
             href={song.href}
           >
-            Open in Spotify
+            Open in Spotify to Listen
           </a>
+          <Share2 className="w-6 h-6 group-hover:text-gray-700" />
         </div>
       )}
 
