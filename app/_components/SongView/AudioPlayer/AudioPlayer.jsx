@@ -6,7 +6,7 @@ import AddSongButton from "./AddSongButton.jsx";
 import ShareButton from "./ShareButton.jsx";
 import OpenDetailsButton from "./OpenDetailsButton.jsx";
 import { useSongViewContext } from "../../../context/song-view-context.js";
-import { Share2 } from "lucide-react";
+import { ArrowUpRightFromSquare } from "lucide-react";
 
 export default function AudioPlayer({ song }) {
   const { songViewContext } = useSongViewContext();
@@ -47,7 +47,7 @@ export default function AudioPlayer({ song }) {
           >
             Open in Spotify to Listen
           </a>
-          <Share2 className="w-6 h-6 group-hover:text-gray-700" />
+          <ArrowUpRightFromSquare className="w-6 h-6 group-hover:text-gray-700" />
         </div>
       )}
 
