@@ -8,7 +8,7 @@ export default SongViewContext;
 
 export function SongViewProvider({ children }) {
   // const [selectedSong, setSelectedSong] = useState({}); // index: currentIndex, song: songs[currentIndex],
-  // const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isDefault, setIsDefault] = useState(true);
   // const [drawersOpen, setDrawersOpen] = useState(false);
   // const [activeSection, setActiveSection] = useState(null);
@@ -32,6 +32,8 @@ export function SongViewProvider({ children }) {
     // setIsDetailsOpen,
     isDefault,
     setIsDefault,
+    isDetailsOpen,
+    setIsDetailsOpen,
     // setDrawersOpen,
     // handleDrawerOpen,
     // handleDrawerClosed,

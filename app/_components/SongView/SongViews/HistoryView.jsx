@@ -16,6 +16,8 @@ export default function HistoryView() {
   const isOpen = historyContext.isDetailsOpen; // true = detailed view, false = not detailed
   const isMobile = styleContext.isMobile;
 
+  console.log("isOpen", isOpen);
+
   if (!song) {
     return <div id="song-drawer__inactive"></div>;
   }
@@ -130,7 +132,7 @@ export default function HistoryView() {
                     {/* Audio player centered */}
                     <div className="flex-1 flex items-center justify-center mt-4">
                       <div className="w-full">
-                        <AudioPlayer song={song} />
+                        <AudioPlayer song={song} isDetailsOpen={isOpen} />
                       </div>
                     </div>
                   </div>

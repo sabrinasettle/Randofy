@@ -91,10 +91,12 @@ export const HistoryProvider = ({ children }) => {
   }, []);
 
   function openDetails() {
+    console.log("Opening details - History");
     setIsDetailsOpen(true);
   }
 
   function closeDetails() {
+    console.log("Closing details - History");
     setIsDetailsOpen(false);
   }
 
@@ -226,6 +228,7 @@ export const HistoryProvider = ({ children }) => {
   }
 
   function moveForward(index) {
+    console.log("moveForward");
     if (index < songHistory.allSongsChronological.length - 1) {
       let newIndex = index + 1;
       setSelectedSong({
@@ -236,6 +239,7 @@ export const HistoryProvider = ({ children }) => {
   }
 
   function moveBackward(index) {
+    console.log("moveBackward");
     if (index > 0) {
       let newIndex = index - 1;
       setSelectedSong({
