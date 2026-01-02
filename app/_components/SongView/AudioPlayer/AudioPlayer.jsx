@@ -8,13 +8,13 @@ import OpenDetailsButton from "./OpenDetailsButton.jsx";
 import { useSongViewContext } from "../../../context/song-view-context.js";
 import { ArrowUpRightFromSquare } from "lucide-react";
 
-export default function AudioPlayer({ song }) {
+export default function AudioPlayer({ song, isDetailsOpen }) {
   const { songViewContext } = useSongViewContext();
   const { isPlaying, setIsPlaying, play, pause, currentTime, setSong } =
     useAudio();
 
   const isDefault = songViewContext.isDefault;
-  const isOpen = songViewContext.isDetailsOpen;
+  console.log("isOpen", isDetailsOpen);
 
   // when song prop changes, tell context
   useEffect(() => {
@@ -67,7 +67,7 @@ export default function AudioPlayer({ song }) {
             <ShareButton song={song} />
           </div>
         </div>
-        {isDefault && !isOpen && <OpenDetailsButton />}
+        {!isDetailsOpen && <OpenDetailsButton />}
       </div>
     </div>
   );
