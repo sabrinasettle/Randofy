@@ -40,14 +40,14 @@ export default function AudioPlayer({ song, isDetailsOpen }) {
           />
         </div>
       ) : (
-        <div className="flex flex-row items-center pt-0 text-gray-600 group">
+        <div className="flex flex-row items-center gap-2 pt-0 text-gray-600 group">
           <a
             className="font-body text-body-lg md:text-body-sm pt-2 pb-2 group-hover:text-gray-700"
             href={song.href}
           >
-            Open in Spotify to Listen
+            Open Spotify to Listen
           </a>
-          <ArrowUpRightFromSquare className="w-6 h-6 group-hover:text-gray-700" />
+          <ArrowUpRightFromSquare className="w-6 h-6 md:w-4 md:h-4 group-hover:text-gray-700" />
         </div>
       )}
 
