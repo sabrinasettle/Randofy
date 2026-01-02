@@ -123,34 +123,3 @@ export default function HistoryContent() {
     </div>
   );
 }
-
-// {() => {
-//   if (!history || isEmptyObject(history)) {
-//     return (
-//       <div className="w-full flex justify-center items-center text-gray-700">
-//         <p>No History Yet! Lets get you started!</p>
-//       </div>
-//     );
-//   }
-//   if (history && isLoading && !isEmptyObject(history)) {
-//     return (
-//       <div className="w-full h-full flex justify-center items-center">
-//         <Loader isLoading={isLoading} />
-//       </div>
-//     );
-//   }
-//   if (history && !isLoading && !isEmptyObject(history)) {
-//     return (
-//       <div>
-//         <div>
-//           <PaginatedHistory />
-//         </div>
-//         <FilterDrawer
-//           isOpen={filtersOpen}
-//           onClose={() => setFilterOpen(false)}
-//         />
-//         <HistoryView />
-//       </div>
-//     );
-//   }
-// }}
