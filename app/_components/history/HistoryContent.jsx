@@ -11,11 +11,6 @@ import HistoryView from "../SongView/SongViews/HistoryView";
 const SortButton = () => {
   const { historyContext } = useHistoryContext();
 
-  // const string =
-  //   historyContext.sortTotal > 0
-  //     ? `Sort Songs [${historyContext.sortTotal}]`
-  //     : "Sort Songs";
-
   return (
     <select
       value={historyContext.sortOption}
