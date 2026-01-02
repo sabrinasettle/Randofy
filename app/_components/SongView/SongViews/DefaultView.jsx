@@ -115,7 +115,7 @@ export default function DefaultView() {
 
               {/* right column */}
               <div className="w-full lg:w-[48%] md:pt-8 md:pb-6 pt-6">
-                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2">
+                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2 md:pl-4">
                   <div>
                     <div className="pt-4 md:pt-6">
                       <ScrollingTitle
