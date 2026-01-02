@@ -16,6 +16,9 @@ export const HistoryProvider = ({ children }) => {
 
   const [sortOption, setSortOption] = useState("time-recent");
 
+  //sorted and filtered list
+  const [displaySongs, setDisplaySongs] = useState([]);
+
   const songFeatureStrings = {
     popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
     acoustics: [
@@ -91,12 +94,10 @@ export const HistoryProvider = ({ children }) => {
   }, []);
 
   function openDetails() {
-    console.log("Opening details - History");
     setIsDetailsOpen(true);
   }
 
   function closeDetails() {
-    console.log("Closing details - History");
     setIsDetailsOpen(false);
   }
 
@@ -227,27 +228,47 @@ export const HistoryProvider = ({ children }) => {
     return songs.length;
   }
 
+  // stable id function (use what you already use as key)
+  const songId = (s) => `${s.track_id}-${s.generated_at}`;
+
+  // update moveForward/moveBackward to use displaySongs (NOT allSongsChronological)
   function moveForward(index) {
-    console.log("moveForward");
-    if (index < songHistory.allSongsChronological.length - 1) {
-      let newIndex = index + 1;
-      setSelectedSong({
-        index: newIndex,
-        song: songHistory.allSongsChronological[newIndex],
-      });
+    console.log("moveForward", index);
+    if (index < displaySongs.length - 1) {
+      const newIndex = index + 1;
+      setSelectedSong({ index: newIndex, song: displaySongs[newIndex] });
     }
   }
 
   function moveBackward(index) {
-    console.log("moveBackward");
+    console.log("moveBackward", index);
     if (index > 0) {
-      let newIndex = index - 1;
-      setSelectedSong({
-        index: newIndex,
-        song: songHistory.allSongsChronological[newIndex],
-      });
+      const newIndex = index - 1;
+      setSelectedSong({ index: newIndex, song: displaySongs[newIndex] });
     }
   }
+
+  // function moveForward(index) {
+  //   console.log("moveForward", index);
+  //   if (index < songHistory.allSongsChronological.length - 1) {
+  //     let newIndex = index + 1;
+  //     setSelectedSong({
+  //       index: newIndex,
+  //       song: songHistory.allSongsChronological[newIndex],
+  //     });
+  //   }
+  // }
+
+  // function moveBackward(index) {
+  //   console.log("moveBackward", index);
+  //   if (index > 0) {
+  //     let newIndex = index - 1;
+  //     setSelectedSong({
+  //       index: newIndex,
+  //       song: songHistory.allSongsChronological[newIndex],
+  //     });
+  //   }
+  // }
 
   const historyContext = {
     isLoading,
@@ -259,6 +280,8 @@ export const HistoryProvider = ({ children }) => {
     isDetailsOpen,
     openDetails,
     closeDetails,
+    displaySongs,
+    setDisplaySongs,
     // Filters
     songFeatureStrings,
     songFeaturesFilters,
