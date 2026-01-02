@@ -64,30 +64,22 @@ export default function SongCard({ song, index }) {
       </div>
 
       {isAlpha && (
-        <div className="text-gray-600 md:flex md:flex-1 text-body-sm md:text-body-md font-normal min-w-0">
+        <div className="hidden md:flex md:flex-1 text-gray-600 text-body-sm md:text-body-md font-normal min-w-0">
           <p>{song.date}</p>
         </div>
       )}
-
-      {/* Optional album name on md+ screens */}
-      {/* <div
-        className={`hidden md:flex md:flex-1 text-body-sm md:text-body-md font-normal ${activeTextStyle} min-w-0`}
-      >
-        <p className="truncate">{song.album_name}</p>
-      </div> */}
-
       <div
         className="
-          flex pr-5 gap-2
+          ml-auto flex items-center pr-5 gap-2
           md:invisible md:opacity-0
           md:group-hover:visible md:group-hover:opacity-100
           transition-opacity duration-200
         "
       >
-        <p className="text-body-sm md:text-body-md font-normal text-gray-600">
+        <p className="hidden md:block text-body-sm md:text-body-md font-normal text-gray-600">
           Click to see details
         </p>
-        <ArrowUpRight className="text-gray-600" />
+        <ArrowUpRight className="text-gray-600 group-hover:text-gray-700" />
       </div>
     </li>
   );
