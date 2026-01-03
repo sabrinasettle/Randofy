@@ -16,7 +16,7 @@ export const HistoryProvider = ({ children }) => {
 
   const [sortOption, setSortOption] = useState("time-recent");
 
-  //sorted and filtered list
+  //sorted and filtered list dislayed to the user
   const [displaySongs, setDisplaySongs] = useState([]);
 
   const songFeatureStrings = {
