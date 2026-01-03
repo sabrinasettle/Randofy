@@ -31,11 +31,11 @@ export default function RandofyContent() {
 
   return (
     // overflow-hidden
-    <div className="overflow-hidden h-full">
+    <div className="overflow-hidden min-h-dvh">
       <div
         className={
           isMobile
-            ? ``
+            ? `h-min`
             : `flex h-full ${musicContext.isLoading ? "w-screen" : "w-full"} pt-4 pb-4 md:pt-0 md:pb-6 flex-col justify-start sm:justify-center items-center relative overflow-hidden z-0`
         }
       >
