@@ -10,7 +10,9 @@ export default function AlbumCarousel({}) {
   const { songViewContext } = useSongViewContext();
   const { musicContext } = useMusicContext();
   const isMobile = songViewContext.isMobile;
+
   const [isLoading, setIsLoading] = useState(true);
+
   const songs = useMemo(
     () => musicContext.currentSongs,
     [musicContext.currentSongs],
@@ -23,6 +25,9 @@ export default function AlbumCarousel({}) {
 
   const targetIndexRef = useRef(musicContext.selectedSong.index ?? 0);
   const scrollIndexRef = useRef(musicContext.selectedSong.index ?? 0);
+
+  // Sync external index with smart path finding
+  const lastSetIndexRef = useRef(-1);
 
   // Helper function to determine if we should animate or jump instantly
   const shouldAnimate = (from, to, arrayLength) => {
@@ -50,6 +55,9 @@ export default function AlbumCarousel({}) {
     if (!mountRef.current.contains(renderer.domElement)) {
       mountRef.current.appendChild(renderer.domElement);
     }
+
+    // Optional but helpful for touch gesture behavior
+    renderer.domElement.style.touchAction = "pan-y";
 
     scene.add(new THREE.AmbientLight(0xffffff, 1));
 
@@ -109,7 +117,6 @@ export default function AlbumCarousel({}) {
         if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
           targetIndexRef.current = newTarget;
         } else {
-          // Instant jump for large distances
           targetIndexRef.current = newTarget;
           scrollIndexRef.current = newTarget;
         }
@@ -119,7 +126,6 @@ export default function AlbumCarousel({}) {
         if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
           targetIndexRef.current = newTarget;
         } else {
-          // Instant jump for large distances
           targetIndexRef.current = newTarget;
           scrollIndexRef.current = newTarget;
         }
@@ -160,6 +166,10 @@ export default function AlbumCarousel({}) {
 
     const onPointerMove = (e) => {
       if (!isDragging) return;
+
+      // IMPORTANT for touch: stop the page from stealing the swipe
+      if (e.cancelable) e.preventDefault();
+
       const x = e.clientX || e.touches?.[0].clientX;
       const delta = (x - startX) * -0.005;
       dragOffset += delta;
@@ -175,7 +185,6 @@ export default function AlbumCarousel({}) {
       if (!isDragging) return;
       isDragging = false;
 
-      // Simple drag logic - clamp to valid range
       let newTarget = Math.round(targetIndexRef.current + dragOffset);
       newTarget = clampIndex(newTarget);
 
@@ -244,13 +253,22 @@ export default function AlbumCarousel({}) {
           : "default";
     };
 
-    renderer.domElement.addEventListener("mousedown", onPointerDown);
-    renderer.domElement.addEventListener("mousemove", onPointerMove);
-    renderer.domElement.addEventListener("mouseup", onPointerUp);
-    renderer.domElement.addEventListener("mouseleave", onPointerUp);
-    renderer.domElement.addEventListener("touchstart", onPointerDown);
-    renderer.domElement.addEventListener("touchmove", onPointerMove);
+    // ✅ MOUSE DRAG REMOVED
+    // renderer.domElement.addEventListener("mousedown", onPointerDown);
+    // renderer.domElement.addEventListener("mousemove", onPointerMove);
+    // renderer.domElement.addEventListener("mouseup", onPointerUp);
+    // renderer.domElement.addEventListener("mouseleave", onPointerUp);
+
+    // ✅ TOUCH DRAG KEPT
+    renderer.domElement.addEventListener("touchstart", onPointerDown, {
+      passive: true,
+    });
+    renderer.domElement.addEventListener("touchmove", onPointerMove, {
+      passive: false, // required because we call preventDefault()
+    });
     renderer.domElement.addEventListener("touchend", onPointerUp);
+
+    // ✅ Other desktop interactions kept
     renderer.domElement.addEventListener("wheel", onWheel, { passive: false });
     renderer.domElement.addEventListener("click", onClick);
     renderer.domElement.addEventListener("mousemove", onPointerMoveCursor);
@@ -267,7 +285,6 @@ export default function AlbumCarousel({}) {
       const floorIndex = Math.floor(scrollIndexRef.current);
       const blend = scrollIndexRef.current - floorIndex;
 
-      // Normalize the current index to proper range for reporting
       let currentIndex = Math.round(scrollIndexRef.current);
       currentIndex = clampIndex(currentIndex);
 
@@ -324,13 +341,18 @@ export default function AlbumCarousel({}) {
 
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("resize", onResize);
-      renderer.domElement.removeEventListener("mousedown", onPointerDown);
-      renderer.domElement.removeEventListener("mousemove", onPointerMove);
-      renderer.domElement.removeEventListener("mouseup", onPointerUp);
-      renderer.domElement.removeEventListener("mouseleave", onPointerUp);
+
+      // ✅ MOUSE DRAG REMOVED
+      // renderer.domElement.removeEventListener("mousedown", onPointerDown);
+      // renderer.domElement.removeEventListener("mousemove", onPointerMove);
+      // renderer.domElement.removeEventListener("mouseup", onPointerUp);
+      // renderer.domElement.removeEventListener("mouseleave", onPointerUp);
+
+      // ✅ TOUCH DRAG KEPT
       renderer.domElement.removeEventListener("touchstart", onPointerDown);
       renderer.domElement.removeEventListener("touchmove", onPointerMove);
       renderer.domElement.removeEventListener("touchend", onPointerUp);
+
       renderer.domElement.removeEventListener("wheel", onWheel);
       renderer.domElement.removeEventListener("click", onClick);
       renderer.domElement.removeEventListener("mousemove", onPointerMoveCursor);
@@ -353,17 +375,12 @@ export default function AlbumCarousel({}) {
     };
   }, [hasMounted, songs, isMobile]);
 
-  // Sync external index with smart path finding
-  const lastSetIndexRef = useRef(-1);
-
   useEffect(() => {
     const index = musicContext.selectedSong.index;
     if (index !== undefined && index !== lastSetIndexRef.current) {
-      // This change came from outside, so sync it
       if (shouldAnimate(scrollIndexRef.current, index, songs.length)) {
         targetIndexRef.current = index;
       } else {
-        // Instant jump for large distances
         targetIndexRef.current = index;
         scrollIndexRef.current = index;
       }
@@ -375,7 +392,7 @@ export default function AlbumCarousel({}) {
       <p className="text-gray-000">{isLoading && "Loading..."}</p>
       <div
         ref={mountRef}
-        className="flex items-center justify-center w-full h-[34vh] sm:h-[38vh] md:h-[40vh] lg:h-[45vh] xl:h-[48vh] bg-transparent overflow-hidden relative"
+        className="flex items-center justify-center w-full h-[34vh] xs:h-[36vh] sm:h-[38vh] md:h-[40vh] lg:h-[45vh] xl:h-[48vh] bg-transparent overflow-hidden relative"
       />
     </div>
   );
