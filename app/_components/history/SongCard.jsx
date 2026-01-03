@@ -9,6 +9,8 @@ import { ArrowUpRight } from "lucide-react";
 export default function SongCard({ song, index }) {
   const { songViewContext } = useSongViewContext();
   const { historyContext } = useHistoryContext();
+
+  const sortOption = historyContext.sortOption;
   const layout = historyContext.layoutType;
   const isMobile = songViewContext.isMobile;
 
@@ -21,7 +23,7 @@ export default function SongCard({ song, index }) {
   let keyString = `${song.track_name}${song.track_id}`;
   const artists = createArtists(song);
 
-  const imageSize = isMobile ? 64 : 74;
+  let isAlpha = sortOption === "alpha-asc" || sortOption === "alpha-desc";
 
   const listItem = (
     <li
@@ -61,18 +63,23 @@ export default function SongCard({ song, index }) {
         </span>
       </div>
 
-      {/* Optional album name on md+ screens */}
-      {/* <div
-        className={`hidden md:flex md:flex-1 text-body-sm md:text-body-md font-normal ${activeTextStyle} min-w-0`}
+      {isAlpha && (
+        <div className="hidden md:flex md:flex-1 text-gray-600 text-body-sm md:text-body-md font-normal min-w-0">
+          <p>{song.date}</p>
+        </div>
+      )}
+      <div
+        className="
+          ml-auto flex items-center pr-5 gap-2
+          md:invisible md:opacity-0
+          md:group-hover:visible md:group-hover:opacity-100
+          transition-opacity duration-200
+        "
       >
-        <p className="truncate">{song.album_name}</p>
-      </div> */}
-
-      <div className={`hidden md:group-hover:flex pr-5 gap-2`}>
-        <p className="text-body-sm md:text-body-md font-normal text-gray-600">
+        <p className="hidden md:block text-body-sm md:text-body-md font-normal text-gray-600">
           Click to see details
         </p>
-        <ArrowUpRight className="text-gray-600" />
+        <ArrowUpRight className="text-gray-600 group-hover:text-gray-700" />
       </div>
     </li>
   );

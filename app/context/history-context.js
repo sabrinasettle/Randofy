@@ -9,12 +9,15 @@ import {
 const HistoryContext = createContext();
 
 export const HistoryProvider = ({ children }) => {
-  const [isLoading, setIsloading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [songHistory, setSongHistory] = useState([]);
   const [selectedSong, setSelectedSong] = useState({});
 
   const [sortOption, setSortOption] = useState("time-recent");
+
+  //sorted and filtered list dislayed to the user
+  const [displaySongs, setDisplaySongs] = useState([]);
 
   const songFeatureStrings = {
     popularity: ["Unknown", "Kinda Known", "Known", "Famous"],
@@ -44,25 +47,50 @@ export const HistoryProvider = ({ children }) => {
   const [filtersTotal, setFiltersTotal] = useState(0);
 
   useEffect(() => {
-    const history = JSON.parse(localStorage.getItem("history"));
-    if (history) {
-      const sortedDates = Object.keys(history).reverse();
+    // minimum time you want the loader to show (ms)
+    const MIN_LOADER_MS = 3000;
+    const start = Date.now();
 
-      const allSongsChronological = [];
+    const stored = localStorage.getItem("history");
 
-      sortedDates.forEach((date) => {
-        const songs = history[date].map((song) => ({
-          ...song,
-          date,
-        }));
-        allSongsChronological.push(...songs);
-      });
-      setSongHistory({
-        totalSongs: allSongsChronological.length,
-        allSongsChronological,
-      });
-      setIsloading(false);
+    if (stored) {
+      try {
+        const history = JSON.parse(stored); // now safe because stored is a string
+
+        const sortedDates = Object.keys(history).reverse();
+
+        const allSongsChronological = [];
+
+        sortedDates.forEach((date) => {
+          const songs = history[date].map((song) => ({
+            ...song,
+            date,
+          }));
+          allSongsChronological.push(...songs);
+        });
+
+        setSongHistory({
+          totalSongs: allSongsChronological.length,
+          allSongsChronological,
+        });
+      } catch (e) {
+        console.error("Error parsing history from localStorage", e);
+        setSongHistory(null);
+      }
+    } else {
+      // no history in localStorage
+      setSongHistory(null); // or {} depending on your isEmptyObject logic
     }
+
+    // make sure the loader shows for at least MIN_LOADER_MS
+    const elapsed = Date.now() - start;
+    const remaining = Math.max(MIN_LOADER_MS - elapsed, 0);
+
+    const timeoutId = setTimeout(() => {
+      setIsLoading(false);
+    }, remaining);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   function openDetails() {
@@ -200,28 +228,51 @@ export const HistoryProvider = ({ children }) => {
     return songs.length;
   }
 
+  // stable id function (use what you already use as key)
+  const songId = (s) => `${s.track_id}-${s.generated_at}`;
+
+  // update moveForward/moveBackward to use displaySongs (NOT allSongsChronological)
   function moveForward(index) {
-    if (index < songHistory.allSongsChronological.length - 1) {
-      let newIndex = index + 1;
-      setSelectedSong({
-        index: newIndex,
-        song: songHistory.allSongsChronological[newIndex],
-      });
+    console.log("moveForward", index);
+    if (index < displaySongs.length - 1) {
+      const newIndex = index + 1;
+      setSelectedSong({ index: newIndex, song: displaySongs[newIndex] });
     }
   }
 
   function moveBackward(index) {
+    console.log("moveBackward", index);
     if (index > 0) {
-      let newIndex = index - 1;
-      setSelectedSong({
-        index: newIndex,
-        song: songHistory.allSongsChronological[newIndex],
-      });
+      const newIndex = index - 1;
+      setSelectedSong({ index: newIndex, song: displaySongs[newIndex] });
     }
   }
 
+  // function moveForward(index) {
+  //   console.log("moveForward", index);
+  //   if (index < songHistory.allSongsChronological.length - 1) {
+  //     let newIndex = index + 1;
+  //     setSelectedSong({
+  //       index: newIndex,
+  //       song: songHistory.allSongsChronological[newIndex],
+  //     });
+  //   }
+  // }
+
+  // function moveBackward(index) {
+  //   console.log("moveBackward", index);
+  //   if (index > 0) {
+  //     let newIndex = index - 1;
+  //     setSelectedSong({
+  //       index: newIndex,
+  //       song: songHistory.allSongsChronological[newIndex],
+  //     });
+  //   }
+  // }
+
   const historyContext = {
     isLoading,
+    setIsLoading,
     // Songs
     selectedSong,
     setSelectedSong,
@@ -229,6 +280,8 @@ export const HistoryProvider = ({ children }) => {
     isDetailsOpen,
     openDetails,
     closeDetails,
+    displaySongs,
+    setDisplaySongs,
     // Filters
     songFeatureStrings,
     songFeaturesFilters,

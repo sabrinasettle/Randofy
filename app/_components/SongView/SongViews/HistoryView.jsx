@@ -49,7 +49,7 @@ export default function HistoryView() {
         // }}
       >
         <div
-          className="fixed inset-0 backdrop-blur-sm md:m-7 lg:m-10 xl:m-12 border md:border-gray-200 md:rounded-sm "
+          className="fixed inset-0 backdrop-blur-sm md:m-4 lg:m-10 xl:m-12 border md:border-gray-200 md:rounded-sm "
           style={{ background: "#0A0A0Af2" }}
         >
           <div className="w-full h-full p-4">
@@ -109,7 +109,7 @@ export default function HistoryView() {
 
               {/* right column */}
               <div className="w-full lg:w-[48%] md:pt-8 md:pb-6 pt-6">
-                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2">
+                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2 md:pl-4">
                   <div>
                     <div className="pt-4 md:pt-6">
                       <ScrollingTitle
@@ -130,7 +130,7 @@ export default function HistoryView() {
                     {/* Audio player centered */}
                     <div className="flex-1 flex items-center justify-center mt-4">
                       <div className="w-full">
-                        <AudioPlayer song={song} />
+                        <AudioPlayer song={song} isDetailsOpen={isOpen} />
                       </div>
                     </div>
                   </div>

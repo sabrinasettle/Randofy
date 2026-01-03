@@ -42,7 +42,6 @@ export default function CardLayoutOptions() {
 
   function handleOnClick(e) {
     let element = e.currentTarget;
-    // console.log(element.id);
     historyContext.changeLayout(element);
     setActiveLayout(element.id);
   }

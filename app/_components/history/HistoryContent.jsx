@@ -11,11 +11,6 @@ import HistoryView from "../SongView/SongViews/HistoryView";
 const SortButton = () => {
   const { historyContext } = useHistoryContext();
 
-  // const string =
-  //   historyContext.sortTotal > 0
-  //     ? `Sort Songs [${historyContext.sortTotal}]`
-  //     : "Sort Songs";
-
   return (
     <select
       value={historyContext.sortOption}
@@ -93,9 +88,10 @@ export default function HistoryContent() {
           <div className="w-full h-full flex justify-center items-center">
             <Loader isLoading={isLoading} />
           </div>
-        ) : !isLoading && (!history || isEmptyObject(history)) ? (
-          <div className="w-full flex justify-center items-center text-gray-700">
+        ) : !history || isEmptyObject(history) ? (
+          <div className="w-full h-full flex flex-col justify-center items-center text-gray-700">
             <p>No History Yet! Lets get you started!</p>
+            <button>Generate Songs</button>
           </div>
         ) : (
           <div>

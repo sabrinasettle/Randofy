@@ -27,8 +27,6 @@ export default function DefaultView() {
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
 
   const artists = createArtists(song);
-  const promColor = song.color;
-  const alpha = useAccessibleAlpha(promColor);
 
   // Compact player styles only
   const getContainerStyles = () => {
@@ -115,7 +113,7 @@ export default function DefaultView() {
 
               {/* right column */}
               <div className="w-full lg:w-[48%] md:pt-8 md:pb-6 pt-6">
-                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2">
+                <div className="w-full flex flex-col justify-between gap-4 md:h-full md:border-l md:border-gray-200 lg:pl-5 lg:pr-2 md:pl-4">
                   <div>
                     <div className="pt-4 md:pt-6">
                       <ScrollingTitle
@@ -136,7 +134,7 @@ export default function DefaultView() {
                     {/* Audio player centered */}
                     <div className="flex-1 flex items-center justify-center mt-4">
                       <div className="w-full">
-                        <AudioPlayer song={song} />
+                        <AudioPlayer song={song} isDetailsOpen={isOpen} />
                       </div>
                     </div>
                   </div>

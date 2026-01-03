@@ -6,15 +6,14 @@ import AddSongButton from "./AddSongButton.jsx";
 import ShareButton from "./ShareButton.jsx";
 import OpenDetailsButton from "./OpenDetailsButton.jsx";
 import { useSongViewContext } from "../../../context/song-view-context.js";
-import { Share2 } from "lucide-react";
+import { ArrowUpRightFromSquare } from "lucide-react";
 
-export default function AudioPlayer({ song }) {
+export default function AudioPlayer({ song, isDetailsOpen }) {
   const { songViewContext } = useSongViewContext();
   const { isPlaying, setIsPlaying, play, pause, currentTime, setSong } =
     useAudio();
 
   const isDefault = songViewContext.isDefault;
-  const isOpen = songViewContext.isDetailsOpen;
 
   // when song prop changes, tell context
   useEffect(() => {
@@ -40,14 +39,14 @@ export default function AudioPlayer({ song }) {
           />
         </div>
       ) : (
-        <div className="flex flex-row items-center pt-0 text-gray-600 group">
+        <div className="flex flex-row items-center gap-2 pt-0 text-gray-600 group">
           <a
             className="font-body text-body-lg md:text-body-sm pt-2 pb-2 group-hover:text-gray-700"
             href={song.href}
           >
-            Open in Spotify to Listen
+            Open Spotify to Listen
           </a>
-          <Share2 className="w-6 h-6 group-hover:text-gray-700" />
+          <ArrowUpRightFromSquare className="w-6 h-6 md:w-4 md:h-4 group-hover:text-gray-700" />
         </div>
       )}
 
@@ -67,7 +66,7 @@ export default function AudioPlayer({ song }) {
             <ShareButton song={song} />
           </div>
         </div>
-        {isDefault && !isOpen && <OpenDetailsButton />}
+        {!isDetailsOpen && <OpenDetailsButton />}
       </div>
     </div>
   );
