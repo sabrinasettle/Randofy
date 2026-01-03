@@ -237,6 +237,8 @@ export default function AudioFeatureTabs({ song }) {
   const tabsRef = useRef([]); // Reference each tab button
   const containerRef = useRef(null); // Reference the tab container
 
+  const genreSet = new Set(song.genres);
+
   // Define the tab labels and content
   const tabs = [
     {
@@ -271,12 +273,12 @@ export default function AudioFeatureTabs({ song }) {
           {/* Song genres */}
           <div className="flex flex-col gap-2">
             <span className="text-sm font-medium text-gray-700">Genres:</span>
-            {song.genres.length > 0 ? (
+            {genreSet.size > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {song.genres.map((g, i) => (
+                {Array.from(genreSet).map((g, i) => (
                   <span
                     key={i}
-                    className="text-sm text-gray-700 bg-gray-200 px-3 py-1 rounded-sm"
+                    className="text-sm text-gray-700 bg-gray-200 px-3 py-1 rounded-sm capitalize"
                   >
                     {g}
                   </span>
