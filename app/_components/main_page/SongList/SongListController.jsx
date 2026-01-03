@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import AlbumCarousel from "./AlbumCarousel";
 import DefaultView from "../../SongView/SongViews/DefaultView";
-import SongViewController from "../../SongView/SongViewController";
 import { useMusicContext } from "../../../context/music-context";
 
 export default function SongListController({}) {

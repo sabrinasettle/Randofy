@@ -22,7 +22,7 @@ export default function RandofyContent() {
       return <Loader isLoading={musicContext.isLoading} />;
     else if (musicContext.currentSongs.length !== 0)
       return (
-        <div className="w-full flex justify-end items-center sm:mt-8 md:mt-0">
+        <div className="w-full flex justify-end items-center pt-8 md:pt-0">
           <SongListController />
         </div>
       );
@@ -59,7 +59,7 @@ export default function RandofyContent() {
           <div
             id="content-container"
             className={`w-full flex-1 min-h-0 flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-1 ${
-              hasContent ? "md:mt-5 xs:mt-7" : ""
+              hasContent ? "md:mt-5 mt-7" : ""
             }`}
           >
             {showItem()}
