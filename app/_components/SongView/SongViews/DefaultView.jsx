@@ -27,8 +27,6 @@ export default function DefaultView() {
   let alt = `Album cover for ${song.album_name} by ${createArtists()}`;
 
   const artists = createArtists(song);
-  const promColor = song.color;
-  const alpha = useAccessibleAlpha(promColor);
 
   // Compact player styles only
   const getContainerStyles = () => {

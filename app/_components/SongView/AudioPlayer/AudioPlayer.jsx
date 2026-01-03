@@ -14,7 +14,6 @@ export default function AudioPlayer({ song, isDetailsOpen }) {
     useAudio();
 
   const isDefault = songViewContext.isDefault;
-  console.log("isOpen", isDetailsOpen);
 
   // when song prop changes, tell context
   useEffect(() => {

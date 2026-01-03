@@ -16,8 +16,6 @@ export default function HistoryView() {
   const isOpen = historyContext.isDetailsOpen; // true = detailed view, false = not detailed
   const isMobile = styleContext.isMobile;
 
-  console.log("isOpen", isOpen);
-
   if (!song) {
     return <div id="song-drawer__inactive"></div>;
   }
