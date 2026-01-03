@@ -43,7 +43,7 @@ export default function RandofyContent() {
 
         {/* Default state - centered text */}
         {!hasContent && (
-          <div className="flex flex-col items-center justify-center max-w-[600px] px-4 h-min">
+          <div className="flex flex-col items-center justify-center max-w-[600px] px-4 h-full">
             {/* Add codtional text here for showing the username */}
             {spotifyUser && (
               <p className="font-body text-heading-2 text-gray-700 pb-7">{`Hi, ${spotifyUser?.display_name} `}</p>
