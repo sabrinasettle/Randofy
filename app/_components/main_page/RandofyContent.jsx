@@ -6,6 +6,36 @@ import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import SongListController from "./SongList/SongListController";
 import Loader from "../ui/loading/Loader";
 import ButtonsContainer from "./ButtonsContainer";
+import { useActiveFilterLabels } from "../../_hooks/useActiveFilterLabels";
+
+const TEXT_SIZES = [
+  "text-display-1",
+  "text-display-2",
+  "text-display-3",
+  "text-body-lg", // 👈 minimum allowed
+];
+
+const getTextSizeClass = (len) => {
+  let index = 0;
+
+  if (len < 60) index = 0;
+  else if (len < 90) index = 1;
+  else if (len < 120) index = 2;
+  else index = 3;
+
+  // 🔒 clamp (blocker)
+  const MIN_INDEX = 3; // text-body-lg
+  return TEXT_SIZES[Math.min(index, MIN_INDEX)];
+};
+
+const getTextLength = ({ num, baseText, genres, dets }) => {
+  let length = String(num).length + baseText.length;
+
+  if (genres.length) length += genres.join(", ").length + 7; // " genres"
+  if (dets.length) length += dets.join(", ").length + 9; // " that are"
+
+  return length;
+};
 
 export default function RandofyContent() {
   const { spotifyClient } = useSpotifyContext();
@@ -29,6 +59,47 @@ export default function RandofyContent() {
     return null; // Return null when no content to show
   }
 
+  const showDynamicText = () => {
+    const num = musicContext.songLimit;
+    const genres = Array.from(musicContext.genres);
+    const dets = useActiveFilterLabels(musicContext.songDetails);
+
+    const genresExist = genres.length > 0;
+    const detsExist = dets.length > 0;
+
+    const baseText =
+      genresExist || detsExist
+        ? "random songs from Spotify from"
+        : "totally random songs from Spotify";
+
+    const textLength = getTextLength({
+      num,
+      baseText,
+      genres,
+      dets,
+    });
+
+    const sizeClass = getTextSizeClass(textLength);
+
+    return (
+      <h1
+        className={`font-body ${sizeClass} text-gray-700 pb-16 text-center transition-all`}
+      >
+        {num} {baseText}{" "}
+        {genresExist && (
+          <>
+            <em>{genres.join(", ")}</em> genres{" "}
+          </>
+        )}
+        {detsExist && (
+          <>
+            that are <em>{dets.join(", ")}</em>
+          </>
+        )}
+      </h1>
+    );
+  };
+
   return (
     // overflow-hidden
     <div className="overflow-hidden min-h-dvh">
@@ -48,9 +119,8 @@ export default function RandofyContent() {
             {spotifyUser && (
               <p className="font-body text-heading-2 text-gray-700 pb-7">{`Hi, ${spotifyUser?.display_name} `}</p>
             )}
-            <h1 className="font-body text-display-1 text-gray-700 pb-16 text-center">
-              5 totally random songs from Spotify
-            </h1>
+            {/* Dynmaic text in size and length */}
+            {showDynamicText()}
           </div>
         )}
 
