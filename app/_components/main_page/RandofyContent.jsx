@@ -22,7 +22,7 @@ export default function RandofyContent() {
       return <Loader isLoading={musicContext.isLoading} />;
     else if (musicContext.currentSongs.length !== 0)
       return (
-        <div className="w-full flex justify-end items-center sm:mt-8 md:mt-0">
+        <div className="w-full flex justify-end items-center pt-8 md:pt-0">
           <SongListController />
         </div>
       );
@@ -31,11 +31,11 @@ export default function RandofyContent() {
 
   return (
     // overflow-hidden
-    <div className="overflow-hidden h-full">
+    <div className="overflow-hidden min-h-dvh">
       <div
         className={
           isMobile
-            ? ``
+            ? `flex flex-col h-full w-full pt-4 pb-4 relative overflow-hidden z-0`
             : `flex h-full ${musicContext.isLoading ? "w-screen" : "w-full"} pt-4 pb-4 md:pt-0 md:pb-6 flex-col justify-start sm:justify-center items-center relative overflow-hidden z-0`
         }
       >
@@ -43,7 +43,7 @@ export default function RandofyContent() {
 
         {/* Default state - centered text */}
         {!hasContent && (
-          <div className="flex flex-col items-center justify-center max-w-[600px] px-4 h-min">
+          <div className="flex flex-col items-center justify-center max-w-[600px] px-4 h-full">
             {/* Add codtional text here for showing the username */}
             {spotifyUser && (
               <p className="font-body text-heading-2 text-gray-700 pb-7">{`Hi, ${spotifyUser?.display_name} `}</p>
@@ -57,10 +57,10 @@ export default function RandofyContent() {
         {/* Content Container - shows when loading or has songs */}
         {hasContent && (
           <div
-            className={`h-full w-screen flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-1 ${
-              hasContent ? "md:mt-5" : ""
-            }`}
             id="content-container"
+            className={`w-full flex-1 min-h-0 flex justify-center items-center transition-all duration-700 ease-in-out opacity-100 md:order-1 ${
+              hasContent ? "md:mt-5 mt-7" : ""
+            }`}
           >
             {showItem()}
           </div>

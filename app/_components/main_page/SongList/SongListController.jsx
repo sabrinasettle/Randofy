@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import AlbumCarousel from "./AlbumCarousel";
 import DefaultView from "../../SongView/SongViews/DefaultView";
-import SongViewController from "../../SongView/SongViewController";
 import { useMusicContext } from "../../../context/music-context";
 
 export default function SongListController({}) {
@@ -11,7 +10,7 @@ export default function SongListController({}) {
   const songs = React.useMemo(() => musicContext.currentSongs, [musicContext]);
 
   return (
-    <div className="flex flex-col items-center md:h-full w-screen">
+    <div className="flex flex-col items-center md:h-full xs:h-min w-screen">
       {/* Index number */}
       <div className="text-gray-600 font-mono text-body-md font-normal md:mb-2">
         {index} / {songs.length}
