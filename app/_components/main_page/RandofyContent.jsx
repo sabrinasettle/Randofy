@@ -39,56 +39,33 @@ export default function RandofyContent() {
     return "text-heading-2"; // 🔒 minimum
   };
 
-  const getTextLength = ({ num, baseText, genres, dets }) => {
-    let length = String(num).length + baseText.length;
-
-    if (genres.length) length += genres.join(", ").length + 7; // " genres"
-    if (dets.length) length += dets.join(", ").length + 9; // " that are"
-
-    return length;
-  };
-
-  // ✅ Hook must be top-level (NOT inside showDynamicText)
+  // ✅ Hook must be top-level
   const dets = useActiveFilterLabels(musicContext.songDetails);
 
   // Memoize text pieces so they don't recompute unnecessarily
   const dynamicText = useMemo(() => {
     const num = musicContext.songLimit;
     const genres = Array.from(musicContext.genres);
+    const hasFilters = genres.length > 0 || dets.length > 0;
 
-    const genresExist = genres.length > 0;
-    const detsExist = dets.length > 0;
+    const baseText = hasFilters
+      ? "somewhat random songs from Spotify"
+      : "totally random songs from Spotify";
 
-    const baseText =
-      genresExist || detsExist
-        ? "somewhat random songs from Spotify"
-        : "totally random songs from Spotify";
-
-    const textLength = getTextLength({ num, baseText, genres, dets });
+    const textLength = String(num).length + baseText.length;
     const sizeClass = getTextSizeClass(textLength);
 
-    return { num, genres, dets, genresExist, detsExist, baseText, sizeClass };
+    return { num, baseText, sizeClass };
   }, [musicContext.songLimit, musicContext.genres, dets]);
 
   const showDynamicText = () => {
-    const { num, genres, dets, genresExist, detsExist, baseText, sizeClass } =
-      dynamicText;
+    const { num, baseText, sizeClass } = dynamicText;
 
     return (
       <h1
         className={`font-body ${sizeClass} text-gray-700 pb-16 text-center transition-all duration-200`}
       >
         {num} {baseText}
-        {/* {" "}{genresExist && (
-          <>
-            <em>{genres.join(", ")}</em> genres{" "}
-          </>
-        )}
-        {detsExist && (
-          <>
-            that are <em>{dets.join(", ")}</em>
-          </>
-        )}*/}
       </h1>
     );
   };
