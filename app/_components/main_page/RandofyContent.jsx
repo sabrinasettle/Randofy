@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useSpotifyContext } from "../../context/spotify-context";
 import { useMusicContext } from "../../context/music-context";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import SongListController from "./SongList/SongListController";
 import Loader from "../ui/loading/Loader";
 import ButtonsContainer from "./ButtonsContainer";
+import { useActiveFilterLabels } from "../../_hooks/useActiveFilterLabels";
 
 export default function RandofyContent() {
   const { spotifyClient } = useSpotifyContext();
@@ -29,28 +30,64 @@ export default function RandofyContent() {
     return null; // Return null when no content to show
   }
 
+  // ✅ Helpers (no hooks here)
+  const getTextSizeClass = (len) => {
+    // Bigger when short, smaller when long — but NEVER below heading-2
+    if (len < 60) return "text-display-1";
+    if (len < 90) return "text-display-2";
+    if (len < 120) return "text-heading-1";
+    return "text-heading-2"; // 🔒 minimum
+  };
+
+  // ✅ Hook must be top-level
+  const dets = useActiveFilterLabels(musicContext.songDetails);
+
+  // Memoize text pieces so they don't recompute unnecessarily
+  const dynamicText = useMemo(() => {
+    const num = musicContext.songLimit;
+    const genres = Array.from(musicContext.genres);
+    const hasFilters = genres.length > 0 || dets.length > 0;
+
+    const baseText = hasFilters
+      ? "somewhat random songs from Spotify"
+      : "totally random songs from Spotify";
+
+    const textLength = String(num).length + baseText.length;
+    const sizeClass = getTextSizeClass(textLength);
+
+    return { num, baseText, sizeClass };
+  }, [musicContext.songLimit, musicContext.genres, dets]);
+
+  const showDynamicText = () => {
+    const { num, baseText, sizeClass } = dynamicText;
+
+    return (
+      <h1
+        className={`font-body ${sizeClass} text-gray-700 pb-16 text-center transition-all duration-200`}
+      >
+        {num} {baseText}
+      </h1>
+    );
+  };
+
   return (
-    // overflow-hidden
     <div className="overflow-hidden min-h-dvh">
       <div
         className={
           isMobile
             ? `flex flex-col h-full w-full pt-4 pb-4 relative overflow-hidden z-0`
-            : `flex h-full ${musicContext.isLoading ? "w-screen" : "w-full"} pt-4 pb-4 md:pt-0 md:pb-6 flex-col justify-start sm:justify-center items-center relative overflow-hidden z-0`
+            : `flex h-full ${
+                musicContext.isLoading ? "w-screen" : "w-full"
+              } pt-4 pb-4 md:pt-0 md:pb-6 flex-col justify-start sm:justify-center items-center relative overflow-hidden z-0`
         }
       >
-        {/* Buttons Container - responsive behavior */}
-
         {/* Default state - centered text */}
         {!hasContent && (
           <div className="flex flex-col items-center justify-center max-w-[600px] px-4 h-full">
-            {/* Add codtional text here for showing the username */}
             {spotifyUser && (
               <p className="font-body text-heading-2 text-gray-700 pb-7">{`Hi, ${spotifyUser?.display_name} `}</p>
             )}
-            <h1 className="font-body text-display-1 text-gray-700 pb-16 text-center">
-              5 totally random songs from Spotify
-            </h1>
+            {showDynamicText()}
           </div>
         )}
 
