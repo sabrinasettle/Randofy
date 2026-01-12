@@ -7,6 +7,7 @@ import Loader from "../ui/loading/Loader";
 import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import PaginatedHistory from "./PaginatedHistory";
 import HistoryView from "../SongView/SongViews/HistoryView";
+import { useLockBodyScroll } from "../../_hooks/useLockBodyScroll";
 
 const SortButton = () => {
   const { historyContext } = useHistoryContext();
@@ -70,6 +71,10 @@ export default function HistoryContent() {
   }
 
   const isEmptyObject = (obj) => Object.keys(obj).length === 0;
+
+  const isHistoryOpen = historyContext?.isDetailsOpen;
+
+  useLockBodyScroll(isHistoryOpen);
 
   return (
     <div
