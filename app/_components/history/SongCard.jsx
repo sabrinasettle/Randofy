@@ -1,18 +1,17 @@
 "use client";
 import Image from "next/image";
-import { useSongViewContext } from "../../context/song-view-context";
+import { useStyleContext } from "../../context/style-context";
 import { useHistoryContext } from "../../context/history-context";
 import { createArtists } from "../../utils/createArtists";
 import ScrollingTitle from "../ui/ScrollingTitle";
 import { ArrowUpRight } from "lucide-react";
 
 export default function SongCard({ song, index }) {
-  const { songViewContext } = useSongViewContext();
+  const { isMobile } = useStyleContext();
   const { historyContext } = useHistoryContext();
 
   const sortOption = historyContext.sortOption;
   const layout = historyContext.layoutType;
-  const isMobile = songViewContext.isMobile;
 
   function openSelectedSong() {
     historyContext.setSelectedSong({ index: index, song });

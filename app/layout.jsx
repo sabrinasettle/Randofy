@@ -8,11 +8,6 @@ import {
 } from "./lib/fonts.js";
 import Nav from "./_components/layout/header/Header";
 import Providers from "./providers";
-import { SpotifyClientProvider } from "./context/spotify-context";
-import { SongViewProvider } from "./context/song-view-context";
-import { ToastProvider } from "./context/toast-context";
-import { MusicProvider } from "./context/music-context";
-import { StyleProvider } from "./context/style-context";
 
 // export const metadata = {
 //   title: "Randofy",
