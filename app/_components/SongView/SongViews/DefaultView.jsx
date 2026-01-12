@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { createArtists } from "../../../utils/createArtists.js";
-import { useAccessibleAlpha } from "../../../_hooks/useAccessibleAlpha.js";
-import { useSongViewContext } from "../../../context/song-view-context.js";
-import { useSpotifyContext } from "../../../context/spotify-context.js";
 import { useMusicContext } from "../../../context/music-context.js";
 import { useStyleContext } from "../../../context/style-context.js";
 import AudioPlayer from "../AudioPlayer/AudioPlayer.jsx";
@@ -13,7 +10,6 @@ import Image from "next/image";
 import AudioFeatureTabs from "../AudioFeatureTabs.jsx";
 
 export default function DefaultView() {
-  const { songViewContext } = useSongViewContext();
   const { musicContext } = useMusicContext();
   const { styleContext } = useStyleContext();
   const song = musicContext.selectedSong.song;

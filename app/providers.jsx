@@ -1,5 +1,4 @@
 import { SpotifyClientProvider } from "./context/spotify-context";
-import { SongViewProvider } from "./context/song-view-context";
 import { ToastProvider } from "./context/toast-context";
 import { MusicProvider } from "./context/music-context";
 import { StyleProvider } from "./context/style-context";
@@ -11,9 +10,7 @@ export default function Providers({ children }) {
       <StyleProvider>
         <SpotifyClientProvider>
           <MusicProvider>
-            <AudioProvider>
-              <SongViewProvider>{children}</SongViewProvider>
-            </AudioProvider>
+            <AudioProvider>{children}</AudioProvider>
           </MusicProvider>
         </SpotifyClientProvider>
       </StyleProvider>

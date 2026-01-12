@@ -1,5 +1,3 @@
-import { useSongViewContext } from "../../../context/song-view-context";
-
 const FilterButton = ({ handleActivation, string, activeFilter }) => {
   return (
     <div
@@ -12,13 +10,8 @@ const FilterButton = ({ handleActivation, string, activeFilter }) => {
 };
 
 export default function DateFilterTabs({ updateFilter, historyFilter }) {
-  // const [activeFilter, setActiveFilter] = useState("All");
-  const { songViewContext } = useSongViewContext();
-  const isMobile = songViewContext.isMobile;
-
   function handleActivation(e) {
     let element = e.target;
-    // setActiveFilter(element.textContent);
     updateFilter(element.textContent);
     // from the handler get the id and then check to see if it is the one
   }

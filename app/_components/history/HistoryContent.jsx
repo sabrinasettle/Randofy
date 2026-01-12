@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSongViewContext } from "../../context/song-view-context";
 import { useHistoryContext } from "../../context/history-context";
 import CardLayoutOptions from "./PageHeader/CardLayoutOptions";
 import Loader from "../ui/loading/Loader";

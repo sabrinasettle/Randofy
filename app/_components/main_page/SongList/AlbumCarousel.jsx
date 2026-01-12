@@ -2,14 +2,14 @@
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import * as THREE from "three";
-import { useSongViewContext } from "../../../context/song-view-context";
-import { useMusicContext } from "../../../context/music-context";
+import { useStyleContext } from "../../context/style-context";
+import { useMusicContext } from "../../context/music-context";
 
 export default function AlbumCarousel({}) {
   const mountRef = useRef(null);
-  const { songViewContext } = useSongViewContext();
+  const { styleContent } = useStyleContext();
   const { musicContext } = useMusicContext();
-  const isMobile = songViewContext.isMobile;
+  const isMobile = styleContent.isMobile;
 
   const [isLoading, setIsLoading] = useState(true);
 

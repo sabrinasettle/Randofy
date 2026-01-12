@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
-import { useSongViewContext } from "../../../context/song-view-context.js";
+import { useStyleContext } from "../../../context/style-context";
 import { useSpotifyContext } from "../../../context/spotify-context";
 import { useToast } from "../../../context/toast-context";
 import Tooltip from "../../ui/ToolTip.jsx";
 import { Plus, CheckCircleIcon } from "lucide-react";
 
 export default function AddSongButton({ song }) {
-  const { songViewContext } = useSongViewContext();
+  const { styleContext } = useStyleContext();
   const { spotifyClient } = useSpotifyContext();
 
   const { showToast } = useToast();
   const { spotifyUser } = spotifyClient;
-  const isMobile = songViewContext.isMobile;
-
+  const isMobile = styleContext.isMobile;
   const [isAdded, setIsAdded] = useState(false);
 
   useEffect(() => {

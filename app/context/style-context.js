@@ -12,6 +12,7 @@ export function StyleProvider({ children }) {
 
   const context = {
     styleContext,
+    isMobile,
     isDefault,
     setIsDefault,
   };
