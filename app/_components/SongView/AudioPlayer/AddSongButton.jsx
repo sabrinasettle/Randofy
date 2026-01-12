@@ -6,12 +6,11 @@ import Tooltip from "../../ui/ToolTip.jsx";
 import { Plus, CheckCircleIcon } from "lucide-react";
 
 export default function AddSongButton({ song }) {
-  const { styleContext } = useStyleContext();
+  const { isMobile } = useStyleContext();
   const { spotifyClient } = useSpotifyContext();
 
   const { showToast } = useToast();
   const { spotifyUser } = spotifyClient;
-  const isMobile = styleContext.isMobile;
   const [isAdded, setIsAdded] = useState(false);
 
   useEffect(() => {

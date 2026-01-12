@@ -7,12 +7,11 @@ import ScrollingTitle from "../ui/ScrollingTitle";
 import { ArrowUpRight } from "lucide-react";
 
 export default function SongCard({ song, index }) {
-  const { styleContext } = useStyleContext();
+  const { isMobile } = useStyleContext();
   const { historyContext } = useHistoryContext();
 
   const sortOption = historyContext.sortOption;
   const layout = historyContext.layoutType;
-  const isMobile = styleContext.isMobile;
 
   function openSelectedSong() {
     historyContext.setSelectedSong({ index: index, song });

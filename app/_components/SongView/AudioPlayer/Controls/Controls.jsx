@@ -3,8 +3,7 @@ import Tooltip from "../../../ui/ToolTip";
 import { useStyleContext } from "../../../../context/style-context.js";
 
 export default function Controls({ isPlaying, playAudio }) {
-  const { styleContext } = useStyleContext();
-  const isMobile = styleContext.isMobile;
+  const { isMobile } = useStyleContext();
 
   const activeStyle = isPlaying ? "bg-gray-700" : "bg-gray-600";
   const heightStyle = isMobile ? "h-[48px] w-[48px]" : "h-[40px] w-[40px]";

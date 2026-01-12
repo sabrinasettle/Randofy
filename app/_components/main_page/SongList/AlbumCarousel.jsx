@@ -2,14 +2,13 @@
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import * as THREE from "three";
-import { useStyleContext } from "../../context/style-context";
-import { useMusicContext } from "../../context/music-context";
+import { useStyleContext } from "../../../context/style-context";
+import { useMusicContext } from "../../../context/music-context";
 
 export default function AlbumCarousel({}) {
   const mountRef = useRef(null);
-  const { styleContent } = useStyleContext();
+  const { isMobile } = useStyleContext();
   const { musicContext } = useMusicContext();
-  const isMobile = styleContent.isMobile;
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -19,27 +18,16 @@ export default function AlbumCarousel({}) {
   );
 
   const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
+  useEffect(() => setHasMounted(true), []);
 
   const targetIndexRef = useRef(musicContext.selectedSong.index ?? 0);
   const scrollIndexRef = useRef(musicContext.selectedSong.index ?? 0);
 
-  // Sync external index with smart path finding
+  // Prevent self-feedback loop when we commit selected song
   const lastSetIndexRef = useRef(-1);
-
-  // Helper function to determine if we should animate or jump instantly
-  const shouldAnimate = (from, to, arrayLength) => {
-    const distance = Math.abs(to - from);
-    const threshold = Math.ceil(arrayLength * 0.3); // Animate if less than 30% of array
-    return distance <= threshold;
-  };
 
   useEffect(() => {
     if (!hasMounted || !mountRef.current) return;
-
-    let isMounted = true;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
@@ -52,11 +40,12 @@ export default function AlbumCarousel({}) {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+
     if (!mountRef.current.contains(renderer.domElement)) {
       mountRef.current.appendChild(renderer.domElement);
     }
 
-    // Optional but helpful for touch gesture behavior
+    // Touch gesture behavior (allow vertical page scroll, we preventDefault only while dragging)
     renderer.domElement.style.touchAction = "pan-y";
 
     scene.add(new THREE.AmbientLight(0xffffff, 1));
@@ -72,15 +61,22 @@ export default function AlbumCarousel({}) {
     const halfGap = extraGap / 2;
     const maxAngle = 1.5;
 
+    // Loading state (avoid flicker by tracking count)
+    let disposed = false;
+    let loadedCount = 0;
+    const totalToLoad = songs.length;
+
+    setIsLoading(totalToLoad > 0);
+
     songs.forEach((song, index) => {
       const start = performance.now();
-      setIsLoading(true);
 
       loader.load(
         song.album_image.url,
         (texture) => {
+          if (disposed) return;
+
           const end = performance.now();
-          setIsLoading(false);
           console.log(`Image ${index} loaded in ${Math.round(end - start)}ms`);
 
           const geometry = new THREE.PlaneGeometry(planeSize, planeSize);
@@ -92,15 +88,24 @@ export default function AlbumCarousel({}) {
 
           const plane = new THREE.Mesh(geometry, material);
           scene.add(plane);
+
           planes[index] = plane;
           planeScales[index] = 1;
+
+          loadedCount += 1;
+          if (loadedCount >= totalToLoad) setIsLoading(false);
         },
         undefined,
-        (err) => console.warn(`Texture load error for index ${index}:`, err),
+        (err) => {
+          if (disposed) return;
+          console.warn(`Texture load error for index ${index}:`, err);
+          loadedCount += 1;
+          if (loadedCount >= totalToLoad) setIsLoading(false);
+        },
       );
     });
 
-    // Simplified interaction variables
+    // Interaction variables
     let isDragging = false;
     let startX = 0;
     let dragOffset = 0;
@@ -114,21 +119,11 @@ export default function AlbumCarousel({}) {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
         const newTarget = clampIndex(targetIndexRef.current - 1);
-        if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
-          targetIndexRef.current = newTarget;
-        } else {
-          targetIndexRef.current = newTarget;
-          scrollIndexRef.current = newTarget;
-        }
+        targetIndexRef.current = newTarget; // ✅ always animate (no snap)
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
         const newTarget = clampIndex(targetIndexRef.current + 1);
-        if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
-          targetIndexRef.current = newTarget;
-        } else {
-          targetIndexRef.current = newTarget;
-          scrollIndexRef.current = newTarget;
-        }
+        targetIndexRef.current = newTarget; // ✅ always animate (no snap)
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -140,45 +135,36 @@ export default function AlbumCarousel({}) {
 
       if (wheelAccum > wheelThreshold) {
         const newTarget = clampIndex(targetIndexRef.current + 1);
-        if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
-          targetIndexRef.current = newTarget;
-        } else {
-          targetIndexRef.current = newTarget;
-          scrollIndexRef.current = newTarget;
-        }
+        targetIndexRef.current = newTarget; // ✅ always animate (no snap)
         wheelAccum = 0;
       } else if (wheelAccum < -wheelThreshold) {
         const newTarget = clampIndex(targetIndexRef.current - 1);
-        if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
-          targetIndexRef.current = newTarget;
-        } else {
-          targetIndexRef.current = newTarget;
-          scrollIndexRef.current = newTarget;
-        }
+        targetIndexRef.current = newTarget; // ✅ always animate (no snap)
         wheelAccum = 0;
       }
     };
 
     const onPointerDown = (e) => {
       isDragging = true;
-      startX = e.clientX || e.touches?.[0].clientX;
+      startX = e.touches?.[0]?.clientX ?? e.clientX ?? 0;
     };
 
     const onPointerMove = (e) => {
       if (!isDragging) return;
 
-      // IMPORTANT for touch: stop the page from stealing the swipe
+      // Stop the page from stealing the swipe (touch only)
       if (e.cancelable) e.preventDefault();
 
-      const x = e.clientX || e.touches?.[0].clientX;
+      const x = e.touches?.[0]?.clientX ?? e.clientX ?? startX;
       const delta = (x - startX) * -0.005;
       dragOffset += delta;
       startX = x;
 
       const proposed = targetIndexRef.current + dragOffset;
       if (proposed < 0) dragOffset = -targetIndexRef.current;
-      if (proposed > songs.length - 1)
+      if (proposed > songs.length - 1) {
         dragOffset = songs.length - 1 - targetIndexRef.current;
+      }
     };
 
     const onPointerUp = () => {
@@ -188,12 +174,7 @@ export default function AlbumCarousel({}) {
       let newTarget = Math.round(targetIndexRef.current + dragOffset);
       newTarget = clampIndex(newTarget);
 
-      if (shouldAnimate(scrollIndexRef.current, newTarget, songs.length)) {
-        targetIndexRef.current = newTarget;
-      } else {
-        targetIndexRef.current = newTarget;
-        scrollIndexRef.current = newTarget;
-      }
+      targetIndexRef.current = newTarget; // ✅ always animate (no snap)
       dragOffset = 0;
     };
 
@@ -213,14 +194,7 @@ export default function AlbumCarousel({}) {
         const clickedIndex = planes.indexOf(clickedPlane);
         if (clickedIndex !== -1) {
           console.log(`Clicked on plane ${clickedIndex}`);
-          if (
-            shouldAnimate(scrollIndexRef.current, clickedIndex, songs.length)
-          ) {
-            targetIndexRef.current = clickedIndex;
-          } else {
-            targetIndexRef.current = clickedIndex;
-            scrollIndexRef.current = clickedIndex;
-          }
+          targetIndexRef.current = clickedIndex; // ✅ always animate (no snap)
         }
       }
     };
@@ -253,48 +227,72 @@ export default function AlbumCarousel({}) {
           : "default";
     };
 
-    // ✅ MOUSE DRAG REMOVED
-    // renderer.domElement.addEventListener("mousedown", onPointerDown);
-    // renderer.domElement.addEventListener("mousemove", onPointerMove);
-    // renderer.domElement.addEventListener("mouseup", onPointerUp);
-    // renderer.domElement.addEventListener("mouseleave", onPointerUp);
-
-    // ✅ TOUCH DRAG KEPT
+    // ✅ TOUCH DRAG
     renderer.domElement.addEventListener("touchstart", onPointerDown, {
       passive: true,
     });
     renderer.domElement.addEventListener("touchmove", onPointerMove, {
-      passive: false, // required because we call preventDefault()
+      passive: false,
     });
     renderer.domElement.addEventListener("touchend", onPointerUp);
 
-    // ✅ Other desktop interactions kept
+    // ✅ Desktop interactions
     renderer.domElement.addEventListener("wheel", onWheel, { passive: false });
     renderer.domElement.addEventListener("click", onClick);
     renderer.domElement.addEventListener("mousemove", onPointerMoveCursor);
 
-    const speed = 0.07;
+    // --- Feel tuning (fix Scott feedback) ---
+    // 1-step should be snappy; big jumps should not teleport or feel violent.
+    const minSpeed = 0.1; // faster than your old 0.07
+    const maxSpeed = 0.18; // capped
+    const maxStepPerFrame = 0.22; // cap per-frame motion so 3+ doesn't feel aggressive
+    const COMMIT_EPS = 0.03; // commit selection only when nearly settled & not dragging
+
     let lastReportedIndex = -1;
 
     const animate = () => {
+      if (disposed) return;
       requestAnimationFrame(animate);
 
       const desiredIndex = targetIndexRef.current + dragOffset;
-      scrollIndexRef.current += (desiredIndex - scrollIndexRef.current) * speed;
+
+      // Distance-based easing + per-frame cap
+      const delta = desiredIndex - scrollIndexRef.current;
+      const dist = Math.abs(delta);
+
+      const speed = THREE.MathUtils.lerp(
+        minSpeed,
+        maxSpeed,
+        Math.min(dist / 1.5, 1),
+      );
+      const step = THREE.MathUtils.clamp(
+        delta * speed,
+        -maxStepPerFrame,
+        maxStepPerFrame,
+      );
+      scrollIndexRef.current += step;
 
       const floorIndex = Math.floor(scrollIndexRef.current);
       const blend = scrollIndexRef.current - floorIndex;
 
-      let currentIndex = Math.round(scrollIndexRef.current);
-      currentIndex = clampIndex(currentIndex);
+      // ✅ Commit selected song only when settled (reduces rapid updates on multi-step moves)
+      const isSettled =
+        !isDragging &&
+        Math.abs(scrollIndexRef.current - targetIndexRef.current) < COMMIT_EPS;
 
-      if (currentIndex !== lastReportedIndex) {
-        lastReportedIndex = currentIndex;
-        lastSetIndexRef.current = currentIndex;
-        musicContext.setSelectedSong({
-          index: currentIndex,
-          song: songs[currentIndex],
-        });
+      if (isSettled && songs.length > 0) {
+        let commitIndex = Math.round(targetIndexRef.current);
+        commitIndex = clampIndex(commitIndex);
+
+        if (commitIndex !== lastReportedIndex) {
+          lastReportedIndex = commitIndex;
+          lastSetIndexRef.current = commitIndex;
+
+          musicContext.setSelectedSong({
+            index: commitIndex,
+            song: songs[commitIndex],
+          });
+        }
       }
 
       planes.forEach((plane, i) => {
@@ -328,27 +326,22 @@ export default function AlbumCarousel({}) {
           distance < 0.1
             ? 1
             : THREE.MathUtils.lerp(1, scaleRatio, Math.min(distance, 1));
+
         planeScales[i] = THREE.MathUtils.lerp(planeScales[i], targetScale, 0.1);
         plane.scale.setScalar(planeScales[i]);
       });
 
       renderer.render(scene, camera);
     };
+
     animate();
 
     return () => {
-      isMounted = false;
+      disposed = true;
 
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("resize", onResize);
 
-      // ✅ MOUSE DRAG REMOVED
-      // renderer.domElement.removeEventListener("mousedown", onPointerDown);
-      // renderer.domElement.removeEventListener("mousemove", onPointerMove);
-      // renderer.domElement.removeEventListener("mouseup", onPointerUp);
-      // renderer.domElement.removeEventListener("mouseleave", onPointerUp);
-
-      // ✅ TOUCH DRAG KEPT
       renderer.domElement.removeEventListener("touchstart", onPointerDown);
       renderer.domElement.removeEventListener("touchmove", onPointerMove);
       renderer.domElement.removeEventListener("touchend", onPointerUp);
@@ -375,15 +368,13 @@ export default function AlbumCarousel({}) {
     };
   }, [hasMounted, songs, isMobile]);
 
+  // Sync external selectedSong -> carousel target (always animate)
   useEffect(() => {
     const index = musicContext.selectedSong.index;
+    if (!songs.length) return;
+
     if (index !== undefined && index !== lastSetIndexRef.current) {
-      if (shouldAnimate(scrollIndexRef.current, index, songs.length)) {
-        targetIndexRef.current = index;
-      } else {
-        targetIndexRef.current = index;
-        scrollIndexRef.current = index;
-      }
+      targetIndexRef.current = Math.max(0, Math.min(songs.length - 1, index));
     }
   }, [musicContext.selectedSong.index, songs.length]);
 

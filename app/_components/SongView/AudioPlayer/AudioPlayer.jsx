@@ -9,10 +9,8 @@ import { useStyleContext } from "../../../context/style-context";
 import { ArrowUpRightFromSquare } from "lucide-react";
 
 export default function AudioPlayer({ song, isDetailsOpen }) {
-  const { styleContext } = useStyleContext();
+  const { isDefault } = useStyleContext();
   const { isPlaying, play, pause, currentTime, setSong } = useAudio();
-
-  const isDefault = styleContext.isDefault;
 
   // when song prop changes, tell context
   useEffect(() => {
