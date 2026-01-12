@@ -7,11 +7,10 @@ export default StyleContext;
 
 export function StyleProvider({ children }) {
   const isMobile = useIsMobile();
-  const styleContext = { isMobile };
   const [isDefault, setIsDefault] = useState(true);
 
   const context = {
-    styleContext,
+    isMobile,
     isDefault,
     setIsDefault,
   };

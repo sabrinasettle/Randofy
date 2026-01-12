@@ -5,15 +5,12 @@ import Controls from "./Controls/Controls.jsx";
 import AddSongButton from "./AddSongButton.jsx";
 import ShareButton from "./ShareButton.jsx";
 import OpenDetailsButton from "./OpenDetailsButton.jsx";
-import { useSongViewContext } from "../../../context/song-view-context.js";
+import { useStyleContext } from "../../../context/style-context";
 import { ArrowUpRightFromSquare } from "lucide-react";
 
 export default function AudioPlayer({ song, isDetailsOpen }) {
-  const { songViewContext } = useSongViewContext();
-  const { isPlaying, setIsPlaying, play, pause, currentTime, setSong } =
-    useAudio();
-
-  const isDefault = songViewContext.isDefault;
+  const { isDefault } = useStyleContext();
+  const { isPlaying, play, pause, currentTime, setSong } = useAudio();
 
   // when song prop changes, tell context
   useEffect(() => {

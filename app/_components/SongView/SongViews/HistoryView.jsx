@@ -9,12 +9,11 @@ import Image from "next/image";
 import AudioFeatureTabs from "../AudioFeatureTabs.jsx";
 
 export default function HistoryView() {
-  const { styleContext } = useStyleContext();
+  const { isMobile } = useStyleContext();
   const { historyContext } = useHistoryContext();
   const song = historyContext.selectedSong.song;
   const index = historyContext.selectedSong.index;
   const isOpen = historyContext.isDetailsOpen; // true = detailed view, false = not detailed
-  const isMobile = styleContext.isMobile;
 
   if (!song) {
     return <div id="song-drawer__inactive"></div>;

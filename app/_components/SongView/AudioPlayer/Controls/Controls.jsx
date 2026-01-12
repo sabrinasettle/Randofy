@@ -1,10 +1,9 @@
 import { Pause, Play } from "lucide-react";
 import Tooltip from "../../../ui/ToolTip";
-import { useSongViewContext } from "../../../../context/song-view-context.js";
+import { useStyleContext } from "../../../../context/style-context.js";
 
 export default function Controls({ isPlaying, playAudio }) {
-  const { songViewContext } = useSongViewContext();
-  const isMobile = songViewContext.isMobile;
+  const { isMobile } = useStyleContext();
 
   const activeStyle = isPlaying ? "bg-gray-700" : "bg-gray-600";
   const heightStyle = isMobile ? "h-[48px] w-[48px]" : "h-[40px] w-[40px]";

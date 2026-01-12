@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-// import { useSongViewContext } from "../../context/song-view-context";
 import { millisToMinutesAndSeconds } from "../../utils/convertMilliseconds.js";
 import { formatYear } from "../../utils/formatYear.js";
 
