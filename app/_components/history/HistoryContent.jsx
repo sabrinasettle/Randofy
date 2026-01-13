@@ -93,9 +93,11 @@ export default function HistoryContent() {
             <Loader isLoading={isLoading} />
           </div>
         ) : !history || isEmptyObject(history) ? (
-          <div className="w-full h-full flex flex-col justify-center items-center text-gray-700">
-            <p>No History Yet! Lets get you started!</p>
-            <button>Generate Songs</button>
+          <div className="w-full h-full flex flex-col justify-center items-center gap-4">
+            <p className="text-heading-3 text-gray-700">Nothing here yet!</p>
+            {/* <button className="font-body transition-all bg-gray-600 border border-transparent hover:border-gray-600 hover:bg-gray-700 text-gray-000 rounded-sm duration-400 ease-in-out text-heading-5 px-4 py-3">
+              Generate Songs
+            </button>*/}
           </div>
         ) : (
           <div>

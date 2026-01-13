@@ -134,7 +134,6 @@ export function MusicProvider({ children }) {
   function moveForward() {
     let len = currentSongs.length;
     const index = (selectedSong.index + 1) % len;
-    console.log(index, len);
     setSelectedSong({
       index: index,
       song: currentSongs[index],
@@ -145,7 +144,6 @@ export function MusicProvider({ children }) {
     let len = currentSongs.length;
 
     let index = (selectedSong.index - 1 + len) % len;
-    console.log(index, len);
     setSelectedSong({
       index: index,
       song: currentSongs[index],
