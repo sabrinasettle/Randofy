@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import getRandomSearch from "../../../lib/js/helpers/randomLib.mjs";
 import { spotifyApi } from "../../../lib/js/spotify-api/SpotifyClient.mjs";
 import getColor from "colorthief";
+import { redis } from "../../../lib/redis";
+
+const COUNTER_KEY = "items_returned_total";
 
 const getData = async (req, max) => {
   let search = getRandomSearch();
@@ -79,6 +82,10 @@ const getData = async (req, max) => {
     return audioFeatures;
   }
 
+  async function incrementCount(count) {
+    await redis.incrBy(COUNTER_KEY, count);
+  }
+
   // new regex(/^:+[a-zA-Z]*:)
   async function retry() {
     let randomOffset = Math.floor(Math.random() * 10);
@@ -90,6 +97,9 @@ const getData = async (req, max) => {
     }
     // console.log("retry", data);
     const tracks = data.tracks;
+
+    const count = tracks.length; // e.g. 5–100
+    await incrementCount(count);
 
     let recommendedTracks = [];
     const ids = tracks.map((item) => item.id);
