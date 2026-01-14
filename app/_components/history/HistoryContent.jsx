@@ -7,6 +7,7 @@ import FilterDrawer from "./FilterDrawer/FilterDrawer";
 import PaginatedHistory from "./PaginatedHistory";
 import HistoryView from "../SongView/SongViews/HistoryView";
 import { useLockBodyScroll } from "../../_hooks/useLockBodyScroll";
+import CounterText from "./CounterText";
 
 const SortButton = () => {
   const { historyContext } = useHistoryContext();
@@ -95,9 +96,7 @@ export default function HistoryContent() {
         ) : !history || isEmptyObject(history) ? (
           <div className="w-full h-full flex flex-col justify-center items-center gap-4">
             <p className="text-heading-3 text-gray-700">Nothing here yet!</p>
-            {/* <button className="font-body transition-all bg-gray-600 border border-transparent hover:border-gray-600 hover:bg-gray-700 text-gray-000 rounded-sm duration-400 ease-in-out text-heading-5 px-4 py-3">
-              Generate Songs
-            </button>*/}
+            <CounterText />
           </div>
         ) : (
           <div>
