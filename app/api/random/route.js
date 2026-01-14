@@ -83,7 +83,7 @@ const getData = async (req, max) => {
   }
 
   async function incrementCount(count) {
-    await redis.incrby(COUNTER_KEY, count);
+    await redis.incrBy(COUNTER_KEY, count);
   }
 
   // new regex(/^:+[a-zA-Z]*:)
@@ -99,7 +99,7 @@ const getData = async (req, max) => {
     const tracks = data.tracks;
 
     const count = tracks.length; // e.g. 5–100
-    incrementCount(count);
+    await incrementCount(count);
 
     let recommendedTracks = [];
     const ids = tracks.map((item) => item.id);
