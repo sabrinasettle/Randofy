@@ -52,7 +52,7 @@ export function MusicProvider({ children }) {
     }
   }, []);
 
-  const updateSongHistory = (songs) => {
+  const updateSongHistory = async (songs) => {
     // localStorage.removeItem("history");
     // check if local storage can be reached else return
     const songHistory = JSON.parse(localStorage.getItem("history"));
@@ -87,6 +87,7 @@ export function MusicProvider({ children }) {
     //   danceability: { min: 0.0, max: 1.0 },
     //   mood: { min: 0.0, max: 1.0 },
     // });
+    //
 
     params.set("limit", songLimit);
 
@@ -108,12 +109,31 @@ export function MusicProvider({ children }) {
     params.set("min_valence", songDetails.mood.min);
     params.set("max_valence", songDetails.mood.max);
 
+    let fiveGenres;
     if (genres.size !== 0) {
-      const fiveGenres = genres.size > 5 ? genres.slice(0, 5) : genres;
+      fiveGenres = genres.size > 5 ? genres.slice(0, 5) : genres;
       params.set("seed_genres", Array.from(fiveGenres));
     }
 
+    console.log(fiveGenres);
     const res = await fetch("/api/random?" + params.toString());
+
+    const trackAnalytics = async (selectedGenres, songDetails) => {
+      try {
+        await fetch("/api/analytics", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            genres: Array.from(selectedGenres), // Convert Set to Array
+            songDetails: songDetails,
+          }),
+        });
+      } catch (error) {
+        console.error("Failed to track analytics:", error);
+      }
+    };
+
+    await trackAnalytics(genres, songDetails);
 
     if (!res.ok) {
       setError(await res.json());
