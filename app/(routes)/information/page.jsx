@@ -28,12 +28,14 @@ export default function Information() {
           buying us a coffee or sharing the product on your socials.
         </p>
         <div className="flex flex-col space-y-2">
-          <a
+          <p>Icons by Lucide</p>
+          <p>Fonts are DM Mono and DM Sans from Google Fonts</p>
+          {/* <a
             className="underline hover:italic"
             href="https://buymeacoffee.com/setsa_studio"
           >
             Click here to support us (with money)
-          </a>
+          </a>*/}
           {/* Add socials when they get created */}
           {/* OR support us (by sharing) */}
         </div>

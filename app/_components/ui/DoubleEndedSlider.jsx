@@ -70,7 +70,7 @@ export default function DoubleEndedSlider({
           step="0.01"
           value={localMax}
           onChange={handleMaxChange}
-          className="absolute w-full h-6 bg-transparent appearance-none slider-thumb z-10 touch-none"
+          className="absolute w-full h-6 bg-transparent appearance-none pointer-events-none slider-thumb z-10"
         />
 
         {/* Min slider (top) */}
@@ -81,7 +81,7 @@ export default function DoubleEndedSlider({
           step="0.01"
           value={localMin}
           onChange={handleMinChange}
-          className="absolute w-full h-6 bg-transparent appearance-none slider-thumb z-20 touch-none"
+          className="absolute w-full h-6 bg-transparent appearance-none pointer-events-none slider-thumb z-20"
         />
 
         <style jsx>{`

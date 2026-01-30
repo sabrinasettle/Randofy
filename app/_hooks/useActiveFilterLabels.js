@@ -55,10 +55,10 @@ const eq = (a, b, eps = 1e-9) => Math.abs(a - b) < eps;
 
 export function useActiveFilterLabels(filters) {
   return useMemo(() => {
-    console.log(
-      "useActiveFilterLabels RUN keys:",
-      filters ? Object.keys(filters) : filters,
-    );
+    // console.log(
+    //   "useActiveFilterLabels RUN keys:",
+    //   filters ? Object.keys(filters) : filters,
+    // );
     const labels = [];
     if (!filters) return labels;
     for (const key of Object.keys(defaultFilters)) {
