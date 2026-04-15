@@ -1,24 +1,74 @@
-@config '../tailwind.config.js';
-@layer tailwind-base, base;
+@import "tailwindcss";
 
-/* define base layer */
-@layer base {
+@theme {
+  /* Font families */
+  --font-body: var(--font-dm-sans);
+  --font-display: var(--font-dm-sans);
+  --font-mono: var(--font-dm-mono);
+
+  /* Display sizes */
+  --text-display-1: clamp(3rem, 8vw, 4rem);
+  --text-display-1--line-height: 1.0;
+  --text-display-1--letter-spacing: -0.03em;
+
+  --text-display-2: clamp(2.5rem, 6vw, 3.5rem);
+  --text-display-2--line-height: 1.05;
+  --text-display-2--letter-spacing: -0.025em;
+
+  /* Heading sizes */
+  --text-heading-1: clamp(2.25rem, 4vw, 3rem);
+  --text-heading-1--line-height: 1.1;
+  --text-heading-1--letter-spacing: -0.02em;
+
+  --text-heading-2: clamp(1.875rem, 3.5vw, 2.25rem);
+  --text-heading-2--line-height: 1.2;
+
+  --text-heading-3: clamp(1.5rem, 3vw, 1.75rem);
+  --text-heading-3--line-height: 1.3;
+
+  --text-heading-4: clamp(1.25rem, 2.5vw, 1.5rem);
+  --text-heading-4--line-height: 1.4;
+
+  --text-heading-5: clamp(1.125rem, 2vw, 1.25rem);
+  --text-heading-5--line-height: 1.4;
+
+  --text-heading-6: clamp(1.12rem, 1.5vw, 1.2rem);
+  --text-heading-6--line-height: 1.4;
+
+  /* Body sizes */
+  --text-body-lg: clamp(1.125rem, 1.5vw, 1.2rem);
+  --text-body-lg--line-height: 1.6;
+
+  --text-body-md: clamp(1rem, 1.2vw, 1.1rem);
+  --text-body-md--line-height: 1.5;
+
+  --text-body-sm: clamp(0.875rem, 1vw, 1rem);
+  --text-body-sm--line-height: 1.6;
+
+  --text-caption: clamp(0.75rem, 0.8vw, 0.8rem);
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.02em;
+
+  /* Grays (dark theme scale: 700=light → 000=dark) */
+  --color-gray-700: #E5E5E5;
+  --color-gray-600: #B2B2B2;
+  --color-gray-500: #757575;
+  --color-gray-400: #5D5D5D;
+  --color-gray-300: #4B4B4B;
+  --color-gray-200: #333333;
+  --color-gray-100: #191919;
+  --color-gray-000: #0A0A0A;
 }
 
-@layer tailwind-base {
-    @import "tailwindcss";
-}
-
-@layer base {
-    :root {
-    }
+@utility perspective-1000 {
+  perspective: 1000px;
 }
 
 html,
 body {
-    background-color: #0a0a0a;
+  background-color: #0a0a0a;
 }
 
 button {
-    cursor: pointer;
+  cursor: pointer;
 }
