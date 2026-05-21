@@ -1,16 +1,35 @@
 import { NextResponse } from "next/server";
 import getRandomSearch from "../../../lib/js/helpers/randomLib.mjs";
 import { spotifyApi } from "../../../lib/js/spotify-api/SpotifyClient.mjs";
-import getColor from "colorthief";
 import { redis } from "../../../lib/redis";
 
 const COUNTER_KEY = "items_returned_total";
+const ARTIST_LOOKUP_BATCH_SIZE = 50;
+
+function chunkArray(items, size) {
+  const chunks = [];
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size));
+  }
+  return chunks;
+}
 
 const getData = async (req, max) => {
   let search = getRandomSearch();
 
   const searchParams = req.nextUrl.searchParams;
   const query = searchParams.toString();
+  const timings = {};
+  const startedAt = Date.now();
+
+  async function timed(label, work) {
+    const start = Date.now();
+    try {
+      return await work();
+    } finally {
+      timings[label] = Date.now() - start;
+    }
+  }
 
   // const filters = JSON.parse(query);
   // console.log("Get Data \n\n\n\n\nSearch: ", search, "\n\nQuery: ", query);
@@ -33,45 +52,33 @@ const getData = async (req, max) => {
 
   // retry makes the attempt to get data
   //
-  async function getGenres(artists) {
-    let genres = [];
-    // console.log(artists);
-    await Promise.all(
-      artists.map(async (artist) => {
-        const request = await spotifyApi.getArtist(artist.id);
-        const artistData = await request.json();
-        artistData.genres.forEach((genre) => {
-          genres.push(genre);
-        });
+  async function getArtistGenresById(tracks) {
+    const artistIds = [
+      ...new Set(
+        tracks.flatMap((track) =>
+          track.artists.map((artist) => artist.id).filter(Boolean),
+        ),
+      ),
+    ];
+
+    const artistChunks = chunkArray(artistIds, ARTIST_LOOKUP_BATCH_SIZE);
+    const artistResponses = await Promise.all(
+      artistChunks.map(async (ids) => {
+        const response = await spotifyApi.getArtists(ids);
+        if (!response.ok) {
+          throw new Error(`Spotify artist lookup failed: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.artists || [];
       }),
     );
-    return genres;
-  }
 
-  async function getBkgrdColor(image) {
-    // console.log("get color", image);
-    const response = await fetch(image.url);
-    const buf = await response.arrayBuffer();
-
-    const dominantColor = await getColor(buf);
-
-    // console.log(dominantColor);
-    // error here
-    function rgbToHex(rgbArray) {
-      if (!rgbArray) return "#000000";
-      return (
-        "#" +
-        rgbArray
-          .map((value) => {
-            let hex = value.toString(16);
-            return hex.length === 1 ? "0" + hex : hex; // Ensure 2-digit hex values
-          })
-          .join("")
-      );
-    }
-    // console.log(rgbToHex(dominantColor));
-    // return dominantColor;
-    return rgbToHex(dominantColor);
+    return new Map(
+      artistResponses
+        .flat()
+        .filter(Boolean)
+        .map((artist) => [artist.id, artist.genres || []]),
+    );
   }
 
   //array of ids
@@ -88,10 +95,11 @@ const getData = async (req, max) => {
 
   // new regex(/^:+[a-zA-Z]*:)
   async function retry() {
-    let randomOffset = Math.floor(Math.random() * 10);
     // add Market to the query
-    const reccomendations = await spotifyApi.getRecommendations(search, query);
-    const data = await reccomendations.json();
+    const data = await timed("recommendations_ms", async () => {
+      const reccomendations = await spotifyApi.getRecommendations(search, query);
+      return await reccomendations.json();
+    });
     if (!data || !data.tracks) {
       throw new Error("Spotify API returned no tracks");
     }
@@ -99,20 +107,31 @@ const getData = async (req, max) => {
     const tracks = data.tracks;
 
     const count = tracks.length; // e.g. 5–100
-    await incrementCount(count);
+    await timed("counter_ms", () => incrementCount(count));
 
-    let recommendedTracks = [];
     const ids = tracks.map((item) => item.id);
-    let { audio_features: tracksAudiofeatures } = await getAudioFeatures(ids);
+    const { audio_features: tracksAudiofeatures = [] } = await timed(
+      "audio_features_ms",
+      () => getAudioFeatures(ids),
+    );
+    const audioFeaturesById = new Map(
+      tracksAudiofeatures.filter(Boolean).map((feature) => [feature.id, feature]),
+    );
+    const artistGenresById = await timed("artist_genres_ms", () =>
+      getArtistGenresById(tracks),
+    );
 
-    for (const item of tracks) {
-      let genres = await getGenres(item.artists);
-      let color = await getBkgrdColor(item.album.images[0]);
-      let trackAudiofeatures = tracksAudiofeatures.find(
-        (feature) => feature.id === item.id,
-      );
+    const recommendedTracks = tracks.map((item) => {
+      const genres = [
+        ...new Set(
+          item.artists.flatMap(
+            (artist) => artistGenresById.get(artist.id) || [],
+          ),
+        ),
+      ];
+      const trackAudiofeatures = audioFeaturesById.get(item.id) || {};
 
-      recommendedTracks.push({
+      return {
         track_name: item.name,
         track_artists: item.artists,
         is_explicit: item.explicit,
@@ -124,7 +143,6 @@ const getData = async (req, max) => {
         release_year: item.album?.release_date,
         song_length: item.duration_ms,
         genres: genres,
-        color: color,
         generated_at: new Date(),
         is_playable: item.is_playable,
         href: `https://open.spotify.com/track/${item.id}`,
@@ -144,11 +162,16 @@ const getData = async (req, max) => {
           // key: trackAudiofeatures.key,
           // time_signature: trackAudiofeatures.time_signature
         },
-      });
-    }
+      };
+    });
     let returnData = {
       recommendedTracks,
     };
+    console.info("[api/random] timings", {
+      count,
+      total_ms: Date.now() - startedAt,
+      ...timings,
+    });
     retData = returnData;
     return returnData;
   }
@@ -168,7 +191,7 @@ export async function GET(req) {
   }
   //do we need max?
   const data = await getData(req, req.body?.max || 1);
-  console.log("data in spotify get", data);
+  console.info("[api/random] returned tracks", data.recommendedTracks.length);
 
   return NextResponse.json(data);
 
