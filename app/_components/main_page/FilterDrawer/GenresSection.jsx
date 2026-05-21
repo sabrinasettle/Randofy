@@ -5,6 +5,8 @@ import { useMusicContext } from "../../../context/music-context";
 
 export default function GenresSection({ navigateBack, selectedGenres }) {
   const { musicContext } = useMusicContext();
+  const maxSelectedGenres = 5;
+  const hasReachedGenreLimit = selectedGenres.size >= maxSelectedGenres;
   const genres = [
     "acoustic",
     "afrobeat",
@@ -152,8 +154,14 @@ export default function GenresSection({ navigateBack, selectedGenres }) {
   }, []);
 
   const toggleGenre = (genre) => {
+    const isSelected = selectedGenres.has(genre);
+
+    if (!isSelected && hasReachedGenreLimit) {
+      return;
+    }
+
     const newSelected = new Set(selectedGenres);
-    if (newSelected.has(genre)) {
+    if (isSelected) {
       newSelected.delete(genre);
     } else {
       newSelected.add(genre);
@@ -202,20 +210,25 @@ export default function GenresSection({ navigateBack, selectedGenres }) {
         </button>
         {selectedGenres.size === 0 ? (
           <span className="text-lg font-normal text-gray-600">
-            [{selectedGenres.size}]
+            [{selectedGenres.size}/{maxSelectedGenres}]
           </span>
         ) : (
           <span className="text-body-lg font-body font-semibold text-gray-700">
-            [{selectedGenres.size}]
+            [{selectedGenres.size}/{maxSelectedGenres}]
           </span>
         )}
       </div>
       {/* Content */}
       <div className="flex-1 px-4">
-        <p className="w-full text-body-sm text-gray-600 text-balance font-body">
-          Disclaimer: While Spotify identifies and works with thousands of
-          subgenres these are the available genres to search against.
-        </p>
+        <div className="space-y-2">
+          <p className="w-full text-body-md text-gray-700 text-balance font-body">
+            Choose up to five genres.
+          </p>
+          <p className="w-full text-body-sm text-gray-600 text-balance font-body">
+            Disclaimer: While Spotify identifies and works with thousands of
+            subgenres these are the available genres to search against.
+          </p>
+        </div>
         {/* Alpha lists of the genres */}
         <div className="space-y-6">
           {sortedLetters.map((letter) => (
@@ -230,22 +243,31 @@ export default function GenresSection({ navigateBack, selectedGenres }) {
               </div>
 
               <div className="flex flex-col gap-2">
-                {groupedGenres[letter].map((genre) => (
-                  <button
-                    key={genre}
-                    onClick={() => toggleGenre(genre)}
-                    className={`
-                              px-3 py-2 rounded-sm text-sm transition-all duration-200 text-left font-body
-                              ${
-                                selectedGenres.has(genre)
-                                  ? "font-semibold bg-gray-100 hover:bg-gray-200 text-white shadow-md transform scale-101"
-                                  : "font-medium bg-gray-000 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:shadow-sm"
-                              }
-                            `}
-                  >
-                    {formatGenreName(genre)}
-                  </button>
-                ))}
+                {groupedGenres[letter].map((genre) => {
+                  const isSelected = selectedGenres.has(genre);
+                  const isDisabled = hasReachedGenreLimit && !isSelected;
+
+                  return (
+                    <button
+                      key={genre}
+                      onClick={() => toggleGenre(genre)}
+                      disabled={isDisabled}
+                      aria-pressed={isSelected}
+                      className={`
+                                px-3 py-2 rounded-sm text-sm transition-all duration-200 text-left font-body
+                                ${
+                                  isSelected
+                                    ? "font-semibold bg-gray-100 hover:bg-gray-200 text-white shadow-md transform scale-101"
+                                    : isDisabled
+                                      ? "font-medium bg-gray-000 text-gray-500 opacity-40 cursor-not-allowed"
+                                      : "font-medium bg-gray-000 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:shadow-sm"
+                                }
+                              `}
+                    >
+                      {formatGenreName(genre)}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           ))}

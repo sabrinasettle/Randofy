@@ -109,13 +109,10 @@ export function MusicProvider({ children }) {
     params.set("min_valence", songDetails.mood.min);
     params.set("max_valence", songDetails.mood.max);
 
-    let fiveGenres;
     if (genres.size !== 0) {
-      fiveGenres = genres.size > 5 ? genres.slice(0, 5) : genres;
-      params.set("seed_genres", Array.from(fiveGenres));
+      params.set("seed_genres", Array.from(genres));
     }
 
-    console.log(fiveGenres);
     const res = await fetch("/api/random?" + params.toString());
 
     const trackAnalytics = async (selectedGenres, songDetails) => {
