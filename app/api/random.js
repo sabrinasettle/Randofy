@@ -1,15 +1,25 @@
 import getRandomSearch from "../../lib/js/helpers/randomLib.mjs";
 import { spotifyApi } from "../../lib/js/spotify-api/SpotifyClient.mjs";
 
+const MAX_ATTEMPTS_PER_SONG = 100;
+
 const getData = (req, max, callback) => {
   let search = getRandomSearch();
-  console.log(req, max);
   let att = 0;
   let index = 1;
   let retArray = [];
   // doit tracks attempts, by count
   function doit() {
     att++;
+    if (att > MAX_ATTEMPTS_PER_SONG) {
+      callback(
+        null,
+        new Error(
+          `Unable to find a playable random track after ${MAX_ATTEMPTS_PER_SONG} attempts`,
+        ),
+      );
+      return;
+    }
     // console.log("attempt number: ", att, search );
     if (att % 50 === 0) {
       search = getRandomSearch();
@@ -85,13 +95,14 @@ const getData = (req, max, callback) => {
 
 /* GET random song object https://.../random */
 export default function GET(req, res) {
-  console.log(req);
-  console.log(req.params);
   if (!spotifyApi) {
     // throw new Error("No Spotify API");
     return res.status(500).send("No Spotify API");
   }
-  getData(req, req.body.max || 1, (returnData) => {
+  getData(req, req.body.max || 1, (returnData, error) => {
+    if (error) {
+      return res.status(504).send({ error: error.message });
+    }
     res.status(200).send(returnData);
   });
 }
