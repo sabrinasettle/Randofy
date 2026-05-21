@@ -383,7 +383,7 @@ export default function AlbumCarousel({}) {
       <p className="text-gray-000">{isLoading && "Loading..."}</p>
       <div
         ref={mountRef}
-        className="flex items-center justify-center w-full h-[34vh] xs:h-[36vh] sm:h-[38vh] md:h-[40vh] lg:h-[45vh] xl:h-[48vh] bg-transparent overflow-hidden relative"
+        className="flex items-center justify-center w-full h-[34vh] xs:h-[36vh] sm:h-[38vh] md:h-[40vh] lg:h-[43vh] xl:h-[42vh] bg-transparent overflow-hidden relative"
       />
     </div>
   );
