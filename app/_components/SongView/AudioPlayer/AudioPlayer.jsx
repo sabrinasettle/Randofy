@@ -4,6 +4,7 @@ import ProgressBar from "./ProgressBar.jsx";
 import Controls from "./Controls/Controls.jsx";
 import AddSongButton from "./AddSongButton.jsx";
 import ShareButton from "./ShareButton.jsx";
+import YouTubeButton from "./YouTubeButton.jsx";
 import OpenDetailsButton from "./OpenDetailsButton.jsx";
 import { useStyleContext } from "../../../context/style-context";
 import { ArrowUpRightFromSquare } from "lucide-react";
@@ -60,6 +61,7 @@ export default function AudioPlayer({ song, isDetailsOpen }) {
           )}
           <div className="flex flex-row gap-1">
             <AddSongButton song={song} />
+            <YouTubeButton song={song} />
             <ShareButton song={song} />
           </div>
         </div>
