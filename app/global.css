@@ -72,3 +72,73 @@ body {
 button {
   cursor: pointer;
 }
+
+.randofy-home-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.78fr);
+  align-items: center;
+  gap: 52px;
+  padding-top: 4rem;
+  padding-bottom: 8.5rem;
+}
+
+.randofy-home-hero__copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.randofy-entropy-preview {
+  position: relative;
+  z-index: 1;
+  width: min(38vw, 430px);
+  min-width: 320px;
+  aspect-ratio: 1;
+  justify-self: center;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.randofy-entropy-preview canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 900px) {
+  .randofy-home-hero {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    align-content: center;
+    justify-items: center;
+    padding-top: 4.5rem;
+    padding-bottom: 11.5rem;
+  }
+
+  .randofy-home-hero__copy {
+    align-items: center;
+    order: 2;
+    gap: 18px;
+  }
+
+  .randofy-entropy-preview {
+    order: 1;
+    width: min(72vw, 330px);
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 520px) {
+  .randofy-home-hero {
+    padding-top: 3.7rem;
+    padding-bottom: 10.5rem;
+  }
+
+  .randofy-entropy-preview {
+    width: min(72vw, 280px);
+    min-width: 220px;
+  }
+}

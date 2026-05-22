@@ -12,8 +12,12 @@ const FilterButton = ({ handleOpen, isSmall }) => {
   //values changed
   const string =
     musicContext.filtersTotal > 0
-      ? `Filter Songs [${musicContext.filtersTotal}]`
-      : "Filter Songs";
+      ? `${isSmall ? "Filter Songs" : "Tune Filters"} [${
+          musicContext.filtersTotal
+        }]`
+      : isSmall
+        ? "Filter Songs"
+        : "Tune Filters";
 
   return (
     <button
