@@ -12,8 +12,12 @@ const FilterButton = ({ handleOpen, isSmall }) => {
   //values changed
   const string =
     musicContext.filtersTotal > 0
-      ? `Filter Songs [${musicContext.filtersTotal}]`
-      : "Filter Songs";
+      ? `${isSmall ? "Filter Songs" : "Tune Filters"} [${
+          musicContext.filtersTotal
+        }]`
+      : isSmall
+        ? "Filter Songs"
+        : "Tune Filters";
 
   return (
     <button
@@ -32,19 +36,13 @@ export default function ButtonsContainer({
   filtersOpen,
   setFilterOpen,
 }) {
-  {
-    /* Buttons Container - responsive behavior */
-  }
-
   const containerClass = hasContent
-    ? "flex-col md:flex-row scale-95 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-4"
-    : "flex-col md:flex-row scale-100 bottom-3 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:translate-y-20";
+    ? "flex-row pt-2 px-4 w-full md:w-auto"
+    : "flex-col max-w-[80%] w-full md:w-auto md:flex-row";
 
   return (
     <div
-      className={`flex gap-4 items-center transition-all duration-400 ease-in-out z-40 order-2 md:order-2 mx-auto w-full md:w-auto
-        ${hasContent ? `flex-row pt-2 px-4` : `flex-col max-w-[80%]`} md:flex-row
-        `}
+      className={`flex gap-4 items-center transition-all duration-400 ease-in-out z-40 order-2 md:order-2 mx-auto ${containerClass}`}
       style={{
         transformOrigin: "center",
       }}
@@ -57,10 +55,3 @@ export default function ButtonsContainer({
     </div>
   );
 }
-
-// ${
-// // Mobile behavior - keep flex-col on mobile, flex-row on desktop
-// hasContent
-//   ? "flex-col md:flex-row scale-95 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-4"
-//   : "flex-col md:flex-row scale-100 bottom-3 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:translate-y-20"
-// }
