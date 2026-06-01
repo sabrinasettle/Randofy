@@ -9,11 +9,21 @@ import { ArrowRight, ArrowLeft, X } from "lucide-react";
 import Image from "next/image";
 import AudioFeatureTabs from "../AudioFeatureTabs.jsx";
 
-export default function DefaultView() {
+export default function DefaultView({
+  portalOnly = false,
+  songOverride,
+  songsOverride,
+  selectedIndexOverride,
+  onSelectIndexOverride,
+  isOpenOverride,
+  onCloseOverride,
+} = {}) {
   const { musicContext } = useMusicContext();
   const { isMobile } = useStyleContext();
-  const song = musicContext.selectedSong.song;
-  const isOpen = musicContext.isDetailsOpen; // true = detailed view, false = not detailed
+  const song = songOverride ?? musicContext.selectedSong.song;
+  const isOpen = isOpenOverride ?? musicContext.isDetailsOpen; // true = detailed view, false = not detailed
+  const songs = songsOverride ?? musicContext.currentSongs;
+  const selectedIndex = selectedIndexOverride ?? musicContext.selectedSong.index;
 
   if (!song) {
     return <div id="song-drawer__inactive"></div>;
@@ -36,6 +46,33 @@ export default function DefaultView() {
 
   const iconSize = isMobile ? 32 : 24;
 
+  function moveBackward() {
+    if (songsOverride && onSelectIndexOverride && songs.length > 0) {
+      onSelectIndexOverride((selectedIndex - 1 + songs.length) % songs.length);
+      return;
+    }
+
+    musicContext.moveBackward();
+  }
+
+  function moveForward() {
+    if (songsOverride && onSelectIndexOverride && songs.length > 0) {
+      onSelectIndexOverride((selectedIndex + 1) % songs.length);
+      return;
+    }
+
+    musicContext.moveForward();
+  }
+
+  function closeDetails() {
+    if (onCloseOverride) {
+      onCloseOverride();
+      return;
+    }
+
+    musicContext.setIsDetailsOpen(false);
+  }
+
   // Full-screen portal component
   const renderFullScreenPlayer = () => {
     if (!isOpen) return null;
@@ -57,20 +94,20 @@ export default function DefaultView() {
               <div className="flex flex-row justify-between md:justify-end gap-3">
                 <div className="flex flex-row">
                   <button
-                    onClick={() => musicContext.moveBackward()}
+                    onClick={moveBackward}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
                     <ArrowLeft size={iconSize} />
                   </button>
                   <button
-                    onClick={() => musicContext.moveForward()}
+                    onClick={moveForward}
                     className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                   >
                     <ArrowRight size={iconSize} />
                   </button>
                 </div>
                 <button
-                  onClick={() => musicContext.setIsDetailsOpen(false)}
+                  onClick={closeDetails}
                   className=" text-gray-600 hover:text-gray-700 hover:bg-gray-200 p-2 rounded-sm"
                 >
                   <X size={iconSize} />
@@ -150,6 +187,10 @@ export default function DefaultView() {
 
   const containerStyles = getContainerStyles();
   const preview = song.preview_url;
+
+  if (portalOnly) {
+    return renderFullScreenPlayer();
+  }
 
   return (
     <div className="w-full flex justify-center p-4">

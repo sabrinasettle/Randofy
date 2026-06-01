@@ -60,7 +60,9 @@ export function MusicProvider({ children }) {
     const dateKey = date.toLocaleDateString();
 
     if (!songHistory) {
-      localStorage.setItem("history", JSON.stringify({ [dateKey]: songs }));
+      const newHistory = { [dateKey]: songs };
+      localStorage.setItem("history", JSON.stringify(newHistory));
+      setGenerationHistory(newHistory);
     } else {
       if (!songHistory[dateKey]) {
         songHistory[dateKey] = [];
