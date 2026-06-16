@@ -4,6 +4,15 @@
 import HistoryContent from "../../_components/history/HistoryContent";
 import { CardLayoutProvider } from "../../context/card-layout-context";
 import { HistoryProvider } from "../../context/history-context";
+
+export const metadata = {
+  title: "History",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
+
 export default function History() {
   return (
     <>

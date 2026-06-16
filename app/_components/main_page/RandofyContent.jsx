@@ -355,11 +355,12 @@ export default function RandofyContent() {
                 <div className="randofy-home-hero__copy">
                   <div className="flex flex-col gap-4">
                     <h1 className="font-body text-display-1 text-gray-700 text-center md:text-left transition-all duration-200">
-                      Randomize the full Spotify catalog.
+                      Random song finder for Spotify discovery.
                     </h1>
                     <p className="font-body text-body-lg text-gray-600 max-w-[560px] text-center md:text-left">
-                      Pull deep cuts, forgotten tracks, and strange little
-                      corners from any discography.
+                      Generate unexpected songs from Spotify's catalog, tune
+                      filters by genre and audio features, and save the tracks
+                      worth replaying.
                     </p>
                   </div>
 

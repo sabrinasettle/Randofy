@@ -1,3 +1,12 @@
+export const metadata = {
+  title: "About",
+  description:
+    "Learn about Randofy, a random song finder for Spotify music discovery, and how it uses the Spotify Web API.",
+  alternates: {
+    canonical: "/information",
+  },
+};
+
 export default function Information() {
   return (
     <div className="w-full px-3 md:px-4 pt-[72px] flex flex-col lg:flex-row justify-between gap-28">
