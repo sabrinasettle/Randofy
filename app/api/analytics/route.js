@@ -1,11 +1,44 @@
 import { NextResponse } from "next/server";
-import { redis } from "../../../lib/redis";
+import { getRedis, isRedisConfigured } from "../../../lib/redis";
 
 export const runtime = "nodejs";
+
+const PARAMS = [
+  "popularity",
+  "acoustics",
+  "energy",
+  "vocals",
+  "danceability",
+  "mood",
+];
+
+function emptyAnalytics() {
+  return {
+    genres: [],
+    parameters: Object.fromEntries(
+      PARAMS.map((param) => [
+        param,
+        {
+          avg_min: 0,
+          avg_max: 0,
+          total_queries: 0,
+          min_distribution: [],
+          max_distribution: [],
+        },
+      ]),
+    ),
+    totalQueries: 0,
+  };
+}
 
 export async function GET() {
   try {
     console.log("GET /api/analytics - Starting...");
+    if (!isRedisConfigured()) {
+      return NextResponse.json(emptyAnalytics());
+    }
+
+    const redis = await getRedis();
 
     // node-redis v4 syntax: zRangeWithScores with REV option
     const genresData = await redis.zRangeWithScores("analytics:genres", 0, -1, {
@@ -18,17 +51,9 @@ export async function GET() {
     }));
 
     // Fetch parameter statistics
-    const params = [
-      "popularity",
-      "acoustics",
-      "energy",
-      "vocals",
-      "danceability",
-      "mood",
-    ];
     const paramStats = {};
 
-    for (const param of params) {
+    for (const param of PARAMS) {
       const stats = await redis.hGetAll(`analytics:stats:${param}`);
 
       // Get distribution of min/max values (top 10)
@@ -92,6 +117,15 @@ export async function POST(request) {
       );
     }
 
+    if (!isRedisConfigured()) {
+      return NextResponse.json({
+        message: "Analytics disabled because Redis is not configured",
+        skipped: true,
+      });
+    }
+
+    const redis = await getRedis();
+
     // Use multi() for transactions in node-redis v4
     const multi = redis.multi();
 
@@ -108,16 +142,7 @@ export async function POST(request) {
     }
 
     // Track each parameter's min/max values
-    const params = [
-      "popularity",
-      "acoustics",
-      "energy",
-      "vocals",
-      "danceability",
-      "mood",
-    ];
-
-    for (const param of params) {
+    for (const param of PARAMS) {
       if (songDetails[param]) {
         const { min, max } = songDetails[param];
 
@@ -137,7 +162,7 @@ export async function POST(request) {
     await multi.exec();
 
     // Update averages
-    for (const param of params) {
+    for (const param of PARAMS) {
       if (songDetails[param]) {
         const stats = await redis.hGetAll(`analytics:stats:${param}`);
         const totalQueries = parseInt(stats.total_queries || 0);

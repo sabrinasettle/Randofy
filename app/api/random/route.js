@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import getRandomSearch from "../../../lib/js/helpers/randomLib.mjs";
 import { spotifyApi } from "../../../lib/js/spotify-api/SpotifyClient.mjs";
-import { redis } from "../../../lib/redis";
+import { getRedis, isRedisConfigured } from "../../../lib/redis";
 
 const COUNTER_KEY = "items_returned_total";
 const ARTIST_LOOKUP_BATCH_SIZE = 50;
@@ -90,7 +90,15 @@ const getData = async (req, max) => {
   }
 
   async function incrementCount(count) {
-    await redis.incrBy(COUNTER_KEY, count);
+    if (!isRedisConfigured()) return;
+
+    try {
+      const redis = await getRedis();
+      await redis.incrBy(COUNTER_KEY, count);
+    } catch (error) {
+      // Metrics must never prevent a successful Spotify recommendation response.
+      console.error("[api/random] counter update failed:", error);
+    }
   }
 
   // new regex(/^:+[a-zA-Z]*:)

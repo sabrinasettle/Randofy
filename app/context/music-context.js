@@ -77,6 +77,7 @@ export function MusicProvider({ children }) {
 
   const getSongs = async () => {
     setIsLoading(true);
+    setError(null);
 
     const params = new URLSearchParams();
 
@@ -115,8 +116,6 @@ export function MusicProvider({ children }) {
       params.set("seed_genres", Array.from(genres));
     }
 
-    const res = await fetch("/api/random?" + params.toString());
-
     const trackAnalytics = async (selectedGenres, songDetails) => {
       try {
         await fetch("/api/analytics", {
@@ -132,19 +131,38 @@ export function MusicProvider({ children }) {
       }
     };
 
-    await trackAnalytics(genres, songDetails);
+    try {
+      const res = await fetch("/api/random?" + params.toString());
+      const contentType = res.headers.get("content-type") || "";
+      const data = contentType.includes("application/json")
+        ? await res.json()
+        : { error: await res.text() || `Request failed with ${res.status}` };
 
-    if (!res.ok) {
-      setError(await res.json());
-      setIsLoading(false);
-    } else {
-      const data = await res.json();
-      let song = data.recommendedTracks[0];
+      if (!res.ok) {
+        setError(data);
+        return;
+      }
+
+      if (!Array.isArray(data.recommendedTracks) || !data.recommendedTracks.length) {
+        setError({ error: "No songs were returned. Please try again." });
+        return;
+      }
+
+      const song = data.recommendedTracks[0];
       setCurrentSongs(data.recommendedTracks);
       setSelectedSong({ index: 0, song });
       updateSongHistory(data.recommendedTracks);
-      setIsLoading(false);
+
+      // Analytics is best-effort and must not delay displaying the songs.
+      void trackAnalytics(genres, songDetails);
       return data;
+    } catch (requestError) {
+      setError({
+        error: "Unable to load songs",
+        message: requestError.message,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
