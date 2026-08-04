@@ -99,6 +99,7 @@ button {
 .randofy-entropy-preview {
   position: relative;
   z-index: 1;
+  pointer-events: none;
   width: min(38vw, 430px);
   min-width: 320px;
   aspect-ratio: 1;
